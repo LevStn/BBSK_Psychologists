@@ -50,5 +50,26 @@ namespace BBSK_Psycho.Controllers
             return null;
         }
 
+        [HttpGet("{id}/{comments}")]
+        public List<Comment> GetCommentsById(int id)
+        {
+            return null;
+        }
+
+
+        [HttpPut("{id}/{comments}/{comments-id}")]
+        public List<Comment> UpdateCommentsById(int id)
+        {
+            return null;
+        }
+
+
+     
+        [HttpDelete("{id}/{comments}/{comment-id}")]
+        public List<Comment> DeleteClientCommentById(int id)
+        {
+            return null;
+        }
+
     }
 }
