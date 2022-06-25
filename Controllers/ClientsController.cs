@@ -2,8 +2,12 @@
 
 namespace BBSK_Psycho.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
+
     public class ClientsController : ControllerBase
     {
+
         private readonly ILogger<ClientsController> _logger;
 
 
@@ -12,34 +16,39 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
+
         [HttpGet("{id}")]
-        public Client GetUserById(int id)
+        public Client GetClientById(int id)
         {
-            return new Client();
+            return null;
         }
 
-        [HttpGet()]
-        public List<Client> GetUsers()
-        {
-            return new List<Client>();
-        }
 
         [HttpPost()]
-        public Client AddUser(int id)
+        public Client AddClient()
         {
-            return new Client();
+            return null;
         }
+
+
+        [HttpGet()]
+        public List<Client> GetClients()
+        {
+            return null;
+        }
+
 
         [HttpPut("{id}")]
-        public Client UpdateUserById(int id)
+        public Client UpdateClientById(int id)
         {
-            return new Client();
+            return null;
         }
 
-        [HttpGet("{id}")]
-        public List<Comment> GetCommentsById()
+        [HttpDelete("{id}")]
+        public Client DeleteClientById(int id)
         {
-            return new List<Comment>();
+            return null;
         }
+
     }
 }
