@@ -15,28 +15,6 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{orders}")]
-        public Client GetAllOrders()
-        {
-            return null!;
-        }
-
-        [HttpGet("{orders}/{id}")]
-        public Client GetOrderById(int id)
-        {
-            return null!;
-        }
-
-        [HttpGet("{orders}/{sessions}")]
-        public Client GetSessionById(int id)
-        {
-            return null!;
-        }
-
-        [HttpGet("{orders}/{sessions}/{id}")]
-        public Client GetAllSessions(int id)
-        {
-            return null!;
-        }
+        
     }
 }

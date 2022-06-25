@@ -9,7 +9,6 @@ namespace BBSK_Psycho.Controllers
     {
         private readonly ILogger<ClientsController> _logger;
 
-
         public ClientsController(ILogger<ClientsController> logger)
         {
             _logger = logger;
