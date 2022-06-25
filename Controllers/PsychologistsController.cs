@@ -39,5 +39,10 @@ namespace BBSK_Psycho.Controllers
         {
             return null!;
         }
+        [HttpGet("{id}")]
+        public Psychologist GetCommentsById()
+        {
+            return null!;
+        }
     }
 }
