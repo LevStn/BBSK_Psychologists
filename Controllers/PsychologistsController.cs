@@ -20,9 +20,24 @@ namespace BBSK_Psycho.Controllers
             return new Psychologist();
         }
         [HttpGet()]
-        public List<Psychologist> GetPsychologists()
-        { 
-            return new List<Psychologist>();
+        public List<Psychologist> GetAllPsychologists()
+        {
+            return null!;
+        }
+        [HttpPost()]
+        public Psychologist AddPsychologist()
+        {
+            return null!;
+        }
+        [HttpPatch("{id}")]
+        public Psychologist UpdatePsychologistById()
+        {
+            return null!;
+        }
+        [HttpDelete("{}")]
+        public Psychologist DeletePsychologist()
+        {
+            return null!;
         }
     }
 }
