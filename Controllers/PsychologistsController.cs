@@ -15,34 +15,67 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpGet("{id}")]
-        public Psychologist GetPsychologistById(int id)
+        public IActionResult GetPsychologistById(int id)
         {
-            return new Psychologist();
+            return Ok(new Psychologist());
         }
+
         [HttpGet()]
-        public List<Psychologist> GetAllPsychologists()
+        public IActionResult GetAllPsychologists()
         {
-            return null!;
+            var psychologists = new List<Psychologist>() { new Psychologist() { Name = "123" }, new Psychologist() { Name = "12aaaa3" }, new Psychologist() { Name = "68596" } };
+            return Ok(psychologists);
         }
+
         [HttpPost()]
-        public Psychologist AddPsychologist()
+        public IActionResult AddPsychologist([FromBody] Psychologist psychologist)
         {
-            return null!;
+            psychologist.Id = 123;
+            return Ok(psychologist);
         }
-        [HttpPatch("{id}")]
-        public Psychologist UpdatePsychologistById()
+
+        [HttpPut("{id}")]
+        public IActionResult UpdatePsychologistById([FromBody] Psychologist psychologist, int id)
         {
-            return null!;
+            var psychologistOld = new Psychologist();
+
+            psychologistOld.Name = psychologist.Name;
+            psychologistOld.Status = psychologist.Status;
+
+            return Ok(psychologistOld);
         }
-        [HttpDelete("{}")]
-        public Psychologist DeletePsychologist()
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletePsychologistById(int id)
         {
-            return null!;
+
+            return Ok();
         }
-        [HttpGet("{id}")]
-        public Psychologist GetCommentsById()
+
+        [HttpGet("comments/{psychologistId}")]
+        public IActionResult GetCommentsById(int psychologistId)
         {
-            return null!;
+            var comments = new List<Comment>() {
+                new Comment()
+                {
+                    PsychologistId = 1,Rating=100 , Text = "AALlaa"
+                },
+                new Comment()
+                {
+                    PsychologistId = 1,Rating=100 , Text = "AALlaa222"
+                },
+                new Comment()
+                {
+                    PsychologistId = 2,Rating=100 , Text = "AALlaa3333"
+                },
+                new Comment()
+                {
+                    PsychologistId = 2,Rating=100 , Text = "AALlaa4444"
+                }
+            };
+            var result = comments.Where(c => c.PsychologistId == psychologistId).ToList();
+
+            return Ok(result);
         }
     }
 }
