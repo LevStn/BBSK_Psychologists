@@ -17,39 +17,31 @@ namespace BBSK_Psycho.Controllers
         [HttpGet()]
         public Client GetAllOrders()
         {
-            return null!;
+            return null;
         }
 
-        [HttpGet("{id}")]
-        public Client GetOrderById(int id)
+        [HttpGet("{orderId}")]
+        public Client GetOrderById(int orderId)
         {
-            return null!;
+            return null;
         }
 
         [HttpPost()]
         public Order AddOrder()
         {
-            return null!;
+            return null;
         }
 
-        [HttpDelete("{id}")]
-        public Client DeleteOrderById(int id)
+        [HttpDelete("{orderId}")]
+        public Client DeleteOrderById(int orderId)
         {
-            return null!;
+            return null;
         }
 
-        [HttpGet("{sessions}")]
-        public Client GetSessionById(int id)
+        [HttpPut("{orderId}")]
+        public Order UpdateOrderStatusByID(int orderId)
         {
-            return null!;
+            return null;
         }
-
-        [HttpGet("{sessions}/{id}")]
-        public Client GetAllSessions(int id)
-        {
-            return null!;
-        }
-
-
     }
 }
