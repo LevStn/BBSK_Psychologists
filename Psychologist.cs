@@ -8,7 +8,7 @@
 
         public string Sex { get; set; }
 
-        public DateTime BirthDate { get; set; } = DateTime.Now;
+        public DateOnly BirthDate { get; set; } 
 
         public string Phone { get; set; }
 
