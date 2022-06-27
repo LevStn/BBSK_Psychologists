@@ -7,6 +7,7 @@ namespace BBSK_Psycho.Controllers
 
     public class ClientsController : ControllerBase
     {
+
         private readonly ILogger<ClientsController> _logger;
 
 
@@ -15,34 +16,50 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
+
         [HttpGet("{id}")]
         public Client GetClientById(int id)
         {
-            return new Client();
+            return null;
         }
+
+
+        [HttpPost()]
+        public Client AddClient()
+        {
+            return null;
+        }
+
 
         [HttpGet()]
         public List<Client> GetClients()
         {
-            return new List<Client>();
+            return null;
         }
 
-        [HttpPost()]
-        public Client AddClient(int id)
-        {
-            return new Client();
-        }
 
         [HttpPut("{id}")]
         public Client UpdateClientById(int id)
         {
-            return new Client();
+            return null;
         }
 
-        [HttpGet("{comments}/{id}")]
-        public List<Comment> GetCommentsById()
+        [HttpDelete("{id}")]
+        public Client DeleteClientById(int id)
         {
-            return new List<Comment>();
+            return null;
+        }
+
+        [HttpGet("{id}/comments")]
+        public List<Comment> GetCommentsByClientId(int id)
+        {
+            return null;
+        }
+
+        [HttpGet("{id}/orders")]
+        public List<Comment> GetOrdersByClientId(int id)
+        {
+            return null;
         }
     }
 }

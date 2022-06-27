@@ -22,6 +22,12 @@
 
         public List<string> Problems { get; set; }
 
+        public decimal Price { get; set; }  
+
+        public Dictionary<DateOnly, List <TimeOnly>> Schedule { get; set; }
+
+        public string DenyMessage { get; set; }
 
     }
+ 
 }
