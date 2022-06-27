@@ -16,7 +16,7 @@
 
         public string Education { get; set; }  // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
 
-        public int Status { get; set; }  //Enum
+        public int Status { get; set; }        //Enum
 
         public List<string> TherapyMethods { get; set; }
 

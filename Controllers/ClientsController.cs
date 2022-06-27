@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -9,7 +9,6 @@ namespace BBSK_Psycho.Controllers
     {
 
         private readonly ILogger<ClientsController> _logger;
-
 
         public ClientsController(ILogger<ClientsController> logger)
         {
