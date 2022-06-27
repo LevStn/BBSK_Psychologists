@@ -26,6 +26,11 @@ namespace BBSK_Psycho.Controllers
             var psychologists = new List<Psychologist>() { new Psychologist() { Name = "123" }, new Psychologist() { Name = "12aaaa3" }, new Psychologist() { Name = "68596" } };
             return psychologists;
         }
+        [HttpGet("{id}")]
+        public List <Comment> GetCommentsByPsychologistId(int id)
+        {
+            return null;
+        }
 
         [HttpPost()]
         public Psychologist AddPsychologist([FromBody] Psychologist psychologist)
