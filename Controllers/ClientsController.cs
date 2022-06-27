@@ -54,13 +54,6 @@ namespace BBSK_Psycho.Controllers
         public List<Comment> GetCommentsByClientId(int id)
         {
             return null;
-        }
-
-
-       
-
-       
-
-       
+        }  
     }
 }
