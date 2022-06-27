@@ -54,6 +54,12 @@ namespace BBSK_Psycho.Controllers
         public List<Comment> GetCommentsByClientId(int id)
         {
             return null;
-        }  
+        }
+
+        [HttpGet("{id}/orders")]
+        public List<Comment> GetOrdersByClientId(int id)
+        {
+            return null;
+        }
     }
 }
