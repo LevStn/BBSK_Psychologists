@@ -1,3 +1,4 @@
+using BBSK_Psycho.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BBSK_Psycho.Controllers
@@ -24,9 +25,9 @@ namespace BBSK_Psycho.Controllers
 
 
         [HttpPost()]
-        public Client AddClient()
+        public int AddClient(UserRegisterRequest request)
         {
-            return null;
+            return 42;
         }
 
 
