@@ -15,45 +15,44 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetPsychologistById(int id)
+        public Psychologist GetPsychologistById(int id)
         {
-            return Ok(new Psychologist());
+            return new Psychologist();
         }
 
         [HttpGet()]
-        public IActionResult GetAllPsychologists()
+        public  List<Psychologist> GetAllPsychologists()
         {
             var psychologists = new List<Psychologist>() { new Psychologist() { Name = "123" }, new Psychologist() { Name = "12aaaa3" }, new Psychologist() { Name = "68596" } };
-            return Ok(psychologists);
+            return psychologists;
         }
 
         [HttpPost()]
-        public IActionResult AddPsychologist([FromBody] Psychologist psychologist)
+        public Psychologist AddPsychologist([FromBody] Psychologist psychologist)
         {
             psychologist.Id = 123;
-            return Ok(psychologist);
+            return psychologist;
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePsychologistById([FromBody] Psychologist psychologist, int id)
+        public Psychologist UpdatePsychologistById([FromBody] Psychologist psychologist, int id)
         {
             var psychologistOld = new Psychologist();
 
             psychologistOld.Name = psychologist.Name;
             psychologistOld.Status = psychologist.Status;
 
-            return Ok(psychologistOld);
+            return psychologistOld;
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletePsychologistById(int id)
+        public void DeletePsychologistById(int id)
         {
 
-            return Ok();
         }
 
         [HttpGet("comments/{psychologistId}")]
-        public IActionResult GetCommentsById(int psychologistId)
+        public List <Comment> GetCommentsById(int psychologistId)
         {
             var comments = new List<Comment>() {
                 new Comment()
@@ -75,7 +74,7 @@ namespace BBSK_Psycho.Controllers
             };
             var result = comments.Where(c => c.PsychologistId == psychologistId).ToList();
 
-            return Ok(result);
+            return result;
         }
     }
 }
