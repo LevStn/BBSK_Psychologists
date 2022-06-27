@@ -8,7 +8,7 @@
 
         public string Sex { get; set; }
 
-        public DateOnly BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; } 
 
         public string Phone { get; set; }
 
@@ -18,9 +18,9 @@
 
         public int Status { get; set; }        //Enum
 
-        public List<string> TherapyMethods { get; set; }
+        public List<string>? TherapyMethods { get; set; }
 
-        public List<string> Problems { get; set; }
+        public List<string>? Problems { get; set; }
 
         public decimal Price { get; set; }  
 
