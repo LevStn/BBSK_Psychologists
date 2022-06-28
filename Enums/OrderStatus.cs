@@ -1,6 +1,6 @@
 ﻿namespace BBSK_Psycho.Enums
 {
-    public enum OrderStatuse
+    public enum OrderStatus
     {   
         Unpaid,
         Paid,
