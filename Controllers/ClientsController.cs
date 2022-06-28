@@ -1,9 +1,12 @@
-using BBSK_Psycho.Models.Requests;
+using BBSK_Psycho.Enums;
+using BBSK_Psycho.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BBSK_Psycho.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
 
     public class ClientsController : ControllerBase
@@ -17,49 +20,53 @@ namespace BBSK_Psycho.Controllers
         }
 
 
+        [HttpPost]
+        public int AddClient([FromBody] ClientRegisterRequest request)
+        {
+            return 2;
+        }
+
         [HttpGet("{id}")]
-        public Client GetClientById(int id)
+        public ClientResponse GetClientById(int id)
         {
-            return null;
-        }
-
-
-        [HttpPost()]
-        public int AddClient(UserRegisterRequest request)
-        {
-            return 42;
-        }
-
-
-        [HttpGet()]
-        public List<Client> GetClients()
-        {
-            return null;
-        }
-
+            return new();
+        }  
 
         [HttpPut("{id}")]
-        public Client UpdateClientById(int id)
+        public void UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
-            return null;
+
         }
 
-        [HttpDelete("{id}")]
-        public Client DeleteClientById(int id)
-        {
-            return null;
-        }
-
+       
         [HttpGet("{id}/comments")]
-        public List<Comment> GetCommentsByClientId(int id)
+        public List<CommentResponse> GetCommentsByClientId(int id)
         {
-            return null;
+            return new();
         }
 
         [HttpGet("{id}/orders")]
-        public List<Comment> GetOrdersByClientId(int id)
+        public List<OrderResponse> GetOrdersByClientId(int id)
         {
             return null;
         }
+
+
+        [Authorize(Roles = nameof(Role.Manager))]
+        [HttpDelete("{id}")]
+        public void DeleteClientById([FromRoute] int id)
+        {
+
+        }
+
+
+
+        [Authorize(Roles = nameof(Role.Manager))]
+        [HttpGet]
+        public List<ClientResponse> GetClients()
+        {
+            return new();
+        }
+
     }
 }
