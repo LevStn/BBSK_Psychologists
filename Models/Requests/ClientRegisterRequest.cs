@@ -8,5 +8,4 @@ public class ClientRegisterRequest
     public string Email { get; set; }
     public string Phone { get; set; }
     public string BirthDate { get; set; }
-
 }

@@ -8,7 +8,6 @@ namespace BBSK_Psycho.Controllers
     [ApiController]
     [Authorize]
     [Route("[controller]")]
-
     public class ClientsController : ControllerBase
     {
 
@@ -19,7 +18,7 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
-
+        [AllowAnonymous]
         [HttpPost]
         public int AddClient([FromBody] ClientRegisterRequest request)
         {
@@ -37,7 +36,6 @@ namespace BBSK_Psycho.Controllers
         {
 
         }
-
        
         [HttpGet("{id}/comments")]
         public List<CommentResponse> GetCommentsByClientId(int id)

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BBSK_Psycho.Models;
+using BBSK_Psycho.Models.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -14,34 +16,34 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
-        [HttpGet()]
-        public Client GetAllOrders()
+        [HttpGet]
+        public List<OrderResponse> GetAllOrders()
         {
             return null;
         }
 
         [HttpGet("{orderId}")]
-        public Client GetOrderById(int orderId)
+        public OrderResponse GetOrderById([FromRoute] int orderId)
         {
             return null;
         }
 
-        [HttpPost()]
-        public Order AddOrder()
+        [HttpPost]
+        public void AddOrder([FromBody] OrderCreateRequest request)
         {
-            return null;
+
         }
 
         [HttpDelete("{orderId}")]
-        public Client DeleteOrderById(int orderId)
+        public void DeleteOrderById([FromRoute] int orderId)
         {
-            return null;
+
         }
 
         [HttpPut("{orderId}")]
-        public Order UpdateOrderStatusByID(int orderId)
+        public void UpdateOrderStatusByID([FromRoute] int orderId) 
         {
-            return null;
+
         }
     }
 }
