@@ -15,7 +15,7 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpGet("{id}")]
-        public Psychologist GetPsychologistById(int id)
+        public Psychologist GetPsychologist(int id)
         {
             return new Psychologist();
         }
@@ -27,7 +27,7 @@ namespace BBSK_Psycho.Controllers
             return psychologists;
         }
         [HttpGet("{psid}")]
-        public List <Comment> GetCommentsByPsychologistId(int id)
+        public List <Comment> GetCommentsByPsychologist(int id)
         {
             return null;
         }
@@ -40,7 +40,7 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpPut("{id}")]
-        public Psychologist UpdatePsychologistById([FromBody] Psychologist psychologist, int id)
+        public Psychologist UpdatePsychologist([FromBody] Psychologist psychologist, int id)
         {
             var psychologistOld = new Psychologist();
 
@@ -51,13 +51,13 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void DeletePsychologistById(int id)
+        public void DeletePsychologist(int id)
         {
 
         }
 
         [HttpGet("comments/{psychologistId}")]
-        public List <Comment> GetCommentsById(int psychologistId)
+        public List <Comment> GetCommentsByPsychologistId(int psychologistId)
         {
             var comments = new List<Comment>() {
                 new Comment()
