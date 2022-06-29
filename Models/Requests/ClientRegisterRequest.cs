@@ -1,5 +1,4 @@
-﻿
-namespace BBSK_Psycho.Models;
+﻿namespace BBSK_Psycho.Models;
 
 public class ClientRegisterRequest
 {
@@ -7,5 +6,5 @@ public class ClientRegisterRequest
     public string Password { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
-    public string BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
 }

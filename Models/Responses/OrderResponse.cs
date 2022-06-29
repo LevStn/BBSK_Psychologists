@@ -14,11 +14,11 @@ public class OrderResponse
 
     public string Message { get; set; } //Например, описание проблемы
 
-    public DateTime SessionDate { get; set; }
+    public string SessionDate { get; set; }
 
-    public DateTime OrderDate { get; set; }
+    public string OrderDate { get; set; }
 
-    public DateTime PayDate { get; set; }
+    public string PayDate { get; set; }
 
     public int OrderStatus { get; set; } //Enum
 }

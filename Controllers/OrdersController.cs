@@ -1,6 +1,5 @@
 ﻿using BBSK_Psycho.Enums;
 using BBSK_Psycho.Models;
-using BBSK_Psycho.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
