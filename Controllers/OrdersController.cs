@@ -46,8 +46,8 @@ namespace BBSK_Psycho.Controllers
         }
 
         [Authorize(Roles = nameof(Role.Manager))]
-        [HttpPut("{orderId}")]
-        public void UpdateOrderStatusByID([FromRoute] int orderId) 
+        [HttpPatch("{orderId}")]
+        public void UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatus newStatus) 
         {
 
         }

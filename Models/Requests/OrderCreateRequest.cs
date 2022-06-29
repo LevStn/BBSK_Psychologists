@@ -16,7 +16,7 @@ public class OrderCreateRequest
 
     public DateTime OrderDate { get; set; }
 
-    public DateTime PayDate { get; set; }
+    public DateTime? PayDate { get; set; }
 
     public int OrderStatus { get; set; }
 }

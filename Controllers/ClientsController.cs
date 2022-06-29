@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BBSK_Psycho.Controllers
 {
     [ApiController]
-    [AuthorizeByRole(RoleConstants.Manager, RoleConstants.Client)]
+    [Authorize]
     [Route("[controller]")]
     public class ClientsController : ControllerBase
     {
@@ -30,7 +30,7 @@ namespace BBSK_Psycho.Controllers
         public ClientResponse GetClientById(int id)
         {
             return new();
-        }  
+        }
 
         [HttpPut("{id}")]
         public void UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
@@ -57,14 +57,14 @@ namespace BBSK_Psycho.Controllers
             return "DONE";
         }
 
-        [AuthorizeByRole(RoleConstants.Manager)]
+        [AuthorizeByRole(Role.Client)]
         [HttpDelete("{id}")]
         public void DeleteClientById([FromRoute] int id)
         {
 
         }
 
-        [AuthorizeByRole(RoleConstants.Manager)]
+        [AuthorizeByRole]
         [HttpGet]
         public List<ClientResponse> GetClients()
         {
