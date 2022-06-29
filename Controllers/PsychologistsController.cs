@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BBSK_Psycho.Models.Responses;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -15,22 +16,22 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpGet("{id}")]
-        public Psychologist GetPsychologist(int id)
+        public GetPsychologistResponse GetPsychologist(int id)
         {
-            return new Psychologist();
+            return new GetPsychologistResponse();
         }
 
         [HttpGet()]
-        public  List<Psychologist> GetAllPsychologists()
+        public  List<GetAllPsychologistsResponse> GetAllPsychologists()
         {
-            var psychologists = new List<Psychologist>() { new Psychologist() { Name = "123" }, new Psychologist() { Name = "12aaaa3" }, new Psychologist() { Name = "68596" } };
+            var psychologists = new List<GetAllPsychologistsResponse>() { new GetAllPsychologistsResponse() { Name = "123" }, new () { Name = "12aaaa3" }, new Psychologist() { Name = "68596" } };
             return psychologists;
         }
-        [HttpGet("{psid}")]
-        public List <Comment> GetCommentsByPsychologist(int id)
-        {
-            return null;
-        }
+        //[HttpGet("{psid}")]
+        //public List <Comment> GetCommentsByPsychologist(int id)
+        //{
+        //    return null;
+        //}
 
         [HttpPost()]
         public Psychologist AddPsychologist([FromBody] Psychologist psychologist)
