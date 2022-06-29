@@ -50,6 +50,12 @@ namespace BBSK_Psycho.Controllers
             return null;
         }
 
+        [AllowAnonymous]
+        [HttpPost("request-search")]
+        public string AddRequestSearch([FromBody] RequestSearch requestSearch)
+        {
+            return "DONE";
+        }
 
         [AuthorizeByRole(RoleConstants.Manager)]
         [HttpDelete("{id}")]
@@ -57,8 +63,6 @@ namespace BBSK_Psycho.Controllers
         {
 
         }
-
-
 
         [AuthorizeByRole(RoleConstants.Manager)]
         [HttpGet]
