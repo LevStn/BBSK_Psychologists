@@ -19,7 +19,7 @@
 
         public decimal Price { get; set; }
 
-        public Dictionary<DateOnly, List<TimeOnly>> Schedule { get; set; }
+        public Dictionary<DateTime, List<DateTime>> Schedule { get; set; }
 
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace BBSK_Psycho.Models.Requests
+﻿namespace BBSK_Psycho.Models.Responses
 {
-    public class AddPsychologistRequest
+    public class AddPsychologyResponse
     {
         public string Name { get; set; }
 
@@ -31,6 +31,5 @@
         public decimal Price { get; set; }
 
         public Dictionary<DateTime, List<DateTime>> Schedule { get; set; }
-
     }
 }

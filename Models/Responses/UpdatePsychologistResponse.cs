@@ -12,7 +12,7 @@
 
         public string Sex { get; set; }
 
-        public DateOnly BirthDate { get; set; }
+        public DateOnly? BirthDate { get; set; }
 
         public string Phone { get; set; }
 
@@ -32,7 +32,7 @@
 
         public decimal Price { get; set; }
 
-        public Dictionary<DateOnly, List<TimeOnly>> Schedule { get; set; }
+        public Dictionary<DateTime, List<DateTime>> Schedule { get; set; }
 
         public string DenyMessage { get; set; }
     }
