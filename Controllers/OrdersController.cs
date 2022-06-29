@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BBSK_Psycho.Enums;
+using BBSK_Psycho.Models;
+using BBSK_Psycho.Models.Requests;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BBSK_Psycho.Controllers
 {
+
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
 
     public class OrdersController
@@ -14,34 +20,37 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
-        [HttpGet()]
-        public Client GetAllOrders()
+        [HttpGet]
+        public List<OrderResponse> GetAllOrders()
         {
             return null;
         }
-
+        
         [HttpGet("{orderId}")]
-        public Client GetOrderById(int orderId)
+        public OrderResponse GetOrderById([FromRoute] int orderId)
         {
             return null;
         }
 
-        [HttpPost()]
-        public Order AddOrder()
+        [Authorize(Roles = nameof(Role.Client))]
+        [HttpPost]
+        public void AddOrder([FromBody] OrderCreateRequest request)
         {
-            return null;
+
         }
 
+        [Authorize(Roles = nameof(Role.Manager))]
         [HttpDelete("{orderId}")]
-        public Client DeleteOrderById(int orderId)
+        public void DeleteOrderById([FromRoute] int orderId)
         {
-            return null;
+
         }
 
+        [Authorize(Roles = nameof(Role.Manager))]
         [HttpPut("{orderId}")]
-        public Order UpdateOrderStatusByID(int orderId)
+        public void UpdateOrderStatusByID([FromRoute] int orderId) 
         {
-            return null;
+
         }
     }
 }
