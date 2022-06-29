@@ -17,9 +17,9 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpGet("{id}")]
-        public GetPsychologistResponse GetPsychologist(int id)
+        public PsychologistResponse GetPsychologist(int id)
         {
-            return new GetPsychologistResponse();
+            return new PsychologistResponse();
         }
 
         [HttpGet()]
@@ -59,7 +59,8 @@ namespace BBSK_Psycho.Controllers
 
         }
 
-        [HttpGet("comments/{psychologistId}")]
+        // /Psychologists/{psychologistId}/comments
+        [HttpGet("{psychologistId}/comments")]
         public List <Comment> GetCommentsByPsychologistId(int psychologistId)
         {
             var comments = new List<Comment>() {
