@@ -1,3 +1,5 @@
+using BBSK_Psycho.Models.Responses;
+
 namespace BBSK_Psycho.Models;
 
 public class OrderResponse
@@ -6,7 +8,7 @@ public class OrderResponse
 
     public int ClientId { get; set; }
 
-    public int PsychologistId { get; set; }
+    public PsychologistResponse psychologistResponse { get; set; }
 
     public decimal Cost { get; set; }
 

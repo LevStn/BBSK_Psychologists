@@ -1,6 +1,6 @@
-﻿namespace BBSK_Psycho.Models.Responses
+﻿namespace BBSK_Psycho.Models.Requests
 {
-    public class AddPsychologyResponse
+    public class UpdatePsychologistRequest
     {
         public string Name { get; set; }
 

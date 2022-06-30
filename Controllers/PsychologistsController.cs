@@ -1,4 +1,5 @@
-﻿using BBSK_Psycho.Models.Requests;
+﻿using BBSK_Psycho.Models;
+using BBSK_Psycho.Models.Requests;
 using BBSK_Psycho.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,32 +26,19 @@ namespace BBSK_Psycho.Controllers
         [HttpGet()]
         public  List<GetAllPsychologistsResponse> GetAllPsychologists()
         {
-            var psychologists = new List<GetAllPsychologistsResponse>() { new GetAllPsychologistsResponse() { Name = "123" }, new GetAllPsychologistsResponse() { Name = "12aaaa3" }, new GetAllPsychologistsResponse() { Name = "68596" } };
-            return psychologists;
+            return new List<GetAllPsychologistsResponse>();
         }
-        //[HttpGet("{psid}")]
-        //public List <Comment> GetCommentsByPsychologist(int id)
-        //{
-        //    return null;
-        //}
 
-        [HttpPost()] //поменять тип данных
-        public Psychologist AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
+        [HttpPost()] 
+        public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
-            var psychologist=new Psychologist();
-           psychologist.Id= 123;
-            return psychologist;
+            return psychologistRequest.Id;
         }
 
         [HttpPut("{id}")]
-        public Psychologist UpdatePsychologist([FromBody] Psychologist psychologist, int id)
+        public UpdatePsychologistResponse UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
-            var psychologistOld = new Psychologist();
-
-            psychologistOld.Name = psychologist.Name;
-            psychologistOld.Status = psychologist.Status;
-
-            return psychologistOld;
+            return new UpdatePsychologistResponse();
         }
 
         [HttpDelete("{id}")]
@@ -61,29 +49,9 @@ namespace BBSK_Psycho.Controllers
 
         // /Psychologists/{psychologistId}/comments
         [HttpGet("{psychologistId}/comments")]
-        public List <Comment> GetCommentsByPsychologistId(int psychologistId)
+        public List <GetCommentsByPsychologistIdResponse> GetCommentsByPsychologistId(int psychologistId)
         {
-            var comments = new List<Comment>() {
-                new Comment()
-                {
-                    PsychologistId = 1,Rating=100 , Text = "AALlaa"
-                },
-                new Comment()
-                {
-                    PsychologistId = 1,Rating=100 , Text = "AALlaa222"
-                },
-                new Comment()
-                {
-                    PsychologistId = 2,Rating=100 , Text = "AALlaa3333"
-                },
-                new Comment()
-                {
-                    PsychologistId = 2,Rating=100 , Text = "AALlaa4444"
-                }
-            };
-            var result = comments.Where(c => c.PsychologistId == psychologistId).ToList();
-
-            return result;
+            return new List <GetCommentsByPsychologistIdResponse>();
         }
     }
 }
