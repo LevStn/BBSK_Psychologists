@@ -24,7 +24,7 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpGet()]
-        public  List<GetAllPsychologistsResponse> GetAllPsychologists()
+        public ActionResult <List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
             return new List<GetAllPsychologistsResponse>();
         }
@@ -36,7 +36,7 @@ namespace BBSK_Psycho.Controllers
         }
 
         [HttpPut("{id}")]
-        public UpdatePsychologistResponse UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
+        public ActionResult<UpdatePsychologistResponse> UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
             return new UpdatePsychologistResponse();
         }
