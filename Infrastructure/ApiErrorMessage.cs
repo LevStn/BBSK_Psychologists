@@ -4,7 +4,9 @@
     {
         public const string ClientNameIsRequired = "Вы не ввели свое имя";
         public const string PasswordLengthIsLessThanAllowed = "Длинна пароля меньше 8-ми символов";
+        public const string PasswordIsRequire = "Вы не ввели пароль";
         public const string InvalidCharacterInEmail = "В email присутсвует недопустимый символ";
+        public const string EmailIsRequire = "Вы не ввели email";
         public const string PhoneNumberIsRequired = "Вы не ввели номер телефона";
         public const string DescriptionIsRequired = "Вы не ввели описание проблемы";
         public const string PsychologistGenderIsRequired = "Вы не выбрали пол специалиста";

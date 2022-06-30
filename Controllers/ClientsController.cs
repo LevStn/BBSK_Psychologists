@@ -23,6 +23,7 @@ namespace BBSK_Psycho.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ProducesResponseType(typeof(int),StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult <int> AddClient([FromBody] ClientRegisterRequest client)
         {
             int id = 2;
@@ -45,7 +46,8 @@ namespace BBSK_Psycho.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]        
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
             return NoContent();

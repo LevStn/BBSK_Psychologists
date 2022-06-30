@@ -9,7 +9,7 @@ public class Loginrequest
     [EmailAddress]
     public string Email { get; set; }
 
-    [Required(ErrorMessage = ApiErrorMessage.PasswordLengthIsLessThanAllowed)]
-    [MinLength(8)]
+    [Required(ErrorMessage = ApiErrorMessage.PasswordIsRequire)]
+    [MinLength(8, ErrorMessage = ApiErrorMessage.PasswordLengthIsLessThanAllowed)]
     public string Password { get; set; }
 }
