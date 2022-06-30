@@ -25,36 +25,32 @@ namespace BBSK_Psycho.Controllers
             return 2;
         }
 
-
+        [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}")]
-        public ClientResponse GetClientById(int id)
+        public ClientResponse GetClientById([FromRoute] int id)
         {
             return new();
         }
 
+        [AuthorizeByRole(Role.Client)]
         [HttpPut("{id}")]
         public void UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
 
         }
-       
+
+        [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}/comments")]
-        public List<CommentResponse> GetCommentsByClientId(int id)
+        public List<CommentResponse> GetCommentsByClientId([FromRoute] int id)
         {
             return new();
         }
 
+        [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}/orders")]
-        public List<OrderResponse> GetOrdersByClientId(int id)
+        public List<OrderResponse> GetOrdersByClientId([FromRoute] int id)
         {
             return null;
-        }
-
-        [AllowAnonymous]
-        [HttpPost("request-search")]
-        public string AddRequestSearch([FromBody] RequestSearch requestSearch)
-        {
-            return "DONE";
         }
 
         [AuthorizeByRole(Role.Client)]
@@ -64,7 +60,7 @@ namespace BBSK_Psycho.Controllers
 
         }
 
-        [AuthorizeByRole]
+        [Authorize(Roles = nameof(Role.Manager))]
         [HttpGet]
         public List<ClientResponse> GetClients()
         {

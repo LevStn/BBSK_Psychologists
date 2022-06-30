@@ -4,8 +4,6 @@ public class CommentResponse
 {
     public int Id { get; set; }
 
-    public int ClientId { get; set; }
-
     public int PsychologistId { get; set; }     // PsyvhologistResponse
 
     public string Text { get; set; }
