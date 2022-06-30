@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BBSK_Psycho.Models;
 
-public class Loginrequest
+public class LoginRequest
 {
     [Required(ErrorMessage = ApiErrorMessage.InvalidCharacterInEmail)]
     [EmailAddress]

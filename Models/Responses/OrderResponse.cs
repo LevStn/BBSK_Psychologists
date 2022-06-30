@@ -1,3 +1,5 @@
+using BBSK_Psycho.Models.Responses;
+
 namespace BBSK_Psycho.Models;
 
 public class OrderResponse
@@ -6,11 +8,13 @@ public class OrderResponse
 
     public int PsychologistId { get; set; }  // PsyResponse
 
+    public PsychologistResponse psychologistResponse { get; set; }
+
     public decimal Cost { get; set; }
 
     public int Duration { get; set; }
 
-    public string Message { get; set; } //Например, описание проблемы
+    public string Message { get; set; } //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
     public DateTime SessionDate { get; set; }
 

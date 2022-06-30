@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BBSK_Psycho.Enums;
+using BBSK_Psycho.Models;
+using BBSK_Psycho.Models.Requests;
+using BBSK_Psycho.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -13,73 +18,47 @@ namespace BBSK_Psycho.Controllers
         {
             _logger = logger;
         }
-
+        
+        [AuthorizeByRole(Role.Manager)]
         [HttpGet("{id}")]
-        public Psychologist GetPsychologistById(int id)
+        public PsychologistResponse GetPsychologist(int id)
         {
-            return new Psychologist();
+            return new PsychologistResponse();
         }
 
+        [AuthorizeByRole(Role.Client, Role.Psychologist)]
         [HttpGet()]
-        public  List<Psychologist> GetAllPsychologists()
+        public ActionResult <List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
-            var psychologists = new List<Psychologist>() { new Psychologist() { Name = "123" }, new Psychologist() { Name = "12aaaa3" }, new Psychologist() { Name = "68596" } };
-            return psychologists;
-        }
-        [HttpGet("{psid}")]
-        public List <Comment> GetCommentsByPsychologistId(int id)
-        {
-            return null;
+            return new List<GetAllPsychologistsResponse>();
         }
 
-        [HttpPost()]
-        public Psychologist AddPsychologist([FromBody] Psychologist psychologist)
+        [AuthorizeByRole(Role.Psychologist)]
+        [HttpPost()] 
+        public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
-            psychologist.Id = 123;
-            return psychologist;
+            return psychologistRequest.Id;
         }
 
+        [AuthorizeByRole(Role.Psychologist)]
         [HttpPut("{id}")]
-        public Psychologist UpdatePsychologistById([FromBody] Psychologist psychologist, int id)
+        public ActionResult<UpdatePsychologistResponse> UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
-            var psychologistOld = new Psychologist();
-
-            psychologistOld.Name = psychologist.Name;
-            psychologistOld.Status = psychologist.Status;
-
-            return psychologistOld;
+            return new UpdatePsychologistResponse();
         }
 
+        [AuthorizeByRole(Role.Psychologist)]
         [HttpDelete("{id}")]
-        public void DeletePsychologistById(int id)
+        public void DeletePsychologist(int id)
         {
 
         }
 
-        [HttpGet("comments/{psychologistId}")]
-        public List <Comment> GetCommentsById(int psychologistId)
+        [AuthorizeByRole(Role.Client, Role.Psychologist)]
+        [HttpGet("{psychologistId}/comments")]
+        public List <GetCommentsByPsychologistIdResponse> GetCommentsByPsychologistId(int psychologistId)
         {
-            var comments = new List<Comment>() {
-                new Comment()
-                {
-                    PsychologistId = 1,Rating=100 , Text = "AALlaa"
-                },
-                new Comment()
-                {
-                    PsychologistId = 1,Rating=100 , Text = "AALlaa222"
-                },
-                new Comment()
-                {
-                    PsychologistId = 2,Rating=100 , Text = "AALlaa3333"
-                },
-                new Comment()
-                {
-                    PsychologistId = 2,Rating=100 , Text = "AALlaa4444"
-                }
-            };
-            var result = comments.Where(c => c.PsychologistId == psychologistId).ToList();
-
-            return result;
+            return new List <GetCommentsByPsychologistIdResponse>();
         }
     }
 }
