@@ -13,11 +13,30 @@ namespace BBSK_Psycho.Controllers
     public class AuthController : Controller
     {
         [HttpPost]
-        public string Login([FromBody] Loginrequest request)
+        public string Login([FromBody] LoginRequest request)
         {
             if (request == default || request.Email == default) return string.Empty;
-            
-            var roleClaim = new Claim(ClaimTypes.Role, (request.Email == "manager@p.ru" ? Role.Manager : request.Email == "psyh@p.ru"? Role.Psychologist: Role.Client).ToString()); //присвоение ролей (клиент, психолог, менеджер)
+
+            Role role;
+
+            if(request.Email == "manager@p.ru")
+            {
+                role = Role.Manager;
+            }
+            else
+            {
+                if(request.Email == "psyh@p.ru")
+                {
+                    role = Role.Psychologist;
+                }
+                else
+                {
+                    role = Role.Client;
+                }
+            }
+            var tmp = role.ToString();
+
+            var roleClaim = new Claim(ClaimTypes.Role, role.ToString()); //присвоение ролей (клиент, психолог, менеджер)
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, request.Email), roleClaim };
 

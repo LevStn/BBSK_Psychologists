@@ -2,7 +2,8 @@
 {
     public class AddPsychologistRequest
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Surname { get; set; }
@@ -31,7 +32,7 @@
 
         public decimal Price { get; set; }
 
-        public Dictionary<DateTime, List<DateTime>> Schedule { get; set; }
+        public Dictionary<String, List<String>> Schedule { get; set; }
 
     }
 }

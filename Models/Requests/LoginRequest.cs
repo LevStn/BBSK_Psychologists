@@ -1,6 +1,6 @@
 ﻿namespace BBSK_Psycho.Models;
 
-public class Loginrequest
+public class LoginRequest
 {
     public string Email { get; set; }
 

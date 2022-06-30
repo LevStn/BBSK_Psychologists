@@ -8,7 +8,7 @@ namespace BBSK_Psycho
         public AuthorizeByRoleAttribute(params Role[] roles)
         {
             Roles = string.Join(",", roles);
-            Roles += Role.Manager;
+            Roles += $",{ Role.Manager.ToString()}";
         }
     }
 
