@@ -8,7 +8,7 @@ public class CommentResponse
 
     public string Text { get; set; }
 
-    public int Rating { get; set; }     // Оценка от 1 до 5 
+    public int Rating { get; set; }     // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 1 пїЅпїЅ 5 
 
     public DateTime Date { get; set; } 
 }

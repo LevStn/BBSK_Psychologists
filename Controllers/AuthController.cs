@@ -13,7 +13,7 @@ namespace BBSK_Psycho.Controllers
     public class AuthController : Controller
     {
         [HttpPost]
-        public string Login([FromBody] UserLoginrequest request)
+        public string Login([FromBody] Loginrequest request)
         {
             if (request == default || request.Email == default) return string.Empty;
             

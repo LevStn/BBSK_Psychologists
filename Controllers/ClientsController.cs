@@ -25,11 +25,12 @@ namespace BBSK_Psycho.Controllers
             return 2;
         }
 
+
         [HttpGet("{id}")]
         public ClientResponse GetClientById(int id)
         {
             return new();
-        }  
+        }
 
         [HttpPut("{id}")]
         public void UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
@@ -49,17 +50,21 @@ namespace BBSK_Psycho.Controllers
             return null;
         }
 
+        [AllowAnonymous]
+        [HttpPost("request-search")]
+        public string AddRequestSearch([FromBody] RequestSearch requestSearch)
+        {
+            return "DONE";
+        }
 
-        [Authorize(Roles = nameof(Role.Manager))]
+        [AuthorizeByRole(Role.Client)]
         [HttpDelete("{id}")]
         public void DeleteClientById([FromRoute] int id)
         {
 
         }
 
-
-
-        [Authorize(Roles = nameof(Role.Manager))]
+        [AuthorizeByRole]
         [HttpGet]
         public List<ClientResponse> GetClients()
         {

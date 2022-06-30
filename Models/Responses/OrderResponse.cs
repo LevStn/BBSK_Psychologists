@@ -6,7 +6,7 @@ public class OrderResponse
 {
     public int Id { get; set; }
 
-    public int ClientId { get; set; }
+    public int PsychologistId { get; set; }  // PsyResponse
 
     public PsychologistResponse psychologistResponse { get; set; }
 
@@ -14,7 +14,7 @@ public class OrderResponse
 
     public int Duration { get; set; }
 
-    public string Message { get; set; } //Например, описание проблемы
+    public string Message { get; set; } //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
     public DateTime SessionDate { get; set; }
 
