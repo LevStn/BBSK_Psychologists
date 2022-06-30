@@ -20,9 +20,10 @@ namespace BBSK_Psycho.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public int AddClient([FromBody] ClientRegisterRequest request)
+        public ActionResult AddClient([FromBody] ClientRegisterRequest client)
         {
-            return 2;
+            int id = 2;
+            return Created($"{Request.Scheme}://{Request.Host.Value}{Request.Path.Value}/{id}", id);
         }
 
         [AuthorizeByRole(Role.Client)]
@@ -34,9 +35,9 @@ namespace BBSK_Psycho.Controllers
 
         [AuthorizeByRole(Role.Client)]
         [HttpPut("{id}")]
-        public void UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
+        public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
-
+            return NoContent();
         }
 
         [AuthorizeByRole(Role.Client)]

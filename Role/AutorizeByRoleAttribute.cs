@@ -5,10 +5,13 @@ namespace BBSK_Psycho
 {
     public class AuthorizeByRoleAttribute : AuthorizeAttribute
     {
-        public AuthorizeByRoleAttribute(params Role[] roles)
+        public AuthorizeByRoleAttribute(Role roles)
         {
-            Roles = string.Join(",", roles);
-            Roles += Role.Manager;
+
+
+            Roles = string.Concat(roles.ToString(), ",");
+            Roles += nameof(Role.Manager);
+           
         }
     }
 
