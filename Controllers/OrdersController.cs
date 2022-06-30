@@ -24,7 +24,8 @@ namespace BBSK_Psycho.Controllers
         {
             return null;
         }
-        
+
+        [AuthorizeByRole(Role.Psychologist)]
         [HttpGet("{orderId}")]
         public OrderResponse GetOrderById([FromRoute] int orderId)
         {

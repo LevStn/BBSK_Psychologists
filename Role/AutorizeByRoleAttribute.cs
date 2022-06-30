@@ -8,7 +8,6 @@ namespace BBSK_Psycho
         public AuthorizeByRoleAttribute(Role roles)
         {
 
-
             Roles = string.Concat(roles.ToString(), ",");
             Roles += nameof(Role.Manager);
            

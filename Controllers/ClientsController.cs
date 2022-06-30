@@ -7,6 +7,7 @@ namespace BBSK_Psycho.Controllers
 {
     [ApiController]
     [Authorize]
+    [Produces("application/json")]
     [Route("[controller]")]
     public class ClientsController : ControllerBase
     {
@@ -18,54 +19,81 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
+
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult AddClient([FromBody] ClientRegisterRequest client)
+        [ProducesResponseType(typeof(int),StatusCodes.Status201Created)]
+        public ActionResult <int> AddClient([FromBody] ClientRegisterRequest client)
         {
             int id = 2;
             return Created($"{Request.Scheme}://{Request.Host.Value}{Request.Path.Value}/{id}", id);
         }
 
+
         [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}")]
-        public ClientResponse GetClientById([FromRoute] int id)
+        [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public ActionResult< ClientResponse> GetClientById([FromRoute] int id)
         {
-            return new();
+            return Ok (new ClientResponse());
         }
+
 
         [AuthorizeByRole(Role.Client)]
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]        
         public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
             return NoContent();
         }
 
+
         [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}/comments")]
-        public List<CommentResponse> GetCommentsByClientId([FromRoute] int id)
+        [ProducesResponseType(typeof(CommentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public ActionResult <CommentResponse> GetCommentsByClientId([FromRoute] int id)
         {
-            return new();
+
+            return Ok(new CommentResponse());
         }
+
 
         [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}/orders")]
-        public List<OrderResponse> GetOrdersByClientId([FromRoute] int id)
+        [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public ActionResult <OrderResponse> GetOrdersByClientId([FromRoute] int id)
         {
-            return null;
+            return Ok(new OrderResponse());
         }
+
 
         [AuthorizeByRole(Role.Client)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("{id}")]
-        public void DeleteClientById([FromRoute] int id)
+        public ActionResult DeleteClientById([FromRoute] int id)
         {
-
+            return NoContent();
         }
+
 
         [Authorize(Roles = nameof(Role.Manager))]
         [HttpGet]
-        public List<ClientResponse> GetClients()
+        [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public ActionResult<ClientResponse> GetClients()
         {
-            return new();
+            return Ok(new ClientResponse());
         }
 
     }
