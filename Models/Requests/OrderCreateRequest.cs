@@ -1,4 +1,6 @@
-﻿namespace BBSK_Psycho.Models;
+﻿using BBSK_Psycho.Enums;
+
+namespace BBSK_Psycho.Models;
 
 public class OrderCreateRequest
 {
@@ -18,7 +20,9 @@ public class OrderCreateRequest
 
     public DateTime? PayDate { get; set; }
 
-    public int OrderStatus { get; set; }
+    public OrderStatus OrderStatus { get; set; }
+
+    public OrderStatus OrderPaymentStatus { get; set; }
 }
 
 

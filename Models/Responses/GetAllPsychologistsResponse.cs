@@ -1,4 +1,6 @@
-﻿namespace BBSK_Psycho.Models.Responses
+﻿using BBSK_Psycho.Enums;
+
+namespace BBSK_Psycho.Models.Responses
 {
     public class GetAllPsychologistsResponse
     {
@@ -7,7 +9,7 @@
 
         public string Surname { get; set; }
 
-        public string Sex { get; set; }
+        public Gender Sex { get; set; }
 
         public int WorkExperience { get; set; }
 

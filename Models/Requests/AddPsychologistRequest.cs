@@ -1,4 +1,6 @@
-﻿namespace BBSK_Psycho.Models.Requests
+﻿using BBSK_Psycho.Enums;
+
+namespace BBSK_Psycho.Models.Requests
 {
     public class AddPsychologistRequest
     {
@@ -14,7 +16,7 @@
 
         public DateTime BirthDate { get; set; }
 
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
 
         public string Email { get; set; }
 
@@ -24,7 +26,7 @@
 
         public List<string> Education { get; set; }  // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
 
-        public int Status { get; set; }        //Enum
+        public CheckStatus Status { get; set; }        //Enum
 
         public List<string>? TherapyMethods { get; set; }
 
