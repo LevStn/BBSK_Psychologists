@@ -37,6 +37,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult< ClientResponse> GetClientById([FromRoute] int id)
         {
             return Ok (new ClientResponse());
@@ -49,6 +50,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void),StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
             return NoContent();
@@ -60,6 +62,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(CommentResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult <CommentResponse> GetCommentsByClientId([FromRoute] int id)
         {
 
@@ -72,6 +75,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult <OrderResponse> GetOrdersByClientId([FromRoute] int id)
         {
             return Ok(new List<OrderResponse>());
@@ -83,6 +87,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult DeleteClientById([FromRoute] int id)
         {
             return NoContent();
