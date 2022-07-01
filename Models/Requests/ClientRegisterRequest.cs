@@ -25,6 +25,6 @@ public class ClientRegisterRequest
     public string? PhoneNumber { get; set; }
 
 
-    [DataType(DataType.Date)]
+    
     public DateTime? BirthDate { get; set; }
 }
