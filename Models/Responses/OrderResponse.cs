@@ -1,3 +1,4 @@
+using BBSK_Psycho.Enums;
 using BBSK_Psycho.Models.Responses;
 
 namespace BBSK_Psycho.Models;
@@ -22,5 +23,7 @@ public class OrderResponse
 
     public DateTime PayDate { get; set; }
 
-    public int OrderStatus { get; set; } //Enum
+    public OrderStatus OrderStatus { get; set; }
+
+    public OrderStatus OrderPaymentStatus { get; set; }
 }

@@ -1,4 +1,6 @@
-﻿namespace BBSK_Psycho.Models.Responses
+﻿using BBSK_Psycho.Enums;
+
+namespace BBSK_Psycho.Models.Responses
 {
     public class PsychologistResponse
     {
@@ -10,7 +12,7 @@
 
         public string Patronymic { get; set; }
 
-        public string Sex { get; set; }
+        public Gender Sex { get; set; }
 
         public DateTime BirthDate { get; set; }
 
@@ -24,7 +26,7 @@
 
         public List<string> Education { get; set; }  // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
 
-        public int Status { get; set; }        //Enum
+        public CheckStatus Status { get; set; }        //Enum
 
         public List<string>? TherapyMethods { get; set; }
 

@@ -2,11 +2,10 @@
 {
     public enum OrderStatus
     {   
-        Unpaid,
-        Paid,
+        
         Completed,
         Cancelled,
-        Deleted,
-        MoneyReturned
+        Deleted
+        
     }
 }

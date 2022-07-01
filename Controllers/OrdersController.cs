@@ -8,9 +8,10 @@ namespace BBSK_Psycho.Controllers
 
     [ApiController]
     [Authorize]
+    [Produces("application/json")]
     [Route("[controller]")]
 
-    public class OrdersController
+    public class OrdersController : ControllerBase
     {
         private readonly ILogger<OrdersController> _logger;
 
@@ -19,38 +20,62 @@ namespace BBSK_Psycho.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = nameof(Role.Manager))]
+        [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [HttpGet]
-        public List<OrderResponse> GetAllOrders()
+        public ActionResult<OrderResponse> GetAllOrders()
         {
-            return null;
+            return Ok(new List <OrderResponse>());
+
         }
 
-        [AuthorizeByRole(Role.Psychologist)]
+
+        [AuthorizeByRole(Role.Psychologist, Role.Client)]
+        [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [HttpGet("{orderId}")]
-        public OrderResponse GetOrderById([FromRoute] int orderId)
+        public ActionResult<OrderResponse> GetOrderById([FromRoute] int orderId)
         {
-            return null;
+            return Ok(new OrderResponse());
         }
 
-        [Authorize(Roles = nameof(Role.Client))]
+
+        [AuthorizeByRole(Role.Client)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [HttpPost]
-        public void AddOrder([FromBody] OrderCreateRequest request)
+        public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
         {
-
+            int id = 2;
+            return Created($"{Request.Scheme}://{Request.Host.Value}{Request.Path.Value}/{id}", id);
         }
 
+
         [Authorize(Roles = nameof(Role.Manager))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [HttpDelete("{orderId}")]
-        public void DeleteOrderById([FromRoute] int orderId)
+        public ActionResult DeleteOrderById([FromRoute] int orderId)
         {
-
+            return NoContent();
         }
 
         [Authorize(Roles = nameof(Role.Manager))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [HttpPatch("{orderId}")]
-        public void UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatus newStatus) 
+        public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
-
+            return NoContent();
         }
+
+        
     }
 }
