@@ -15,6 +15,13 @@
         public const string DateIsRequired = "Вы не выбрали удобную дату";
         public const string TimeIsRequired = "Вы не выбрали удобное время";
         public const string ClientIdIsRequired = "Вы не выбрали id клиента ";
-
+        public const string CostIsRequired = "Вы не указали стоимость";
+        public const string DurationIsRequired = "Вы не выбрали промежуток времени";
+        public const string MessageIsRequired = "Вы не описали свои проблемы";
+        public const string SessionDateIsRequired = "Вы не выбрали дату сессии";
+        public const string InvalidDate = "Не верный формат даты";
+        public const string OrderDateIsRequired = "Не указана дата заказа";
+        public const string OrderStatusIsRequired = "Не выбран статус ордера";
+        public const string OrderPaymentStatusIsRequired = "Не выбран статус оплаты";
     }
 }
