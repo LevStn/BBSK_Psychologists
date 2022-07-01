@@ -1,4 +1,5 @@
 ﻿using BBSK_Psycho.Enums;
+using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using BBSK_Psycho.Models.Requests;
 using BBSK_Psycho.Models.Responses;
@@ -18,19 +19,19 @@ namespace BBSK_Psycho.Controllers
         {
             _logger = logger;
         }
-        
+
         [AuthorizeByRole(Role.Manager)]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PsychologistResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult <PsychologistResponse> GetPsychologist(int id)
+        public ActionResult<PsychologistResponse> GetPsychologist(int id)
         {
             return Ok(new PsychologistResponse());
         }
 
         [AuthorizeByRole(Role.Client, Role.Psychologist)]
         [HttpGet()]
-        public ActionResult <List<GetAllPsychologistsResponse>> GetAllPsychologists()
+        public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
             return new List<GetAllPsychologistsResponse>();
         }
@@ -43,7 +44,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
-            return Created($"{Request.Scheme}://{Request.Host.Value}{Request.Path.Value}/{psychologistRequest.Id}", psychologistRequest.Id);
+            return Created($"{this.GetRequestPath()}/{psychologistRequest.Id}", psychologistRequest.Id);
             //return psychologistRequest.Id;
         }
 
@@ -65,9 +66,30 @@ namespace BBSK_Psycho.Controllers
 
         [AuthorizeByRole(Role.Client, Role.Psychologist)]
         [HttpGet("{psychologistId}/comments")]
-        public List <GetCommentsByPsychologistIdResponse> GetCommentsByPsychologistId(int psychologistId)
+        public List<GetCommentsByPsychologistIdResponse> GetCommentsByPsychologistId(int psychologistId)
         {
-            return new List <GetCommentsByPsychologistIdResponse>();
+            return new List<GetCommentsByPsychologistIdResponse>();
         }
+
+        [AuthorizeByRole(Role.Client)]
+        [HttpPost("request-psyhologist-search")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public ActionResult <int> AddRequestPsyhologistSearch([FromBody] RequestPsyhologistSearch requestPsyhologistSearch)
+        {
+            int id = 2;
+            return Created($"{this.GetRequestPath()}/{id}", id);
+        }
+
+        [Authorize(Roles = nameof(Role.Client))]
+        [HttpPost("{psychologistId}/comments")]
+        public ActionResult <int> AddCommentForPsyhologist([FromBody] CommentRequest comment, int psychologistId)
+        {
+            int id = 2;
+            return Created($"{this.GetRequestPath()}/{id}", id);
+        }
+
     }
 }
