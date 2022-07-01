@@ -10,8 +10,6 @@ public class OrderCreateRequest
     [Required(ErrorMessage = ApiErrorMessage.ClientIdIsRequired)]
     public int ClientId { get; set; }
 
-    [Required]
-    public PsychologistResponse psychologistResponse { get; set; }
 
     [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
     public decimal Cost { get; set; }
@@ -33,8 +31,6 @@ public class OrderCreateRequest
     [DataType(DataType.Date, ErrorMessage = ApiErrorMessage.InvalidDate)]
     public DateTime? PayDate { get; set; }
 
-    [Required(ErrorMessage = ApiErrorMessage.OrderStatusIsRequired)]
-    public OrderStatus OrderStatus { get; set; }
 
     [Required(ErrorMessage = ApiErrorMessage.OrderPaymentStatusIsRequired)]
     public OrderPaymentSatus OrderPaymentStatus { get; set; }
