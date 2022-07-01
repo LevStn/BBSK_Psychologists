@@ -7,7 +7,7 @@ public class OrderResponse
 {
     public int Id { get; set; }
 
-    public int PsychologistId { get; set; }  // PsyResponse
+    //public int PsychologistId { get; set; }  // PsyResponse
 
     public PsychologistResponse psychologistResponse { get; set; }
 

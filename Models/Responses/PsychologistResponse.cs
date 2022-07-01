@@ -12,7 +12,7 @@ namespace BBSK_Psycho.Models.Responses
 
         public string Patronymic { get; set; }
 
-        public Gender Sex { get; set; }
+        public Gender gender { get; set; }
 
         public DateTime BirthDate { get; set; }
 
@@ -26,7 +26,7 @@ namespace BBSK_Psycho.Models.Responses
 
         public List<string> Education { get; set; }  // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
 
-        public CheckStatus Status { get; set; }        //Enum
+        public CheckStatus checkStatus { get; set; }        //Enum
 
         public List<string>? TherapyMethods { get; set; }
 

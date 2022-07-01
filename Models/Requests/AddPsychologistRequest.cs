@@ -1,4 +1,5 @@
-﻿using BBSK_Psycho.Infrastructure;
+﻿using BBSK_Psycho.Enums;
+using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 
 namespace BBSK_Psycho.Models.Requests
@@ -13,7 +14,7 @@ namespace BBSK_Psycho.Models.Requests
         [Required]
         public string Patronymic { get; set; }
         [Required]
-        public string Sex { get; set; }
+        public Gender gender { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]
@@ -31,7 +32,7 @@ namespace BBSK_Psycho.Models.Requests
         [Required]
         public List<string> Education { get; set; }  // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
         [Required]
-        public int Status { get; set; }        //Enum
+        public  CheckStatus checkStatus{ get; set; }        //Enum
         [Required]
         public List<string>? TherapyMethods { get; set; }
         [Required]
