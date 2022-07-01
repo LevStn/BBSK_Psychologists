@@ -22,7 +22,7 @@ public class OrderCreateRequest
 
     public OrderStatus OrderStatus { get; set; }
 
-    public OrderStatus OrderPaymentStatus { get; set; }
+    public OrderPaymentSatus OrderPaymentStatus { get; set; }
 }
 
 
