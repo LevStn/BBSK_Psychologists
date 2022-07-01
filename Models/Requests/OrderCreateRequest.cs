@@ -1,5 +1,6 @@
 ﻿using BBSK_Psycho.Enums;
 using BBSK_Psycho.Infrastructure;
+using BBSK_Psycho.Models.Responses;
 using System.ComponentModel.DataAnnotations;
 
 namespace BBSK_Psycho.Models;
@@ -10,7 +11,7 @@ public class OrderCreateRequest
     public int ClientId { get; set; }
 
     [Required]
-    public int PsychologistId { get; set; }
+    public PsychologistResponse psychologistResponse { get; set; }
 
     [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
     public decimal Cost { get; set; }
