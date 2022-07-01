@@ -5,7 +5,7 @@ namespace BBSK_Psycho.Models;
 
 public class RequestSearch
 {
-    [Required(ErrorMessage = ApiErrorMessage.ClientNameIsRequired)]
+    [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
     public string Name { get; set; }
 
 

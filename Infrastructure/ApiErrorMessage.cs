@@ -2,8 +2,8 @@
 {
     public static class ApiErrorMessage
     {
-        public const string ClientNameIsRequired = "Вы не ввели свое имя";
-        public const string PasswordLengthIsLessThanAllowed = "Длинна пароля меньше 8-ми символов";
+        public const string NameIsRequired = "Вы не ввели свое имя";
+        public const string PasswordLengthIsLessThanAllowed = "Длина пароля меньше 8-ми символов";
         public const string PasswordIsRequire = "Вы не ввели пароль";
         public const string InvalidCharacterInEmail = "В email присутсвует недопустимый символ";
         public const string EmailIsRequire = "Вы не ввели email";
