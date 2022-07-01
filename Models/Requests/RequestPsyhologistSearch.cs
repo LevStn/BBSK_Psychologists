@@ -31,12 +31,10 @@ public class RequestPsyhologistSearch
 
 
     [Required(ErrorMessage = ApiErrorMessage.DateIsRequired)]
-    [DataType(DataType.Date)]
     public DateTime Date { get; set; }
 
 
     [Required(ErrorMessage = ApiErrorMessage.TimeIsRequired)]
-    [DataType(DataType.Time)]
     public TimeOfDay Time { get; set; } // enum
 
 
