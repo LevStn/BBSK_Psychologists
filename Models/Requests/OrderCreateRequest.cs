@@ -26,10 +26,10 @@ public class OrderCreateRequest
     public DateTime SessionDate { get; set; }
 
     [Required(ErrorMessage = ApiErrorMessage.SessionDateIsRequired)]
-    [DataType(DataType.Date, ErrorMessage = ApiErrorMessage.OrderDateIsRequired)]
+    [DataType(DataType.Date, ErrorMessage = ApiErrorMessage.InvalidDate)]
     public DateTime OrderDate { get; set; }
 
-    [DataType(DataType.Date, ErrorMessage = ApiErrorMessage.OrderDateIsRequired)]
+    [DataType(DataType.Date, ErrorMessage = ApiErrorMessage.InvalidDate)]
     public DateTime? PayDate { get; set; }
 
     [Required(ErrorMessage = ApiErrorMessage.OrderStatusIsRequired)]
