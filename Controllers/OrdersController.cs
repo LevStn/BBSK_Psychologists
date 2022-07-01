@@ -1,4 +1,5 @@
 ﻿using BBSK_Psycho.Enums;
+using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,10 +34,10 @@ namespace BBSK_Psycho.Controllers
 
 
         [AuthorizeByRole(Role.Psychologist, Role.Client)]
+        [HttpGet("{orderId}")]
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [HttpGet("{orderId}")]
         public ActionResult<OrderResponse> GetOrderById([FromRoute] int orderId)
         {
             return Ok(new OrderResponse());
@@ -44,33 +45,33 @@ namespace BBSK_Psycho.Controllers
 
 
         [AuthorizeByRole(Role.Client)]
+        [HttpPost]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [HttpPost]
         public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
         {
             int id = 2;
-            return Created($"{Request.Scheme}://{Request.Host.Value}{Request.Path.Value}/{id}", id);
+            return Created($"{this.GetRequestPath()}/{id}", id);
         }
 
 
         [Authorize(Roles = nameof(Role.Manager))]
+        [HttpDelete("{orderId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [HttpDelete("{orderId}")]
         public ActionResult DeleteOrderById([FromRoute] int orderId)
         {
             return NoContent();
         }
 
         [Authorize(Roles = nameof(Role.Manager))]
+        [HttpPatch("{orderId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [HttpPatch("{orderId}")]
         public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
             return NoContent();

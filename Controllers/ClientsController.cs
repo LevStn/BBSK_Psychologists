@@ -1,4 +1,5 @@
 using BBSK_Psycho.Enums;
+using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace BBSK_Psycho.Controllers
         public ActionResult <int> AddClient([FromBody] ClientRegisterRequest client)
         {
             int id = 2;
-            return Created($"{Request.Scheme}://{Request.Host.Value}{Request.Path.Value}/{id}", id);
+            return Created($"{this.GetRequestPath()}/{id}", id);
         }
 
 

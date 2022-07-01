@@ -1,4 +1,5 @@
 ﻿using BBSK_Psycho.Enums;
+using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using BBSK_Psycho.Models.Requests;
 using BBSK_Psycho.Models.Responses;
@@ -43,7 +44,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
-            return Created($"{Request.Scheme}://{Request.Host.Value}{Request.Path.Value}/{psychologistRequest.Id}", psychologistRequest.Id);
+            return Created($"{this.GetRequestPath()}/{psychologistRequest.Id}", psychologistRequest.Id);
             //return psychologistRequest.Id;
         }
 
@@ -69,5 +70,7 @@ namespace BBSK_Psycho.Controllers
         {
             return new List <GetCommentsByPsychologistIdResponse>();
         }
+
+
     }
 }
