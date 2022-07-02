@@ -94,9 +94,9 @@ namespace BBSK_Psycho.Controllers
         [HttpPost("{psychologistId}/comments")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void),StatusCodes.Status422UnprocessableEntity)]
         public ActionResult <int> AddCommentToPsyhologist([FromBody] CommentRequest comment, int psychologistId)
         {
             int id = 2;
