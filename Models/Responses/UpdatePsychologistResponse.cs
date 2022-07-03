@@ -33,7 +33,7 @@ namespace BBSK_Psycho.Models.Responses
 
         public decimal Price { get; set; }
 
-        public Dictionary<DateTime, List<DateTime>> Schedule { get; set; }
+        public Dictionary<String, List<String>> Schedule { get; set; }
 
         public string DenyMessage { get; set; }
     }

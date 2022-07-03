@@ -44,7 +44,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
-            return Created($"{this.GetRequestPath()}/{psychologistRequest.Id}", psychologistRequest.Id);
+            var id = 42;
+            return Created($"{this.GetRequestPath()}/{id}", id);
             //return psychologistRequest.Id;
         }
 

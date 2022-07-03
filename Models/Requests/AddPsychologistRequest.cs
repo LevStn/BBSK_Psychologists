@@ -6,38 +6,49 @@ namespace BBSK_Psycho.Models.Requests
 {
     public class AddPsychologistRequest
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.LastNameIsRequired)]
         public string Surname { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.PatronymicIsRequired)]
         public string Patronymic { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.PsychologistGenderIsRequired)]
         public Gender gender { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.BirthDateIsRequired)]
         public DateTime BirthDate { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.PhoneNumberIsRequired)]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.PasswordIsRequire)]
         [MinLength(8, ErrorMessage = ApiErrorMessage.PasswordLengthIsLessThanAllowed)]
         public string Password { get; set; }
+
         [Required(ErrorMessage = ApiErrorMessage.EmailIsRequire)]
         public string Email { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.WorkExperienceIsRequired)]
         public int WorkExperience { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.PassportDataIsRequired)]
         public string PasportData { get; set; }
-        [Required]
-        public List<string> Education { get; set; }  // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
-        [Required]
-        public  CheckStatus checkStatus{ get; set; }        //Enum
-        [Required]
+
+        [Required(ErrorMessage = ApiErrorMessage.EducationIsRequired)]
+        public List<string> Education { get; set; }
+        
+        // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
+        [Required()]
+        public  CheckStatus checkStatus{ get; set; }
+        [Required(ErrorMessage = ApiErrorMessage.TherapyMethodsIsRequired)]
         public List<string>? TherapyMethods { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.ProblemsIsRequired)]
         public List<string>? Problems { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
         public decimal Price { get; set; }
         //[Required]
         //public Dictionary<String, List<String>> Schedule { get; set; }
