@@ -1,42 +1,45 @@
 ﻿using BBSK_Psycho.Enums;
+using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 
 namespace BBSK_Psycho.Models.Requests
 {
     public class UpdatePsychologistRequest
     {
-        [Required]
+        
+        [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.LastNameIsRequired)]
         public string Surname { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.PatronymicIsRequired)]
         public string Patronymic { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.PsychologistGenderIsRequired)]
         public Gender gender { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.BirthDateIsRequired)]
         public DateTime BirthDate { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.PhoneNumberIsRequired)]
         public string Phone { get; set; }
-        [Required]
-        public string Email { get; set; }
-        [Required]
-        [MinLength (8)]
+
+        [Required(ErrorMessage = ApiErrorMessage.PasswordIsRequire)]
+        [MinLength(8, ErrorMessage = ApiErrorMessage.PasswordLengthIsLessThanAllowed)]
         public string Password { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.EmailIsRequire)]
+        public string Email { get; set; }
+        [Required(ErrorMessage = ApiErrorMessage.WorkExperienceIsRequired)]
         public int WorkExperience { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.PassportDataIsRequired)]
         public string PasportData { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.EducationIsRequired)]
         public List<string> Education { get; set; }  // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
-        [Required]
-        public CheckStatus checkStatus { get; set; }    //Enum
-        [Required]
+        [Required()]
+        public CheckStatus checkStatus { get; set; }        //Enum
+        [Required(ErrorMessage = ApiErrorMessage.TherapyMethodsIsRequired)]
         public List<string>? TherapyMethods { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.ProblemsIsRequired)]
         public List<string>? Problems { get; set; }
-        [Required]
+        [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
         public decimal Price { get; set; }
         [Required]
-        public Dictionary<DateTime, List<DateTime>> Schedule { get; set; }
+        public Dictionary<String, List<String>> Schedule { get; set; }
     }
 }
