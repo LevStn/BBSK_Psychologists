@@ -12,7 +12,6 @@ namespace BBSK_Psycho.Models
 
         public string? LastName { get; set; }
 
-
         public DateTime? BirthDate { get; set; }
 
     }

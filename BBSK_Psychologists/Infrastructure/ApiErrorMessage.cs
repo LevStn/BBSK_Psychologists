@@ -34,5 +34,6 @@
         public const string TherapyMethodsIsRequired = "";
         public const string ProblemsIsRequired = "";
         public const string LalaIsRequired = "";
+        public const string NoErrorForTest = "";
     }
 }
