@@ -5,49 +5,7 @@
     <projectFile profileName="IIS Express">BBSK_Psycho.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="95f60835-6477-429f-a07b-2ea433ef6a1b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/BBSK_Psycho.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BBSK_Psycho.sln" beforeDir="false" afterPath="$PROJECT_DIR$/BBSK_Psycho.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Comment.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/AuthController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/ClientsController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/OrdersController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/PsychologistsController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/CheckStatus.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/Gender.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/OrderPaymentSatus.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/OrderStatus.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/Role.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Enums/TimeOfDay.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Extensions/ControllerExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/ApiErrorMessage.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Infrastructure/AuthOptions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/AddPsychologistRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/ClientRegisterRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/ClientUpdateRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/CommentRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/LoginRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/OrderCreateRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/OrderStatusPatchRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/RequestPsyhologistSearch.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Requests/UpdatePsychologistRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/ClientResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/CommentResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/GetAllPsychologistsResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/GetCommentsByPsychologistIdResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/OrderResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/PsychologistResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Responses/UpdatePsychologistResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Order.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Properties/launchSettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Psychologist.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RequestForSearch.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Role/AutorizeByRoleAttribute.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.Development.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/appsettings.json" beforeDir="false" />
-    </list>
+    <list default="true" id="95f60835-6477-429f-a07b-2ea433ef6a1b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -128,7 +86,7 @@
       <option name="presentableId" value="Default" />
       <updated>1656931878653</updated>
       <workItem from="1656931887845" duration="225000" />
-      <workItem from="1656932138736" duration="1293000" />
+      <workItem from="1656932138736" duration="1707000" />
     </task>
     <servers />
   </component>
