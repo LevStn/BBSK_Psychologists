@@ -25,7 +25,6 @@
         public const string OrderStatusIsRequired = "Не выбран статус ордера";
         public const string OrderPaymentStatusIsRequired = "Не выбран статус оплаты";
         public const string RatingIsRequired = "Вы не поставили оценку";
-        public const string RatingIsRequired = "Вы не поставили оценку";
         public const string LastNameIsRequired = "";
         public const string PatronymicIsRequired = "";
         public const string BirthDateIsRequired = "";
