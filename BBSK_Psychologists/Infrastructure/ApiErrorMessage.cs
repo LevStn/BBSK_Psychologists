@@ -24,7 +24,8 @@
         public const string OrderDateIsRequired = "Не указана дата заказа";
         public const string OrderStatusIsRequired = "Не выбран статус ордера";
         public const string OrderPaymentStatusIsRequired = "Не выбран статус оплаты";
-        public const string TheNumberOfCharactersExceedsTheAllowedValue = "Количество символов превышает допустимое значение";
+        public const string RatingIsRequired = "Вы не поставили оценку";
+        public const string RatingIsRequired = "Вы не поставили оценку";
         public const string LastNameIsRequired = "";
         public const string PatronymicIsRequired = "";
         public const string BirthDateIsRequired = "";

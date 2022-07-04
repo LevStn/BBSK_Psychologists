@@ -14,7 +14,6 @@ public class ClientRegisterRequestNegativeTests
     {
         var validationsResults = new List<ValidationResult>();
         var isValid = Validator.TryValidateObject(client, new ValidationContext(client), validationsResults, true);
-        //Assert.IsFalse(isValid);
         var actualMessage = validationsResults[0].ErrorMessage;
         Assert.AreEqual(errorMessage, actualMessage);
     }
@@ -24,7 +23,6 @@ public class ClientRegisterRequestNegativeTests
     {
         var validationsResults = new List<ValidationResult>();
         var isValid = Validator.TryValidateObject(client, new ValidationContext(client), validationsResults, true);
-        //Assert.IsFalse(isValid);
         var actualMessage = validationsResults[0].ErrorMessage;
         Assert.AreEqual(errorMessage, actualMessage);
     }
