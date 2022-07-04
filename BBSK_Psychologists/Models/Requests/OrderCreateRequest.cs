@@ -8,14 +8,14 @@ namespace BBSK_Psycho.Models
 {
     public class OrderCreateRequest
     {
-        [Required(ErrorMessage = ApiErrorMessage.ClientIdIsRequired)]
+        
         public int ClientId { get; set; }
 
 
         [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
         public decimal Cost { get; set; }
 
-        [Required(ErrorMessage = ApiErrorMessage.DurationIsRequired)]
+        
         public int Duration { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.MessageIsRequired)]
