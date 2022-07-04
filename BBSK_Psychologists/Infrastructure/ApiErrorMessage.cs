@@ -24,7 +24,7 @@
         public const string OrderDateIsRequired = "Не указана дата заказа";
         public const string OrderStatusIsRequired = "Не выбран статус ордера";
         public const string OrderPaymentStatusIsRequired = "Не выбран статус оплаты";
-        public const string TheNumberOfCharactersExceedsTheAllowedValue = "Количество символов превышает допустимое значение";
+        public const string RatingIsRequired = "Выберети оценку от 1-го до 5-ти";
         public const string LastNameIsRequired = "";
         public const string PatronymicIsRequired = "";
         public const string BirthDateIsRequired = "";
@@ -34,5 +34,6 @@
         public const string TherapyMethodsIsRequired = "";
         public const string ProblemsIsRequired = "";
         public const string LalaIsRequired = "";
+        public const string NoErrorForTest = "";
     }
 }
