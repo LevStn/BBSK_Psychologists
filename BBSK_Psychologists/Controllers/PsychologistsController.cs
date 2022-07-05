@@ -15,13 +15,13 @@ namespace BBSK_Psycho.Controllers
     [Route("[controller]")]
     public class PsychologistsController : ControllerBase
     {
-        private readonly ILogger<PsychologistsController> _logger;
+        //private readonly ILogger<PsychologistsController> _logger;
 
 
-        public PsychologistsController(ILogger<PsychologistsController> logger)
-        {
-            _logger = logger;
-        }
+        //public PsychologistsController(ILogger<PsychologistsController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         [AuthorizeByRole(Role.Manager)]
         [HttpGet("{id}")]
@@ -34,9 +34,12 @@ namespace BBSK_Psycho.Controllers
 
         [AuthorizeByRole(Role.Client, Role.Psychologist)]
         [HttpGet()]
+        [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
-            return new List<GetAllPsychologistsResponse>();
+            return Ok(new List<GetAllPsychologistsResponse>());
         }
 
         [AuthorizeByRole(Role.Psychologist)]

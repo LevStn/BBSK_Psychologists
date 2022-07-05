@@ -8,7 +8,7 @@ namespace BBSK_Psycho.Models.Requests
 {
     public class AddPsychologistRequest
     {
-        //public int Id { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
 
