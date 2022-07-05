@@ -16,9 +16,9 @@ namespace BBSK_Psycho.Models.Requests
         [Required(ErrorMessage = ApiErrorMessage.PatronymicIsRequired)]
         public string Patronymic { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.PsychologistGenderIsRequired)]
-        public Gender gender { get; set; }
+        public Gender? gender { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.BirthDateIsRequired)]
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.PhoneNumberIsRequired)]
         public string Phone { get; set; }
 

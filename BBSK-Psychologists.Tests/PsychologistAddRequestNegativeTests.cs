@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BBSK_Psychologists.Tests
 {
-    public class Tests
+    public class PsychologistAddRequestNegativeTests
     {
         [SetUp]
         public void Setup()
