@@ -1,13 +1,10 @@
-using System;
 using BBSK_Psycho.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using BBSK_Psycho.DataLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +48,12 @@ builder.Services.AddSwaggerGen(options =>
                         Array.Empty<string>()
                     },
                });
+});
+const string _LevServer = @"Server=.\SQLEXPRESS;Database=BBSK_PsychoDb;Trusted_Connection=True;";
+string _LevClient = builder.Configuration.GetValue<string>(_LevServer);
+builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
+{
+    o.UseSqlServer(_LevServer);
 });
 
 
