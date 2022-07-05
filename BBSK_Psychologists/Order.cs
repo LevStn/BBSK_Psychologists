@@ -1,4 +1,4 @@
-﻿using System;
+﻿using BBSK_Psycho.Enums;
 
 namespace BBSK_Psycho
 {
@@ -12,7 +12,7 @@ namespace BBSK_Psycho
 
         public decimal Cost { get; set; }
 
-        public int Duration { get; set; }
+        public SessionDuration Duration { get; set; }
 
         public string Message { get; set; } //Например, описание проблемы
 
@@ -22,6 +22,6 @@ namespace BBSK_Psycho
 
         public DateTime PayDate { get; set; }
 
-        public int OrderStatus { get; set; } //Enum
+        public OrderStatus OrderStatus { get; set; }
     }
 }
