@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class CommentRequestPositiveTestsSourceRangeForRating : IEnumerable
+public class CommentRequestNegativeTestsSource : IEnumerable
 {
     public IEnumerator GetEnumerator()
     {
@@ -16,11 +16,11 @@ public class CommentRequestPositiveTestsSourceRangeForRating : IEnumerable
                 ClientId = 1,
                 PsychologistId = 2,
                 Text = "",
-                Rating = 5,
+                Rating = 0,
                 Date = DateTime.Now
 
             },
-            ApiErrorMessage.NoErrorForTest
+            ApiErrorMessage.RatingIsRequired
         };
 
         yield return new object[]
@@ -30,11 +30,11 @@ public class CommentRequestPositiveTestsSourceRangeForRating : IEnumerable
                 ClientId = 1,
                 PsychologistId = 2,
                 Text = "",
-                Rating = 1,
+                Rating = 6,
                 Date = DateTime.Now
 
             },
-            ApiErrorMessage.NoErrorForTest
+            ApiErrorMessage.RatingIsRequired
         };
 
         yield return new object[]
@@ -44,13 +44,26 @@ public class CommentRequestPositiveTestsSourceRangeForRating : IEnumerable
                 ClientId = 1,
                 PsychologistId = 2,
                 Text = "",
-                Rating = 3,
+                Rating = -2,
                 Date = DateTime.Now
 
             },
-            ApiErrorMessage.NoErrorForTest
+            ApiErrorMessage.RatingIsRequired
         };
 
+        yield return new object[]
+       {
+            new CommentRequest
+            {
+                ClientId = 1,
+                PsychologistId = 7,
+                Text = "aaaa",
+                Rating = -2,
+                Date = DateTime.Now
+
+            },
+            ApiErrorMessage.RatingIsRequired
+       };
     }
 }
 

@@ -5,10 +5,37 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class ClientRegisterRequestNegativeTestsSourceForRequired : IEnumerable
+public class ClientRegisterRequestNegativeTestsSource : IEnumerable
 {
+    Random rnd = new Random();
     public IEnumerator GetEnumerator()
     {
+        yield return new object[]
+        {
+             new ClientRegisterRequest
+             {
+                 Name = "Petro",
+                 LastName ="Petrov",
+                 Password="123",
+                 Email ="p@petrov.com",
+                 PhoneNumber ="89119118696",
+                 BirthDate = DateTime.Now,
+             },
+             ApiErrorMessage.PasswordLengthIsLessThanAllowed
+        };
+        yield return new object[]
+        {
+             new ClientRegisterRequest
+             {
+                 Name = "Petro",
+                 LastName ="Petrov",
+                 Password="123adada4541",
+                 Email ="ppetrov.com",
+                 PhoneNumber ="89119118696",
+                 BirthDate = DateTime.Now,
+             },
+             ApiErrorMessage.InvalidCharacterInEmail
+        };
         yield return new object[]
         {
              new ClientRegisterRequest
@@ -50,6 +77,28 @@ public class ClientRegisterRequestNegativeTestsSourceForRequired : IEnumerable
              },
              ApiErrorMessage.EmailIsRequire
         };
+
+        yield return new object[]
+        {
+             new ClientRegisterRequest
+             {
+
+                 Name = "fsdgsgsgs",
+                 LastName ="Petrov",
+                 Password="123456789",
+                 Email ="p@petrov.com",
+                 PhoneNumber ="8911911118696",
+                 BirthDate = DateTime.Now,
+             },
+             ApiErrorMessage.LengthExceeded
+        };
+
+
+
+
+
     }
+
+    
 }
 

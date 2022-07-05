@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class ClientUpdateRequestNegativeTestsSourceForRequired : IEnumerable
+public class ClientUpdateRequestNegativeTestsSource : IEnumerable
 {
     public IEnumerator GetEnumerator()
     {

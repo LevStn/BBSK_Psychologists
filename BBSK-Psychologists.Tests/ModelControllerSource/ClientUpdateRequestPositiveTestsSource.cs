@@ -5,21 +5,19 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class LoginRequestNegativeTestsSourceForPasswordLength : IEnumerable
+public class ClientUpdateRequestPositiveTestsSource : IEnumerable
 {
     public IEnumerator GetEnumerator()
     {
         yield return new object[]
         {
-             new LoginRequest
+             new ClientUpdateRequest
              {
-                Email = "ad@mail.ru",
-                Password = "1234567"
+                 Name = "Petro",
+                 LastName ="",
+                 BirthDate = DateTime.Now,
              },
-             ApiErrorMessage.PasswordLengthIsLessThanAllowed
         };
-
-       
 
 
     }

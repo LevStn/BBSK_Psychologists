@@ -34,6 +34,7 @@
         public const string EducationIsRequired = "Укажите ваше образование";
         public const string TherapyMethodsIsRequired = "Укажите терапевтические методы";
         public const string ProblemsIsRequired = "Введите проблемы, с которыми вы работаете";
+        public const string LengthExceeded = "Превышена допустимая длина";
         public const string LalaIsRequired = "";
         public const string NoErrorForTest = "";
     }

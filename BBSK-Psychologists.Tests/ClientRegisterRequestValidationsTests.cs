@@ -6,26 +6,36 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BBSK_Psychologists.Tests;
 
-public class ClientRegisterRequestNegativeTests
+public class ClientRegisterRequestValidationsTests
 {
 
-    [TestCaseSource(typeof(ClientRegisterRequestNegativeTestsSourceForRequired))]
-    public void WhenEmailNamePasswordAreEmptyShouldThrowException(ClientRegisterRequest client, string errorMessage)
+    [TestCaseSource(typeof(ClientRegisterRequestNegativeTestsSource))]
+    public void ClientRegisterRequest_SendingIncorrectData_GetErrorMessage(ClientRegisterRequest client, string errorMessage)
     {
+        //given
         var validationsResults = new List<ValidationResult>();
+
+        //when
         var isValid = Validator.TryValidateObject(client, new ValidationContext(client), validationsResults, true);
+
+        //then
         var actualMessage = validationsResults[0].ErrorMessage;
         Assert.AreEqual(errorMessage, actualMessage);
     }
 
-    [TestCaseSource(typeof(ClientRegisterRequestNegativeTestsSourceForMinLengthPassword))]
-    public void WhenPasswordLengthLessEightCharactersThrowException(ClientRegisterRequest client, string errorMessage)
-    {
-        var validationsResults = new List<ValidationResult>();
-        var isValid = Validator.TryValidateObject(client, new ValidationContext(client), validationsResults, true);
-        var actualMessage = validationsResults[0].ErrorMessage;
-        Assert.AreEqual(errorMessage, actualMessage);
-    }
 
+
+    [TestCaseSource(typeof(ClientRegisterRequestPositiveTestsSource))]
+    public void ClientRegisterRequest_SendingCorrectData_GetAnEmptyStringError (ClientRegisterRequest client)
+    {
+        //given
+        var validationsResults = new List<ValidationResult>();
+
+        //when
+        var isValid = Validator.TryValidateObject(client, new ValidationContext(client), validationsResults, true);
+
+        //then
+        Assert.True(isValid);
+    }
 
 }

@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class LoginRequestNegativeTestsSourceForEmailSymbol : IEnumerable
+public class LoginRequestPositiveTestsSource : IEnumerable
 {
     public IEnumerator GetEnumerator()
     {
@@ -13,15 +13,11 @@ public class LoginRequestNegativeTestsSourceForEmailSymbol : IEnumerable
         {
              new LoginRequest
              {
-                Email = "admail.ru",
-                Password = "1234546adadas"
+                Email = "ad@mail.ru",
+                Password = "123456789"
              },
-             ApiErrorMessage.InvalidCharacterInEmail
+           
         };
-
-       
-
-
     }
 }
 

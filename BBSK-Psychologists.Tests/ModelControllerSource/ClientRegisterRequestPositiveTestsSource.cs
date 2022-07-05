@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class ClientRegisterRequestPositiveTestsSourceForMinLengthPassword : IEnumerable
+public class ClientRegisterRequestPositiveTestsSource : IEnumerable
 {
     public IEnumerator GetEnumerator()
     {
@@ -20,11 +20,8 @@ public class ClientRegisterRequestPositiveTestsSourceForMinLengthPassword : IEnu
                  PhoneNumber ="89119118696",
                  BirthDate = DateTime.Now,
              },
-             ApiErrorMessage.NoErrorForTest
+            
         };
-
-
-
 
     }
 }
