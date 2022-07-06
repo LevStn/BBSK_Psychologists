@@ -9,7 +9,7 @@
         public const string EmailIsRequire = "Вы не ввели email";
         public const string PhoneNumberIsRequired = "Вы не ввели номер телефона";
         public const string DescriptionIsRequired = "Вы не ввели описание проблемы";
-        public const string PsychologistGenderIsRequired = "Вы не выбрали пол специалиста";
+        public const string PsychologistGenderIsRequired = "Вы не выбрали пол";
         public const string CostMinIsRequired = "Вы не ввели минимальную стоимость";
         public const string CostMaxIsRequired = "Вы не ввели максимальную стоимость";
         public const string DateIsRequired = "Вы не выбрали удобную дату";
@@ -24,15 +24,17 @@
         public const string OrderDateIsRequired = "Не указана дата заказа";
         public const string OrderStatusIsRequired = "Не выбран статус ордера";
         public const string OrderPaymentStatusIsRequired = "Не выбран статус оплаты";
+        public const string RatingIsRequired = "Выберети оценку от 1-го до 5-ти";
         public const string TheNumberOfCharactersExceedsTheAllowedValue = "Количество символов превышает допустимое значение";
-        public const string LastNameIsRequired = "";
-        public const string PatronymicIsRequired = "";
-        public const string BirthDateIsRequired = "";
-        public const string WorkExperienceIsRequired = "";
-        public const string PassportDataIsRequired = "";
-        public const string EducationIsRequired = "";
-        public const string TherapyMethodsIsRequired = "";
-        public const string ProblemsIsRequired = "";
+        public const string LastNameIsRequired = "Поле с фамилией обязательно для заполнения";
+        public const string PatronymicIsRequired = "Вы не ввели отчество";
+        public const string BirthDateIsRequired = "Вы не выбрали дату рождения";
+        public const string WorkExperienceIsRequired = "Укажите опыт работы в годах";
+        public const string PassportDataIsRequired = "Укажите серию и номер паспорта";
+        public const string EducationIsRequired = "Укажите ваше образование";
+        public const string TherapyMethodsIsRequired = "Укажите терапевтические методы";
+        public const string ProblemsIsRequired = "Введите проблемы, с которыми вы работаете";
         public const string LalaIsRequired = "";
+        public const string NoErrorForTest = "";
     }
 }

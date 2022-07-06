@@ -19,10 +19,10 @@ namespace BBSK_Psycho.Models.Requests
         public string Patronymic { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.PsychologistGenderIsRequired)]
-        public Gender gender { get; set; }
+        public Gender? gender { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.BirthDateIsRequired)]
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.PhoneNumberIsRequired)]
         public string Phone { get; set; }
@@ -35,13 +35,13 @@ namespace BBSK_Psycho.Models.Requests
         public string Email { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.WorkExperienceIsRequired)]
-        public int WorkExperience { get; set; }
+        public int? WorkExperience { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.PassportDataIsRequired)]
         public string PasportData { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.EducationIsRequired)]
-        public List<string> Education { get; set; }
+        public List<string>? Education { get; set; }
         
         // "2013 - Московский Государственный Университет - Факультет - Степень; Dev Education"
         [Required()]
