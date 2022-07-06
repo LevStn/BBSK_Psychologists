@@ -4,7 +4,7 @@ using System.Collections;
 using System;
 using BBSK_Psycho.Enums;
 
-namespace BBSK_Psychologists.Tests.ModelControllerService
+namespace ModelControllerSource
 {
     public class OrderCreateRequestNegativeTestSource : IEnumerable
     {
@@ -35,7 +35,7 @@ namespace BBSK_Psychologists.Tests.ModelControllerService
             yield return new object[] //Message
             {
                 order,
-                ApiErrorMessage.ClientIdIsRequired
+                ApiErrorMessage.MessageIsRequired
             };
         }
     }

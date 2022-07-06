@@ -1,5 +1,5 @@
 ﻿using BBSK_Psycho.Models;
-using BBSK_Psychologists.Tests.ModelControllerService;
+using ModelControllerSource;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

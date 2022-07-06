@@ -14,7 +14,7 @@
         public const string CostMaxIsRequired = "Вы не ввели максимальную стоимость";
         public const string DateIsRequired = "Вы не выбрали удобную дату";
         public const string TimeIsRequired = "Вы не выбрали удобное время";
-        public const string ClientIdIsRequired = "Вы не выбрали id клиента ";
+        public const string ClientIdIsRequired = "Вы не выбрали id клиента";
         public const string PsychologistIdIsRequired = "Вы не выбрали id психолога ";
         public const string CostIsRequired = "Вы не указали стоимость";
         public const string DurationIsRequired = "Вы не выбрали промежуток времени";

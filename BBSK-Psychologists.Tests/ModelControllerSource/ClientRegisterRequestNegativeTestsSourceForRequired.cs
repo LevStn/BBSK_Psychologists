@@ -34,7 +34,7 @@ public class ClientRegisterRequestNegativeTestsSourceForRequired : IEnumerable
                  PhoneNumber ="89119118696",
                  BirthDate = DateTime.Now,
              },
-             ApiErrorMessage.PasswordIsRequire
+             ApiErrorMessage.PasswordIsRequired
         };
 
         yield return new object[]
