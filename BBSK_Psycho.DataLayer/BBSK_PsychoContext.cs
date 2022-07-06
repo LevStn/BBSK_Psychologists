@@ -6,10 +6,10 @@ namespace BBSK_Psycho.DataLayer;
 
 public class BBSK_PsychoContext : DbContext
 {
-    public DbSet<Client> clients { get; set; }
-    public DbSet<Comment> comments { get; set; }
-
-    public DbSet<Order> orders { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<Comment> Comments { get; set; }
+    public DbSet<Psychologist> Psychologists { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
 
     public BBSK_PsychoContext(DbContextOptions<BBSK_PsychoContext> option)
         : base(option)
@@ -29,6 +29,10 @@ public class BBSK_PsychoContext : DbContext
                 .HasOne(o => o.Psychologist)
                 .WithMany(c => c.Orders);
 
+            entity
+                .Property(p => p.Cost)
+                .HasPrecision(18, 2);
+
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -39,6 +43,7 @@ public class BBSK_PsychoContext : DbContext
             entity
                 .HasOne(o => o.Client)
                 .WithMany(c => c.Comments);
+
             entity
                 .HasOne(o => o.Psychologist)
                 .WithMany(c => c.Comments);
@@ -58,13 +63,12 @@ public class BBSK_PsychoContext : DbContext
             entity.ToTable(nameof(Psychologist));
             entity.HasKey(c => c.Id);
 
-
+            entity.Property(p => p.Price)
+                    .HasPrecision(18, 2);
 
         });
 
-        modelBuilder.Entity<Psychologist>()
-            .Property(p => p.Price)
-            .HasPrecision(18, 2);
+       
 
         modelBuilder.Entity<Schedule>(entity =>
         {

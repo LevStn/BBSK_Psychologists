@@ -29,16 +29,16 @@ namespace BBSK_Psycho.DataLayer.Entities
 
         public int? WorkExperience { get; set; }
 
-        public string PasportData { get; set; }
+        public string PasportData { get; set; } 
 
-        //public List<string>? Education { get; set; }
-        
+        //public List<string>? Education { get; set; } //------?
+
         public CheckStatus checkStatus { get; set; }
-       
-        //public List<string>? TherapyMethods { get; set; }
-       
-        //public List<string>? Problems { get; set; }
-      
+
+        //public List<string>? TherapyMethods { get; set; } //------?
+
+        //public List<string>? Problems { get; set; } //------?
+
         public decimal Price { get; set; }
 
         public int ScheduleId { get; set; }

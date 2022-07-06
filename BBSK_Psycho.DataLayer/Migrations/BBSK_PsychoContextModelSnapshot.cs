@@ -101,6 +101,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Cost")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Duration")
