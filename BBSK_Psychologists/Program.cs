@@ -49,11 +49,10 @@ builder.Services.AddSwaggerGen(options =>
                     },
                });
 });
-const string _LevServer = @"Server=.\SQLEXPRESS;Database=BBSK_PsychoDb;Trusted_Connection=True;";
-string _LevClient = builder.Configuration.GetValue<string>(_LevServer);
+
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer(_LevServer);
+    o.UseSqlServer(@"Server=.\SQLEXPRESS;Database=BBSK_PsychoDb;Trusted_Connection=True;");
 });
 
 

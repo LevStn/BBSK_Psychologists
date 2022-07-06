@@ -62,6 +62,10 @@ public class BBSK_PsychoContext : DbContext
 
         });
 
+        modelBuilder.Entity<Psychologist>()
+            .Property(p => p.Price)
+            .HasPrecision(18, 2);
+
         modelBuilder.Entity<Schedule>(entity =>
         {
             entity.ToTable(nameof(Schedule));

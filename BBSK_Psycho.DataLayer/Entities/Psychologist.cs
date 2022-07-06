@@ -31,13 +31,13 @@ namespace BBSK_Psycho.DataLayer.Entities
 
         public string PasportData { get; set; }
 
-        public List<string>? Education { get; set; }
+        //public List<string>? Education { get; set; }
         
         public CheckStatus checkStatus { get; set; }
        
-        public List<string>? TherapyMethods { get; set; }
+        //public List<string>? TherapyMethods { get; set; }
        
-        public List<string>? Problems { get; set; }
+        //public List<string>? Problems { get; set; }
       
         public decimal Price { get; set; }
 
