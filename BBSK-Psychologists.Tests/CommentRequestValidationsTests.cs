@@ -24,7 +24,7 @@ public class CommentRequestValidationsTests
 
 
     [TestCaseSource(typeof(CommentRequestPositiveTestsSource))]
-    public void ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError(CommentRequest comet, string errorMessage)
+    public void ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError(CommentRequest comet)
     {
         //given
         var validationsResults = new List<ValidationResult>();

@@ -24,10 +24,17 @@ public class ClientUpdateRequestValidationsTests
     }
 
 
-    [TestCaseSource(typeof(ClientUpdateRequestPositiveTestsSource))]
-    public void ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError(ClientUpdateRequest client)
+    [Test]
+    public void ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError()
     {
         //given
+        var client = new ClientUpdateRequest()
+        {
+            Name = "Petro",
+            BirthDate = DateTime.Today,
+            LastName = ""
+        };
+
         var validationsResults = new List<ValidationResult>();
 
         //when

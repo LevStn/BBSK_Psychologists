@@ -20,7 +20,6 @@ public class CommentRequestPositiveTestsSource : IEnumerable
                 Date = DateTime.Now
 
             },
-            ApiErrorMessage.NoErrorForTest
         };
 
         yield return new object[]
@@ -34,7 +33,6 @@ public class CommentRequestPositiveTestsSource : IEnumerable
                 Date = DateTime.Now
 
             },
-            ApiErrorMessage.NoErrorForTest
         };
 
         yield return new object[]
@@ -48,7 +46,6 @@ public class CommentRequestPositiveTestsSource : IEnumerable
                 Date = DateTime.Now
 
             },
-            ApiErrorMessage.NoErrorForTest
         };
 
     }

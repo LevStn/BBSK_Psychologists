@@ -25,10 +25,20 @@ public class ClientRegisterRequestValidationsTests
 
 
 
-    [TestCaseSource(typeof(ClientRegisterRequestPositiveTestsSource))]
-    public void ClientRegisterRequest_SendingCorrectData_GetAnEmptyStringError (ClientRegisterRequest client)
+    [Test]
+    public void ClientRegisterRequest_SendingCorrectData_GetAnEmptyStringError ()
     {
         //given
+        var client = new ClientRegisterRequest()
+        {
+            Name = "Petro",
+            LastName = "Petrov",
+            Password = "1232345678",
+            Email = "p@petrov.com",
+            PhoneNumber = "89119118696",
+            BirthDate = DateTime.Now,
+        };
+
         var validationsResults = new List<ValidationResult>();
 
         //when

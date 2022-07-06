@@ -19,7 +19,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void AddClient_ValidRequestPassed_CreatedResultRecived()
+    public void AddClient_ValidRequestPassed_CreatedResultReceived()
     {
 
         //given
@@ -43,7 +43,7 @@ public class ClientsControllerTests
 
 
     [Test]
-    public void GetClientById_ValidRequestPassed_OkRecived()
+    public void GetClientById_ValidRequestPassed_OkReceived()
     {
         //given
         var expectedClient = new ClientResponse();
@@ -60,7 +60,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void UpdateClientById_ValidRequestPassed_NoContentRecived()
+    public void UpdateClientById_ValidRequestPassed_NoContentReceived()
     {
         //given
         var expectedClient = new ClientUpdateRequest();
@@ -77,7 +77,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void GetCommentsByClientId_ValidRequestPassed_RequesredTypeRecived()
+    public void GetCommentsByClientId_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
         var expectedComment = new List <CommentResponse>();
@@ -95,7 +95,7 @@ public class ClientsControllerTests
 
    
     [Test]
-    public void GetOrdersByClientId_ValidRequestPassed_RequesredTypeRecived()
+    public void GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
         var expectedOrders = new List<OrderResponse>();
@@ -112,7 +112,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void DeleteClientById_ValidRequestPassed_NoContentRecived()
+    public void DeleteClientById_ValidRequestPassed_NoContentReceived()
     {
         //given
         var clientId = 2;
@@ -128,7 +128,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void GetClients_ValidRequestPassed_RequesredTypeRecived()
+    public void GetClients_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
         var expectedClients = new List<ClientResponse>();

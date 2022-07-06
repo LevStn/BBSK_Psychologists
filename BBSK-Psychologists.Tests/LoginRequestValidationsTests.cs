@@ -11,7 +11,7 @@ public class LoginRequestValidationsTests
 {
 
     [TestCaseSource(typeof(LoginRequestNegativeTestsSource))]
-    public void WhenPassworEmailAreEmptyShouldThrowException(LoginRequest request, string errorMessage)
+    public void LoginRequest_SendingIncorrectData_GetErrorMessage(LoginRequest request, string errorMessage)
     {
         //given
         var validationsResults = new List<ValidationResult>();
@@ -25,10 +25,17 @@ public class LoginRequestValidationsTests
     }
 
 
-    [TestCaseSource(typeof(LoginRequestPositiveTestsSource))]
-    public void ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError(LoginRequest request)
+    [Test]
+    public void LoginRequest_SendingCorrectData_GetAnEmptyStringError()
     {
         //given
+
+        var request = new LoginRequest()
+        {
+            Email = "ad@mail.ru",
+            Password = "123456789"
+        };
+
         var validationsResults = new List<ValidationResult>();
 
         //when
