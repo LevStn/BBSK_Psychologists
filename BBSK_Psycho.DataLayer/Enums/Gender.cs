@@ -2,7 +2,7 @@
 {
     public enum Gender
     {
-        Famale,
+        Famale=1,
         Male
     }
 }

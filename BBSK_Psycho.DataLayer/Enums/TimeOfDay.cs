@@ -2,7 +2,7 @@
 {
     public enum TimeOfDay
     {
-        Morning,
+        Morning = 1,
         Day,
         Evening
     }

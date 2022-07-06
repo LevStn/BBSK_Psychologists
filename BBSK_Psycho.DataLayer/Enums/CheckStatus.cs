@@ -2,7 +2,7 @@
 
 public enum CheckStatus
 {
-    Rejected,
+    Rejected=1,
     Completed,
     Waiting
 }

@@ -19,7 +19,7 @@ namespace BBSK_Psycho.DataLayer.Entities
 
         public Gender gender { get; set; }
    
-        public DateTime? BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         
         public string Phone { get; set; }
         
@@ -29,23 +29,21 @@ namespace BBSK_Psycho.DataLayer.Entities
 
         public int? WorkExperience { get; set; }
 
-        public string PasportData { get; set; } 
+        public string PasportData { get; set; }
 
-        //public List<string>? Education { get; set; } //------?
 
         public CheckStatus checkStatus { get; set; }
 
-        //public List<string>? TherapyMethods { get; set; } //------?
-
-        //public List<string>? Problems { get; set; } //------?
-
         public decimal Price { get; set; }
-
-        public int ScheduleId { get; set; }
 
         public List <Order> Orders { get; set; }
         public List <Comment> Comments { get; set; }
         public List <Schedule> Schedules { get; set; }
-        
+
+        public List <TherapyMethod> TherapyMethods { get; set; }
+        public List<Problem> Problems { get; set; }
+
+        public List<Education> Educations { get; set; }
+
     }
 }

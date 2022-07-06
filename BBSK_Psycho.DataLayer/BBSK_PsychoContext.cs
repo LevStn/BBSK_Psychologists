@@ -10,6 +10,11 @@ public class BBSK_PsychoContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Psychologist> Psychologists { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<Problem> Problems { get; set; }
+    public DbSet<TherapyMethod> TherapyMethods { get; set; }
+
+    public DbSet<Education> Educations { get; set; }
+
 
     public BBSK_PsychoContext(DbContextOptions<BBSK_PsychoContext> option)
         : base(option)
@@ -33,20 +38,24 @@ public class BBSK_PsychoContext : DbContext
                 .Property(p => p.Cost)
                 .HasPrecision(18, 2);
 
+            entity.Property(c => c.Message).HasMaxLength(255);
+
         });
 
         modelBuilder.Entity<Comment>(entity =>
         {
             entity.ToTable(nameof(Comment));
-            entity.HasKey(o => o.Id);
+            entity.HasKey(c => c.Id);
 
             entity
-                .HasOne(o => o.Client)
+                .HasOne(c => c.Client)
                 .WithMany(c => c.Comments);
 
             entity
-                .HasOne(o => o.Psychologist)
-                .WithMany(c => c.Comments);
+                .HasOne(c => c.Psychologist)
+                .WithMany(p => p.Comments);
+
+            entity.Property(c => c.Text).HasMaxLength(255);
 
         });
 
@@ -56,15 +65,26 @@ public class BBSK_PsychoContext : DbContext
             entity.HasKey(c => c.Id);
 
 
+            entity.Property(c => c.Name).HasMaxLength(50);
+            entity.Property(c => c.LastName).HasMaxLength(50);
+
+
         });
 
         modelBuilder.Entity<Psychologist>(entity =>
         {
             entity.ToTable(nameof(Psychologist));
-            entity.HasKey(c => c.Id);
+            entity.HasKey(p => p.Id);
 
+            
             entity.Property(p => p.Price)
                     .HasPrecision(18, 2);
+
+            entity.Property(p => p.Name).HasMaxLength(50);
+            entity.Property(p => p.Surname).HasMaxLength(50);
+            entity.Property(p => p.Patronymic).HasMaxLength(50);
+            entity.Property(p => p.Phone).HasMaxLength(11);
+            
 
         });
 
@@ -73,13 +93,48 @@ public class BBSK_PsychoContext : DbContext
         modelBuilder.Entity<Schedule>(entity =>
         {
             entity.ToTable(nameof(Schedule));
-            entity.HasKey(c => c.Id);
+            entity.HasKey(s => s.Id);
 
             entity
-                .HasOne(o => o.Psychologist)
-                .WithMany(c => c.Schedules);
+                .HasOne(s => s.Psychologist)
+                .WithMany(p => p.Schedules);
         });
 
+        modelBuilder.Entity<Problem>(entity =>
+        {
+            entity.ToTable(nameof(Problem));
+            entity.HasKey(p => p.Id);
 
+            entity
+                .HasMany(p => p.Psychologists)
+                .WithMany(p => p.Problems);
+
+            entity.Property(p => p.ProblemName).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TherapyMethod>(entity =>
+        {
+            entity.ToTable(nameof(TherapyMethod));
+            entity.HasKey(t => t.Id);
+
+            entity
+                .HasMany(t => t.Psychologists)
+                .WithMany(p => p.TherapyMethods);
+
+            entity.Property(t => t.Method).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<Education>(entity =>
+        {
+            entity.ToTable(nameof(Education));
+            entity.HasKey(e => e.Id);
+
+            entity
+                .HasOne(e => e.Psychologist)
+                .WithMany(p => p.Educations);
+
+
+            entity.Property(e =>e.EducationData ).HasMaxLength(255);
+        });
     }
 } 

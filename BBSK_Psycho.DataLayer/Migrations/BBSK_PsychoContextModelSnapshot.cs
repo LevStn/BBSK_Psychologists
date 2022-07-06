@@ -38,11 +38,13 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -78,7 +80,8 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -87,6 +90,29 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasIndex("PsychologistId");
 
                     b.ToTable("Comment", (string)null);
+                });
+
+            modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Education", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("EducationData")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("PsychologistId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PsychologistId");
+
+                    b.ToTable("Education", (string)null);
                 });
 
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Order", b =>
@@ -109,7 +135,8 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -138,6 +165,24 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.ToTable("Order", (string)null);
                 });
 
+            modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Problem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ProblemName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Problem", (string)null);
+                });
+
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Psychologist", b =>
                 {
                     b.Property<int>("Id")
@@ -146,7 +191,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("BirthDate")
+                    b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -155,7 +200,8 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasportData")
                         .IsRequired()
@@ -167,22 +213,22 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.Property<string>("Patronymic")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("WorkExperience")
                         .HasColumnType("int");
@@ -222,6 +268,54 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.ToTable("Schedule", (string)null);
                 });
 
+            modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.TherapyMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TherapyMethod", (string)null);
+                });
+
+            modelBuilder.Entity("ProblemPsychologist", b =>
+                {
+                    b.Property<int>("ProblemsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PsychologistsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProblemsId", "PsychologistsId");
+
+                    b.HasIndex("PsychologistsId");
+
+                    b.ToTable("ProblemPsychologist");
+                });
+
+            modelBuilder.Entity("PsychologistTherapyMethod", b =>
+                {
+                    b.Property<int>("PsychologistsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TherapyMethodsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PsychologistsId", "TherapyMethodsId");
+
+                    b.HasIndex("TherapyMethodsId");
+
+                    b.ToTable("PsychologistTherapyMethod");
+                });
+
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Comment", b =>
                 {
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Client", "Client")
@@ -237,6 +331,17 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Client");
+
+                    b.Navigation("Psychologist");
+                });
+
+            modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Education", b =>
+                {
+                    b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", "Psychologist")
+                        .WithMany("Educations")
+                        .HasForeignKey("PsychologistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Psychologist");
                 });
@@ -271,6 +376,36 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.Navigation("Psychologist");
                 });
 
+            modelBuilder.Entity("ProblemPsychologist", b =>
+                {
+                    b.HasOne("BBSK_Psycho.DataLayer.Entities.Problem", null)
+                        .WithMany()
+                        .HasForeignKey("ProblemsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", null)
+                        .WithMany()
+                        .HasForeignKey("PsychologistsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PsychologistTherapyMethod", b =>
+                {
+                    b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", null)
+                        .WithMany()
+                        .HasForeignKey("PsychologistsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BBSK_Psycho.DataLayer.Entities.TherapyMethod", null)
+                        .WithMany()
+                        .HasForeignKey("TherapyMethodsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Client", b =>
                 {
                     b.Navigation("Comments");
@@ -281,6 +416,8 @@ namespace BBSK_Psycho.DataLayer.Migrations
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Psychologist", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Educations");
 
                     b.Navigation("Orders");
 

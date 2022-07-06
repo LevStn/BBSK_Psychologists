@@ -2,7 +2,7 @@
 {
     public enum OrderPaymentSatus
     {
-        Unpaid,
+        Unpaid = 1,
         Paid,
         MoneyReturned
     }
