@@ -16,5 +16,7 @@ public class Client
     public DateTime? BirthDate { get; set; }
     public DateTime RegistrationDate { get; set; }
 
-    public List <Order> Order { get; set; }
+    public List <Order> Orders { get; set; }
+
+    public List<Comment> Comments { get; set; }
 }

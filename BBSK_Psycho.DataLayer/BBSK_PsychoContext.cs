@@ -24,7 +24,18 @@ public class BBSK_PsychoContext : DbContext
 
             entity
                 .HasOne(o => o.Client)
-                .WithMany(c => c.Order);
+                .WithMany(c => c.Orders);
+
+        });
+
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.ToTable(nameof(Comment));
+            entity.HasKey(o => o.Id);
+
+            entity
+                .HasOne(o => o.Client)
+                .WithMany(c => c.Comments);
 
         });
 
