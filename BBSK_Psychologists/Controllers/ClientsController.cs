@@ -16,12 +16,12 @@ namespace BBSK_Psycho.Controllers
     public class ClientsController : ControllerBase
     {
 
-        private readonly ILogger<ClientsController> _logger;
+        //private readonly ILogger<ClientsController> _logger;
 
-        public ClientsController(ILogger<ClientsController> logger)
-        {
-            _logger = logger;
-        }
+        //public ClientsController(ILogger<ClientsController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
 
         [AllowAnonymous]

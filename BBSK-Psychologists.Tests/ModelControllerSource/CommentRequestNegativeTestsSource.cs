@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class CommentRequestNegativeTestsSourceRangeForRating : IEnumerable
+public class CommentRequestNegativeTestsSource : IEnumerable
 {
     public IEnumerator GetEnumerator()
     {
@@ -50,6 +50,20 @@ public class CommentRequestNegativeTestsSourceRangeForRating : IEnumerable
             },
             ApiErrorMessage.RatingIsRequired
         };
+
+        yield return new object[]
+       {
+            new CommentRequest
+            {
+                ClientId = 1,
+                PsychologistId = 7,
+                Text = "aaaa",
+                Rating = -2,
+                Date = DateTime.Now
+
+            },
+            ApiErrorMessage.RatingIsRequired
+       };
     }
 }
 

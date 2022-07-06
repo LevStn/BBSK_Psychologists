@@ -5,10 +5,30 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource;
 
-public class LoginRequestNegativeTestsSourceForRequired : IEnumerable
+public class LoginRequestNegativeTestsSource : IEnumerable
 {
     public IEnumerator GetEnumerator()
     {
+        yield return new object[]
+        {
+             new LoginRequest
+             {
+                Email = "admail.ru",
+                Password = "1234546adadas"
+             },
+             ApiErrorMessage.InvalidCharacterInEmail
+        };
+
+        yield return new object[]
+        {
+             new LoginRequest
+             {
+                Email = "ad@mail.ru",
+                Password = "1234567"
+             },
+             ApiErrorMessage.PasswordLengthIsLessThanAllowed
+        };
+
         yield return new object[]
         {
              new LoginRequest
