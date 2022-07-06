@@ -1,9 +1,8 @@
-﻿namespace BBSK_Psycho.Enums
+﻿namespace BBSK_Psycho.DataLayer.Enums;
+
+public enum CheckStatus
 {
-    public enum CheckStatus
-    {
-        Rejected,
-        Completed,
-        Waiting
-    }
+    Rejected,
+    Completed,
+    Waiting
 }

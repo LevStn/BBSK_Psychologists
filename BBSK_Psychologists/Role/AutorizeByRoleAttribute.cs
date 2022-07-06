@@ -1,4 +1,4 @@
-﻿using BBSK_Psycho.Enums;
+﻿using BBSK_Psycho.DataLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BBSK_Psycho

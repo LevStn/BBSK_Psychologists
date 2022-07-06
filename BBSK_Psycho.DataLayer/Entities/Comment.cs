@@ -16,4 +16,5 @@ public class Comment
     public int Rating { get; set; } // ������ �� 1 �� 5 
 
     public DateTime Date { get; set; }
+    public Client Client { get; set; }
 }
