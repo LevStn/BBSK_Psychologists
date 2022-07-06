@@ -54,21 +54,5 @@ namespace BBSK_Psychologists.Tests
             Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
 
         }
-        //[Test]
-        //public void UpdatePsychologist_NoContentResultNotFound()
-        //{
-        //    // given
-
-        //    var psychologist = psychologistData;
-
-        //    // when
-        //    int id = -1;
-        //    var actual = _sut.UpdatePsychologist(psychologist, id);
-
-        //    // then
-        //    var actualResult = actual as NoContentResult;
-        //    Assert.AreEqual(StatusCodes.Status404NotFound, actualResult.StatusCode);
-
-        //}
     }
 }

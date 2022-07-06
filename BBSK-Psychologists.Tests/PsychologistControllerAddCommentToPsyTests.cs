@@ -20,7 +20,7 @@ namespace BBSK_Psychologists.Tests
             _sut = new PsychologistsController();
         }
         [Test]
-        public void AddRequestForPsy()
+        public void AddRequestForPsy_ValidRequestPassed_CreatedResultReceived()
         {
             // given
 

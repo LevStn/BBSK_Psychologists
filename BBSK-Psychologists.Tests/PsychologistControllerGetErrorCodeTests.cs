@@ -22,7 +22,7 @@ namespace BBSK_Psychologists.Tests
             _sut = new PsychologistsController();
         }
         [Test]
-        public void GetPsychologist_CreatedResultPassed()
+        public void GetPsychologist_ObjectResultPassed()
         {
             var clientId = 1;
             // when
