@@ -4,7 +4,7 @@
     {
         public const string NameIsRequired = "Вы не ввели свое имя";
         public const string PasswordLengthIsLessThanAllowed = "Длина пароля меньше 8-ми символов";
-        public const string PasswordIsRequire = "Вы не ввели пароль";
+        public const string PasswordIsRequired = "Вы не ввели пароль";
         public const string InvalidCharacterInEmail = "В email присутсвует недопустимый символ";
         public const string EmailIsRequire = "Вы не ввели email";
         public const string PhoneNumberIsRequired = "Вы не ввели номер телефона";

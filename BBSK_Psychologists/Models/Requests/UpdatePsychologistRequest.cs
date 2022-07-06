@@ -22,7 +22,7 @@ namespace BBSK_Psycho.Models.Requests
         [Required(ErrorMessage = ApiErrorMessage.PhoneNumberIsRequired)]
         public string Phone { get; set; }
 
-        [Required(ErrorMessage = ApiErrorMessage.PasswordIsRequire)]
+        [Required(ErrorMessage = ApiErrorMessage.PasswordIsRequired)]
         [MinLength(8, ErrorMessage = ApiErrorMessage.PasswordLengthIsLessThanAllowed)]
         public string Password { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.EmailIsRequire)]
