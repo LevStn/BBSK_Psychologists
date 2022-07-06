@@ -17,4 +17,5 @@ public class Comment
 
     public DateTime Date { get; set; }
     public Client Client { get; set; }
+    public Psychologist Psychologist { get; set; }
 }

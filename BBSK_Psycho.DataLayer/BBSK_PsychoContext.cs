@@ -25,6 +25,9 @@ public class BBSK_PsychoContext : DbContext
             entity
                 .HasOne(o => o.Client)
                 .WithMany(c => c.Orders);
+            entity
+                .HasOne(o => o.Psychologist)
+                .WithMany(c => c.Orders);
 
         });
 
@@ -36,6 +39,9 @@ public class BBSK_PsychoContext : DbContext
             entity
                 .HasOne(o => o.Client)
                 .WithMany(c => c.Comments);
+            entity
+                .HasOne(o => o.Psychologist)
+                .WithMany(c => c.Comments);
 
         });
 
@@ -46,6 +52,26 @@ public class BBSK_PsychoContext : DbContext
 
 
         });
+
+        modelBuilder.Entity<Psychologist>(entity =>
+        {
+            entity.ToTable(nameof(Psychologist));
+            entity.HasKey(c => c.Id);
+
+
+
+        });
+
+        modelBuilder.Entity<Schedule>(entity =>
+        {
+            entity.ToTable(nameof(Schedule));
+            entity.HasKey(c => c.Id);
+
+            entity
+                .HasOne(o => o.Psychologist)
+                .WithMany(c => c.Schedules);
+        });
+
 
     }
 } 

@@ -40,6 +40,12 @@ namespace BBSK_Psycho.DataLayer.Entities
         public List<string>? Problems { get; set; }
       
         public decimal Price { get; set; }
+
+        public int ScheduleId { get; set; }
+
+        public List <Order> Orders { get; set; }
+        public List <Comment> Comments { get; set; }
+        public List <Schedule> Schedules { get; set; }
         
     }
 }
