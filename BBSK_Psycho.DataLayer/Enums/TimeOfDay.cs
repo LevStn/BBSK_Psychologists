@@ -1,8 +1,8 @@
-﻿namespace BBSK_Psycho.Enums
+﻿namespace BBSK_Psycho.DataLayer.Enums
 {
     public enum TimeOfDay
     {
-        Morning,
+        Morning = 1,
         Day,
         Evening
     }
