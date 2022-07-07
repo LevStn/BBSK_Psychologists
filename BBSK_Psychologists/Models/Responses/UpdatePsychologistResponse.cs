@@ -9,7 +9,7 @@ namespace BBSK_Psycho.Models.Responses
 
         public string Name { get; set; }
 
-        public string Surname { get; set; }
+        public string LastName { get; set; }
 
         public string Patronymic { get; set; }
 

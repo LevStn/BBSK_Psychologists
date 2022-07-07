@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests
 {
-    public class PsychologistAddRequestPositiveTestSource : IEnumerable
+    public class PsychologistAddRequestValidation_WhenValidModelPassed_NoErrorsReceived : IEnumerable
     {
         public IEnumerator GetEnumerator()
         {
@@ -13,7 +13,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "лял",
-                Surname = "пвфа",
+                LastName = "пвфа",
                 Patronymic = "ПВАПВА",
                 gender = BBSK_Psycho.Enums.Gender.Male,
                 Phone = "85884859",
