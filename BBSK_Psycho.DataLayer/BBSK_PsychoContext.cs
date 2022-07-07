@@ -36,7 +36,7 @@ public class BBSK_PsychoContext : DbContext
 
             entity
                 .Property(p => p.Cost)
-                .HasPrecision(18, 2);
+                .HasPrecision(7, 2);
 
             entity.Property(c => c.Message).HasMaxLength(255);
 
@@ -67,6 +67,8 @@ public class BBSK_PsychoContext : DbContext
 
             entity.Property(c => c.Name).HasMaxLength(50);
             entity.Property(c => c.LastName).HasMaxLength(50);
+            entity.Property(c => c.Email).HasMaxLength(140);
+            entity.Property(c => c.Password).HasMaxLength(140);
 
 
         });
@@ -78,13 +80,16 @@ public class BBSK_PsychoContext : DbContext
 
             
             entity.Property(p => p.Price)
-                    .HasPrecision(18, 2);
+                    .HasPrecision(7, 2);
 
             entity.Property(p => p.Name).HasMaxLength(50);
-            entity.Property(p => p.Surname).HasMaxLength(50);
+            entity.Property(p => p.LastName).HasMaxLength(50);
             entity.Property(p => p.Patronymic).HasMaxLength(50);
             entity.Property(p => p.Phone).HasMaxLength(11);
-            
+            entity.Property(p => p.Email).HasMaxLength(140);
+            entity.Property(p => p.Password).HasMaxLength(140);
+            entity.Property(p => p.PasportData).HasMaxLength(255);
+
 
         });
 

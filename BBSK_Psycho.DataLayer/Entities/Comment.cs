@@ -9,10 +9,12 @@ namespace BBSK_Psycho.DataLayer.Entities;
 public class Comment
 {
     public int Id { get; set; }
-
     public string Text { get; set; }
-    public int Rating { get; set; } // ������ �� 1 �� 5 
+    public int Rating { get; set; } 
     public DateTime Date { get; set; }
+    public bool IsDelete { get; set; }
+
+
     public Client Client { get; set; }
     public Psychologist Psychologist { get; set; }
 }

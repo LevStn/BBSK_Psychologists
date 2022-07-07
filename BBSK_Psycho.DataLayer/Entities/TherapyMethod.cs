@@ -10,7 +10,9 @@ public class TherapyMethod
 {
     public int Id { get; set; }
     public string Method { get; set; }
+    public bool IsDelete { get; set; }
 
-    public List <Psychologist> Psychologists { get; set; }
+
+    public List<Psychologist> Psychologists { get; set; }
 
 }

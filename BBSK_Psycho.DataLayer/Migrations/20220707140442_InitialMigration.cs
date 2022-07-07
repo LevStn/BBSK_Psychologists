@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BBSK_Psycho.DataLayer.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,10 +17,11 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: true),
-                    RegistrationDate = table.Column<DateTime>(type: "date", nullable: false)
+                    RegistrationDate = table.Column<DateTime>(type: "date", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,7 +34,8 @@ namespace BBSK_Psycho.DataLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProblemName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    ProblemName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,17 +49,18 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Patronymic = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    gender = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false),
                     WorkExperience = table.Column<int>(type: "int", nullable: true),
-                    PasportData = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    checkStatus = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    PasportData = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CheckStatus = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,7 +73,8 @@ namespace BBSK_Psycho.DataLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Method = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Method = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,6 +90,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     Text = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
                     PsychologistId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -113,6 +118,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EducationData = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
                     PsychologistId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -134,14 +140,15 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PsychologistId = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
-                    Cost = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Cost = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     SessionDate = table.Column<DateTime>(type: "date", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "date", nullable: false),
                     PayDate = table.Column<DateTime>(type: "date", nullable: false),
                     OrderStatus = table.Column<int>(type: "int", nullable: false),
-                    OrderPaymentStatus = table.Column<int>(type: "int", nullable: false)
+                    OrderPaymentStatus = table.Column<int>(type: "int", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,6 +199,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     Time = table.Column<DateTime>(type: "time", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
                     PsychologistId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
