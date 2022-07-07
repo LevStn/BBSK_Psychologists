@@ -12,7 +12,7 @@ public class Comment
     public string Text { get; set; }
     public int Rating { get; set; } 
     public DateTime Date { get; set; }
-    public bool IsDelete { get; set; }
+    public bool IsDeleted { get; set; }
 
 
     public Client Client { get; set; }

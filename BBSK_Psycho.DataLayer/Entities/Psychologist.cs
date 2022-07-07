@@ -22,7 +22,7 @@ namespace BBSK_Psycho.DataLayer.Entities
         public string PasportData { get; set; }
         public CheckStatus CheckStatus { get; set; }
         public decimal Price { get; set; }
-        public bool IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
 
 
         public List<Order> Orders { get; set; }

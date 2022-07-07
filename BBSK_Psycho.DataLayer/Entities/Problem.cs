@@ -10,7 +10,7 @@ public class Problem
 {
     public int Id { get; set; }
     public string ProblemName { get; set; }
-    public bool IsDelete { get; set; }
+    public bool IsDeleted { get; set; }
 
 
     public List<Psychologist> Psychologists { get; set; }

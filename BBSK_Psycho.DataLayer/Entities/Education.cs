@@ -5,7 +5,7 @@ namespace BBSK_Psycho.DataLayer.Entities
     {
         public int Id { get; set; }
         public string EducationData { get; set; }
-        public bool IsDelete { get; set; }
+        public bool IsDeleted { get; set; }
 
 
         public Psychologist Psychologist { get; set; }

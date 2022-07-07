@@ -15,7 +15,7 @@ public class Client
     public string Password { get; set; }
     public DateTime? BirthDate { get; set; }
     public DateTime RegistrationDate { get; set; }
-    public bool IsDelete { get; set; }
+    public bool IsDeleted { get; set; }
 
 
     public List<Order> Orders { get; set; }

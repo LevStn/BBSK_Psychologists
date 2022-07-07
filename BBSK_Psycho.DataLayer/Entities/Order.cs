@@ -16,7 +16,7 @@ public class Order
     public DateTime PayDate { get; set; }
     public OrderStatus OrderStatus { get; set; }
     public OrderStatus OrderPaymentStatus { get; set; }
-    public bool IsDelete { get; set; }
+    public bool IsDeleted { get; set; }
 
 
     public Client Client { get; set; }
