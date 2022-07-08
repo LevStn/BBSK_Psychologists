@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BBSK_Psychologists.Tests
 {
-    public class OrderCreateRequestTests
+    public class OrderCreateRequestNegativeTests
     {
         [TestCaseSource(typeof(OrderCreateRequestNegativeTestSource))]
         public void WhenMessageIsNullShouldThrowException(OrderCreateRequest order, string errorMessage)

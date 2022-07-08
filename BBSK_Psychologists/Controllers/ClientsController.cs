@@ -41,7 +41,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public ActionResult< ClientResponse> GetClientById([FromRoute] int id)
+        public ActionResult<ClientResponse> GetClientById([FromRoute] int id)
         {
             return Ok (new ClientResponse());
         }
@@ -66,7 +66,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public ActionResult <CommentResponse> GetCommentsByClientId([FromRoute] int id)
+        public ActionResult<CommentResponse> GetCommentsByClientId([FromRoute] int id)
         {
 
             return Ok(new List<CommentResponse>());
@@ -79,7 +79,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public ActionResult <OrderResponse> GetOrdersByClientId([FromRoute] int id)
+        public ActionResult<OrderResponse> GetOrdersByClientId([FromRoute] int id)
         {
             return Ok(new List<OrderResponse>());
         }

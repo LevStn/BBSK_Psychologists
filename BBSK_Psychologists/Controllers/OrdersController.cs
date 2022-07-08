@@ -17,12 +17,12 @@ namespace BBSK_Psycho.Controllers
 
     public class OrdersController : ControllerBase
     {
-        private readonly ILogger<OrdersController> _logger;
+        //private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(ILogger<OrdersController> logger)
-        {
-            _logger = logger;
-        }
+        //public OrdersController(ILogger<OrdersController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         [Authorize(Roles = nameof(Role.Manager))]
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
@@ -31,7 +31,7 @@ namespace BBSK_Psycho.Controllers
         [HttpGet]
         public ActionResult<OrderResponse> GetAllOrders()
         {
-            return Ok(new List <OrderResponse>());
+            return Ok(new List<OrderResponse>());
 
         }
 
