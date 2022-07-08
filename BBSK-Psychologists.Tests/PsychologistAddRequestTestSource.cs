@@ -20,7 +20,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "лял",
-                Surname = "пвфа",
+                LastName = "пвфа",
                 Patronymic = "ПВАПВА",
                 gender = Gender.Male,
                 Phone = "85884859",
@@ -43,7 +43,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "",
-                Surname = "пвфа",
+                LastName = "пвфа",
                 Patronymic = "ПВАПВА",
                 gender = Gender.Male,
                 Phone = "85884859",
@@ -66,7 +66,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "пвфа",
+                LastName = "пвфа",
                 Patronymic = "ПВАПВА",
                 gender = Gender.Male,
                 Phone = "85884859",
@@ -89,7 +89,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "пвфа",
+                LastName = "пвфа",
                 Patronymic = "ПВАПВА",
                 gender = Gender.Male,
                 Phone = "85884859",
@@ -112,7 +112,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "",
+                LastName = "",
                 Patronymic = "ПВАПВА",
                 gender = Gender.Male,
                 Phone = "85884859",
@@ -135,7 +135,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "Лялла",
+                LastName = "Лялла",
                 Patronymic = "",
                 gender = Gender.Male,
                 Phone = "85884859",
@@ -158,7 +158,7 @@ namespace BBSK_Psychologists.Tests
                         new AddPsychologistRequest
                         {
                             Name = "Глаша",
-                            Surname = "Лялла",
+                            LastName = "Лялла",
                             Patronymic = "Пывпапы",
                             gender = null,
                             Phone = "85884859",
@@ -180,7 +180,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "Лялла",
+                LastName = "Лялла",
                 Patronymic = "Лалаовв",
                 gender = Gender.Male,
                 Phone = "85884859",
@@ -202,7 +202,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "Лялла",
+                LastName = "Лялла",
                 Patronymic = "Лалаовв",
                 gender = Gender.Male,
                 Phone = "",
@@ -225,7 +225,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "Лялла",
+                LastName = "Лялла",
                 Patronymic = "Лалаовв",
                 gender = Gender.Male,
                 Phone = "3645622456546",
@@ -248,7 +248,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "Лялла",
+                LastName = "Лялла",
                 Patronymic = "Лалаовв",
                 gender = Gender.Male,
                 Phone = "3645622456546",
@@ -270,7 +270,7 @@ namespace BBSK_Psychologists.Tests
             new AddPsychologistRequest
             {
                 Name = "Глаша",
-                Surname = "Лялла",
+                LastName = "Лялла",
                 Patronymic = "Лалаовв",
                 gender = Gender.Male,
                 Phone = "3645622456546",

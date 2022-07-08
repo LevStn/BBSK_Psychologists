@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho.DataLayer.Entities;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -37,6 +38,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<PsychologistResponse> GetPsychologist(int id)
         {
+            var result = _psychologistsRepository.GetPsychologist(id);
+            if (result == null)
+                return NotFound();
+            else
             return Ok(new PsychologistResponse());
         }
 
@@ -55,8 +60,24 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
+            var psychologist = new Psychologist
+            {
+                Name = psychologistRequest.Name,
+                LastName= psychologistRequest.LastName,
+                Patronymic= psychologistRequest.Patronymic,
+                BirthDate= (DateTime)psychologistRequest.BirthDate,
+                Gender= (Gender)psychologistRequest.gender,
+                Phone= psychologistRequest.Phone,
+                Email= psychologistRequest.Email,
+                Password= psychologistRequest.Password,
+                PasportData= psychologistRequest.PasportData,
+                CheckStatus= psychologistRequest.checkStatus,
+                Price= psychologistRequest.Price
+            };
             var id = 42;
-            return Created($"{this.GetRequestPath()}/{id}", id);
+            var result = _psychologistsRepository.AddPsychologist(psychologist);
+            return Created("", result);
+            //return Created($"{this.GetRequestPath()}/{id}", id); 
             //return psychologistRequest.Id;
         }
 
@@ -67,6 +88,12 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
+            var psychologist = new Psychologist
+            {
+                Name = psychologistRequest.Name,
+                BirthDate = psychologistRequest.BirthDate
+            };
+            _psychologistsRepository.UpdatePsychologist(psychologist);
             return NoContent();
         }
 
@@ -79,6 +106,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult DeletePsychologist(int id)
         {
+            _psychologistsRepository.DeletePsychologist(id);
             return NoContent();
         }
 

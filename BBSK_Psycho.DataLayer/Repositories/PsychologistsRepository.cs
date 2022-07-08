@@ -17,5 +17,25 @@ namespace BBSK_Psycho.DataLayer.Repositories
         }
 
         public Psychologist? GetPsychologist(int id) => _context.Psychologists.FirstOrDefault(p => p.Id == id);
+
+        public int AddPsychologist (Psychologist psychologist)
+        {
+            _context.Psychologists.Add(psychologist);
+            _context.SaveChanges();
+
+            return psychologist.Id;
+        }
+
+        public void UpdatePsychologist(Psychologist psychologist)
+        {
+            _context.Psychologists.Update(psychologist);
+
+        }
+        public void DeletePsychologist (int id)
+        {
+            var psychologist = GetPsychologist(id);
+            _context.Psychologists.Remove(psychologist);
+            _context.SaveChanges ();
+        }
     }
 }
