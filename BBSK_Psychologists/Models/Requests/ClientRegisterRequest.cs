@@ -26,6 +26,5 @@ public class ClientRegisterRequest
     [MaxLength(12, ErrorMessage = ApiErrorMessage.LengthExceeded)]
     public string? PhoneNumber { get; set; }
 
-
     public DateTime? BirthDate { get; set; }
 }

@@ -69,7 +69,7 @@ public class BBSK_PsychoContext : DbContext
             entity.Property(c => c.LastName).HasMaxLength(50);
             entity.Property(c => c.Email).HasMaxLength(140);
             entity.Property(c => c.Password).HasMaxLength(140);
-
+            entity.Property(c => c.PhoneNumber).HasMaxLength(12);
 
         });
 

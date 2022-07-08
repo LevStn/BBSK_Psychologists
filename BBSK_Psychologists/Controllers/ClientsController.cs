@@ -1,11 +1,9 @@
-using System.Collections.Generic;
+using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
-using BBSK_Psycho.Extensions;
+using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -15,13 +13,12 @@ namespace BBSK_Psycho.Controllers
     [Route("[controller]")]
     public class ClientsController : ControllerBase
     {
-
-        //private readonly ILogger<ClientsController> _logger;
-
-        //public ClientsController(ILogger<ClientsController> logger)
-        //{
-        //    _logger = logger;
-        //}
+        private readonly IClientsRepository _clientsRepository;
+      
+        public ClientsController(IClientsRepository clientsRepository)
+        {
+            _clientsRepository = clientsRepository;
+        }
 
 
         [AllowAnonymous]
@@ -30,8 +27,20 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult <int> AddClient([FromBody] ClientRegisterRequest client)
         {
-            int id = 2;
-            return Created($"{this.GetRequestPath()}/{id}", id);
+            var clientModel = new Client
+            {
+                Name = client.Name,
+                LastName = client.LastName,
+                Password = client.Password,
+                Email = client.Email,
+                PhoneNumber = client.PhoneNumber,
+                BirthDate = client.BirthDate
+
+            };
+            
+            var result = _clientsRepository.AddClient(clientModel);
+            return Created("", result);
+            
         }
 
 
@@ -43,7 +52,12 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult< ClientResponse> GetClientById([FromRoute] int id)
         {
-            return Ok (new ClientResponse());
+            var clinet = _clientsRepository.GetClientById(id);
+
+            if (clinet is null)
+                return NotFound();
+            else
+                return Ok(clinet);
         }
 
 
@@ -56,6 +70,13 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
+            var clinet = _clientsRepository.GetClientById(id);
+            clinet.Name = request.Name;
+            clinet.LastName = request.LastName;
+            clinet.BirthDate = request.BirthDate;
+
+            _clientsRepository.UpdateClientById(clinet, id);
+
             return NoContent();
         }
 
@@ -68,8 +89,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult <CommentResponse> GetCommentsByClientId([FromRoute] int id)
         {
-
-            return Ok(new List<CommentResponse>());
+            var clientComents = _clientsRepository.GetCommentsByClientId(id);
+            if (clientComents is null)
+                return NotFound();
+            else
+                return Ok(clientComents);
         }
 
 
@@ -81,7 +105,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult <OrderResponse> GetOrdersByClientId([FromRoute] int id)
         {
-            return Ok(new List<OrderResponse>());
+            var clientOrders = _clientsRepository.GetOrdersByClientId(id);
+            if(clientOrders is null)
+                return NotFound();
+            else
+                return Ok(clientOrders);
         }
 
 
@@ -93,7 +121,12 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult DeleteClientById([FromRoute] int id)
         {
-            return NoContent();
+            var client = _clientsRepository.GetClientById(id);
+            if (client is null)
+                return NotFound();
+            else
+                _clientsRepository.DeleteClient(client);
+                return NoContent();
         }
 
 
@@ -104,8 +137,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<ClientResponse> GetClients()
         {
-            return Ok(new List<ClientResponse>());
-            
+            var clients = _clientsRepository.GetClients();
+            return Ok(clients);
+
+
         }
 
     }

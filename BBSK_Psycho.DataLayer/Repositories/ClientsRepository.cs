@@ -14,6 +14,8 @@ public class ClientsRepository : IClientsRepository
 
     public Client? GetClientById(int id) => _context.Clients.FirstOrDefault(c => c.Id == id && c.IsDeleted == false);
 
+    public List<Client> GetClients() => _context.Clients.Where(c => c.IsDeleted== false).ToList();
+
     public List<Comment> GetCommentsByClientId(int id) => _context.Comments.Where(c => c.IsDeleted == false && c.Client.Id == id).ToList();
 
     public List<Order> GetOrdersByClientId(int id) => _context.Orders.Where(c => c.IsDeleted == false && c.Client.Id == id).ToList();
@@ -32,13 +34,10 @@ public class ClientsRepository : IClientsRepository
         _context.SaveChanges();
     }
 
-    public void DeleteClientById(int id)
+    public void DeleteClient(Client client)
     {
-        var client = GetClientById(id);
         client.IsDeleted = true;
         _context.SaveChanges();
     }
-
-
 
 }
