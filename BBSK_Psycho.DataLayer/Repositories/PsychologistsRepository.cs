@@ -29,7 +29,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
         public void UpdatePsychologist(Psychologist psychologist)
         {
             _context.Psychologists.Update(psychologist);
-
+            _context.SaveChanges();
         }
         public void DeletePsychologist (int id)
         {
