@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using BBSK_Psycho.DataLayer.Repositories;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -15,6 +16,13 @@ namespace BBSK_Psycho.Controllers
     [Route("[controller]")]
     public class PsychologistsController : ControllerBase
     {
+
+        private readonly IPsychologistsRepository _psychologistsRepository;
+        public PsychologistsController(IPsychologistsRepository psychologistsRepository)
+        {
+            _psychologistsRepository = psychologistsRepository;
+        }
+
         private readonly ILogger<PsychologistsController> _logger;
 
 
