@@ -53,7 +53,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer(@"Server=.\SQLEXPRESS;Database=BBSK_PsychoDb;Trusted_Connection=True;");
+    o.UseSqlServer("Data Source=DESKTOP-PMA057A;Initial Catalog=BBSK_PsychoDb;Integrated Security=True");
 });
 
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();

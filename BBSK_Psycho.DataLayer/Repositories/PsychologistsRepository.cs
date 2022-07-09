@@ -18,6 +18,9 @@ namespace BBSK_Psycho.DataLayer.Repositories
 
         public Psychologist? GetPsychologist(int id) => _context.Psychologists.FirstOrDefault(p => p.Id == id);
 
+        public List <Psychologist> GetAllPsychologists() => _context.Psychologists.ToList();
+
+        public List<Comment> GetCommentsByPsychologistId(int id) => _context.Comments.ToList();
         public int AddPsychologist (Psychologist psychologist)
         {
             _context.Psychologists.Add(psychologist);
@@ -33,9 +36,9 @@ namespace BBSK_Psycho.DataLayer.Repositories
         }
         public void DeletePsychologist (int id)
         {
-            var psychologist = GetPsychologist(id);
-            _context.Psychologists.Remove(psychologist);
+            _context.Psychologists.Remove(new Psychologist { Id=id});
             _context.SaveChanges ();
         }
+
     }
 }

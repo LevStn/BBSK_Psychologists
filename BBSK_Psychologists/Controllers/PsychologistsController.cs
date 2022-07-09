@@ -24,14 +24,6 @@ namespace BBSK_Psycho.Controllers
             _psychologistsRepository = psychologistsRepository;
         }
 
-        private readonly ILogger<PsychologistsController> _logger;
-
-
-        public PsychologistsController(ILogger<PsychologistsController> logger)
-        {
-            _logger = logger;
-        }
-
         [AuthorizeByRole(Role.Manager)]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PsychologistResponse), StatusCodes.Status200OK)]
@@ -42,14 +34,16 @@ namespace BBSK_Psycho.Controllers
             if (result == null)
                 return NotFound();
             else
-            return Ok(new PsychologistResponse());
+            return Ok(result);
         }
 
         [AuthorizeByRole(Role.Client, Role.Psychologist)]
         [HttpGet()]
         public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
-            return new List<GetAllPsychologistsResponse>();
+            var result = _psychologistsRepository.GetAllPsychologists();
+            
+            return Ok(result);
         }
 
         [AuthorizeByRole(Role.Psychologist)]

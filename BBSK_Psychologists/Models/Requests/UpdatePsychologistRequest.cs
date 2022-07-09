@@ -13,7 +13,7 @@ namespace BBSK_Psycho.Models.Requests
         [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.LastNameIsRequired)]
-        public string Surname { get; set; }
+        public string LastName { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.PatronymicIsRequired)]
         public string Patronymic { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.PsychologistGenderIsRequired)]
