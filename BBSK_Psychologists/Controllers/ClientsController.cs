@@ -70,12 +70,15 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
-            var clinet = _clientsRepository.GetClientById(id);
-            clinet.Name = request.Name;
-            clinet.LastName = request.LastName;
-            clinet.BirthDate = request.BirthDate;
+            var client = new Client()
+            {
+                Name = request.Name,
+                LastName = request.LastName,
+                BirthDate = request.BirthDate,
+            };
+            
 
-            _clientsRepository.UpdateClient(clinet, id);
+            _clientsRepository.UpdateClient(client, id);
 
             return NoContent();
         }
