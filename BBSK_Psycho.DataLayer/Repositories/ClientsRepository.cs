@@ -12,7 +12,7 @@ public class ClientsRepository : IClientsRepository
         _context = context;
     }
 
-    public Client? GetClientById(int id) => _context.Clients.FirstOrDefault(c => c.Id == id && c.IsDeleted == false);
+    public Client? GetClientById(int id) => _context.Clients.FirstOrDefault(c => c.Id == id);
 
     public List<Client> GetClients() => _context.Clients.Where(c => c.IsDeleted== false).ToList();
 
@@ -28,14 +28,21 @@ public class ClientsRepository : IClientsRepository
         return client.Id;
     }
 
-    public void UpdateClientById(Client client, int id)
+    public void UpdateClient(Client newProperty, int id)
     {
+        var client=GetClientById(id);
+
+        client.Name = newProperty.Name;
+        client.LastName = newProperty.LastName;
+        client.BirthDate = newProperty.BirthDate;
+
         _context.Clients.Update(client);
         _context.SaveChanges();
     }
 
-    public void DeleteClient(Client client)
+    public void DeleteClient(int id)
     {
+        var client=GetClientById(id);
         client.IsDeleted = true;
         _context.SaveChanges();
     }

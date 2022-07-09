@@ -75,7 +75,7 @@ namespace BBSK_Psycho.Controllers
             clinet.LastName = request.LastName;
             clinet.BirthDate = request.BirthDate;
 
-            _clientsRepository.UpdateClientById(clinet, id);
+            _clientsRepository.UpdateClient(clinet, id);
 
             return NoContent();
         }
@@ -125,7 +125,7 @@ namespace BBSK_Psycho.Controllers
             if (client is null)
                 return NotFound();
             else
-                _clientsRepository.DeleteClient(client);
+                _clientsRepository.DeleteClient(id);
                 return NoContent();
         }
 

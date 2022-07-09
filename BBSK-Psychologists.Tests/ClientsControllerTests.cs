@@ -48,14 +48,14 @@ public class ClientsControllerTests
         //given
         var expectedClient = new ClientResponse();
         var clientId = 2;
-       
+
         //when
         var actual = _sut.GetClientById(clientId);
 
         //then
-        var actualResult =actual.Result as ObjectResult;
+        var actualResult = actual.Result as ObjectResult;
 
-        Assert.AreEqual(StatusCodes.Status200OK , actualResult.StatusCode);
+        Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
         Assert.AreEqual(expectedClient.GetType(), actualResult.Value.GetType());
     }
 
@@ -70,17 +70,17 @@ public class ClientsControllerTests
         var actual = _sut.UpdateClientById(expectedClient, clientId);
 
         //then
-        var actualResult =  actual as NoContentResult;
+        var actualResult = actual as NoContentResult;
 
         Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
-       
+
     }
 
     [Test]
     public void GetCommentsByClientId_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
-        var expectedComment = new List <CommentResponse>();
+        var expectedComment = new List<CommentResponse>();
         var clientId = 2;
 
         //when
@@ -93,7 +93,7 @@ public class ClientsControllerTests
         Assert.AreEqual(expectedComment.GetType(), actualResult.Value.GetType());
     }
 
-   
+
     [Test]
     public void GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived()
     {
