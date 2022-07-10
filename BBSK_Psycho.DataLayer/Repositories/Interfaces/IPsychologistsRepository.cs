@@ -6,7 +6,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
     {
         Psychologist? GetPsychologist(int id);
         List<Psychologist> GetAllPsychologists();
-
+        public int AddCommentToPsyhologist(Comment comment, int psychologistId);
         List<Comment> GetCommentsByPsychologistId(int id);
         int AddPsychologist(Psychologist psychologist);
         void UpdatePsychologist(Psychologist psychologist);

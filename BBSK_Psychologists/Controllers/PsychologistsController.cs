@@ -107,9 +107,10 @@ namespace BBSK_Psycho.Controllers
         [AuthorizeByRole(Role.Client, Role.Psychologist)]
         [HttpGet("{psychologistId}/comments")]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public List<GetCommentsByPsychologistIdResponse> GetCommentsByPsychologistId(int psychologistId)
+        public ActionResult <List<GetCommentsByPsychologistIdResponse>> GetCommentsByPsychologistId(int psychologistId)
         {
-            return new List<GetCommentsByPsychologistIdResponse>();
+            var result=_psychologistsRepository.GetCommentsByPsychologistId(psychologistId);
+                return Ok(result);
         }
 
         [AuthorizeByRole(Role.Client)]
@@ -118,7 +119,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult <int> AddRequestPsyhologistSearch([FromBody] RequestPsyhologistSearch requestPsyhologistSearch)
+        public ActionResult <int> AddRequestPsyhologistSearch([FromBody] Models.ApplicationForPsychologistSearch requestPsyhologistSearch)
         {
             int id = 2;
             return Created($"{this.GetRequestPath()}/{id}", id);
@@ -128,13 +129,21 @@ namespace BBSK_Psycho.Controllers
         [HttpPost("{psychologistId}/comments")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(void),StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult <int> AddCommentToPsyhologist([FromBody] CommentRequest comment, int psychologistId)
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
+        public ActionResult<int> AddCommentToPsyhologist([FromBody] CommentRequest commentRequest, int psychologistId)
         {
-            int id = 2;
-            return Created($"{this.GetRequestPath()}/{id}", id);
+            var comment = new Comment
+            {
+                Text = commentRequest.Text,
+                Rating = commentRequest.Rating,
+                Date = commentRequest.Date,
+                Client = new Client() { Id = commentRequest.ClientId }
+            };
+
+            var result = _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);
+            return Created("", result);
         }
 
     }
