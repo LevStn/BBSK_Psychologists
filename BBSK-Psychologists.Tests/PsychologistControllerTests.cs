@@ -57,6 +57,7 @@ namespace BBSK_Psychologists.Tests
         {
             _sut = new PsychologistsController();
         }
+
         [Test]
         public void AddRequestForPsy_ValidRequestPassed_CreatedResultReceived()
         {
@@ -129,11 +130,11 @@ namespace BBSK_Psychologists.Tests
         public void DeletePsychologist_NoContentResult()
         {
             // given
-
+            int id = 2
             //var psychologist = psychologistData;
 
             // when
-            int id = 2;
+           ;
             var actual = _sut.DeletePsychologist(id);
 
             // then
@@ -157,8 +158,6 @@ namespace BBSK_Psychologists.Tests
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
 
         }
-
-
     }
 }
 

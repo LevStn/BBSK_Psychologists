@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace BBSK_Psychologists.Tests
 {
-    public class PsychologistAddRequestValidation_WhenValidModelPassed_NoErrorsReceived : IEnumerable
+    public class PsychologistAddPositiveTestSource : IEnumerable
     {
         public IEnumerator GetEnumerator()
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BBSK_Psychologists.Tests
 {
-    public class PsychologistAddRequestValidation_WhenInvalidModel_ErrorsReceived : IEnumerable
+    public class AddPsychologistRequestSource : IEnumerable
     {
         private static AddPsychologistRequest ReturnModelOfAdd()
         {

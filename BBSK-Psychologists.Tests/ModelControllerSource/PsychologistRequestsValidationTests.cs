@@ -15,8 +15,8 @@ namespace BBSK_Psychologists.Tests.ModelControllerSource
         {
         }
 
-        [TestCaseSource(typeof(PsychologistAddRequestValidation_WhenInvalidModel_ErrorsReceived))]
-        public void PsychologistAddRequestTest(AddPsychologistRequest addPsychologistRequest, string errorMessage)
+        [TestCaseSource(typeof(AddPsychologistRequestSource))]
+        public void PsychologistAddRequestValidation_WhenInvalidModel_ValidationErrorsReceived(AddPsychologistRequest addPsychologistRequest, string errorMessage)
         {
             //given
             var validationResultList = new List<ValidationResult>();
@@ -28,8 +28,8 @@ namespace BBSK_Psychologists.Tests.ModelControllerSource
 
         }
 
-        [TestCaseSource(typeof(PsychologistUpdateRequestValidation_WhenInvalidModel_ErrorsReceived))]
-        public void PsychologistAddRequestTest(UpdatePsychologistRequest updatePsychologistRequest, string errorMessage)
+        [TestCaseSource(typeof(PsychologistUpdateNegativeTestSource))]
+        public void PsychologistUpdateRequestValidation_WhenInvalidModel_ValidationErrorsReceived(UpdatePsychologistRequest updatePsychologistRequest, string errorMessage)
         {
             //given
             var validationResultList = new List<ValidationResult>();
@@ -41,8 +41,8 @@ namespace BBSK_Psychologists.Tests.ModelControllerSource
 
         }
 
-        [TestCaseSource(typeof(PsychologistAddRequestValidation_WhenValidModelPassed_NoErrorsReceived))]
-        public void PsychologistAddRequestPositiveTest(AddPsychologistRequest addPsychologistRequest, string errorMessage)
+        [TestCaseSource(typeof(PsychologistAddPositiveTestSource))]
+        public void PsychologistAddRequestValidation_WhenValidModel_ValidationErrorsNotReceived(AddPsychologistRequest addPsychologistRequest, string errorMessage)
         {
             //given
             var validationResultList = new List<ValidationResult>();
