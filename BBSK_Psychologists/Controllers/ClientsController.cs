@@ -52,12 +52,12 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult< ClientResponse> GetClientById([FromRoute] int id)
         {
-            var clinet = _clientsRepository.GetClientById(id);
+            var client = _clientsRepository.GetClientById(id);
 
-            if (clinet is null)
+            if (client is null)
                 return NotFound();
             else
-                return Ok(clinet);
+                return Ok(client);
         }
 
 

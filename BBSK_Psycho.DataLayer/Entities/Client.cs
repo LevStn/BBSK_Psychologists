@@ -22,6 +22,8 @@ public class Client
         {
             return DateTime.Now;
         }
+
+        private set { }
     }
 
     public bool IsDeleted { get; set; }
