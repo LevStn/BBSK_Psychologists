@@ -1,4 +1,5 @@
 ﻿using BBSK_Psycho.DataLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,15 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public Psychologist? GetPsychologist(int id) => _context.Psychologists.FirstOrDefault(p => p.Id == id);
+        public Psychologist? GetPsychologist(int id) =>
+            _context.Psychologists
+            .Include(e => e.Educations)
+            .Include(tm => tm.TherapyMethods)
+            .Include(p => p.Problems)
+            .Include(s => s.Schedules)
+            .Include(c => c.Comments)
+            .Include(c => c.Comments)
+            .FirstOrDefault(p => p.Id == id);
 
         public List <Psychologist> GetAllPsychologists() => _context.Psychologists.ToList();
 
@@ -57,8 +66,11 @@ namespace BBSK_Psycho.DataLayer.Repositories
         }
         public void DeletePsychologist (int id)
         {
-            _context.Psychologists.Remove(new Psychologist { Id=id});
-            _context.SaveChanges ();
+            var psychologist = _context.Psychologists.FirstOrDefault(o => o.Id == id);
+            psychologist.IsDeleted = true;
+            _context.SaveChanges();
+            //_context.Psychologists.Remove(new Psychologist { Id=id});
+            //_context.SaveChanges ();
         }
     }
 }
