@@ -28,6 +28,7 @@ namespace BBSK_Psycho.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PsychologistResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<PsychologistResponse> GetPsychologist(int id)
         {
@@ -38,6 +39,7 @@ namespace BBSK_Psycho.Controllers
         [HttpGet()]
         [ProducesResponseType(typeof(GetAllPsychologistsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
             return new List<GetAllPsychologistsResponse>();
