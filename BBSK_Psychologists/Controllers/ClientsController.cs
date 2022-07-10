@@ -14,7 +14,9 @@ namespace BBSK_Psycho.Controllers
     public class ClientsController : ControllerBase
     {
         private readonly IClientsRepository _clientsRepository;
-      
+
+        AutoMapper.Mapper mapper = MapperConfigStorage.GetInstanse();
+
         public ClientsController(IClientsRepository clientsRepository)
         {
             _clientsRepository = clientsRepository;
@@ -26,21 +28,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult <int> AddClient([FromBody] ClientRegisterRequest client)
-        {
-            var clientModel = new Client
-            {
-                Name = client.Name,
-                LastName = client.LastName,
-                Password = client.Password,
-                Email = client.Email,
-                PhoneNumber = client.PhoneNumber,
-                BirthDate = client.BirthDate
-
-            };
-            
-            var result = _clientsRepository.AddClient(clientModel);
+        {    
+            var result = _clientsRepository.AddClient(mapper.Map<Client>(client));
             return Created("", result);
-            
+   
         }
 
 
