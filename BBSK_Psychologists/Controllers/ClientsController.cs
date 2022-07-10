@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BBSK_Psycho.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +16,12 @@ namespace BBSK_Psycho.Controllers
     public class ClientsController : ControllerBase
     {
 
-        private readonly ILogger<ClientsController> _logger;
+        //private readonly ILogger<ClientsController> _logger;
 
-        public ClientsController(ILogger<ClientsController> logger)
-        {
-            _logger = logger;
-        }
+        //public ClientsController(ILogger<ClientsController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
 
         [AllowAnonymous]

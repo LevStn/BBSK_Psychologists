@@ -1,8 +1,8 @@
 ﻿using System;
-using BBSK_Psycho.Enums;
 using BBSK_Psycho.Infrastructure;
 using BBSK_Psycho.Models.Responses;
 using System.ComponentModel.DataAnnotations;
+using BBSK_Psycho.DataLayer.Enums;
 
 namespace BBSK_Psycho.Models
 {

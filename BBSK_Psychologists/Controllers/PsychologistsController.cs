@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BBSK_Psycho.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using BBSK_Psycho.Models.Requests;
