@@ -29,7 +29,7 @@ namespace BBSK_Psycho.Models
         public DateTime? PayDate { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.OrderPaymentStatusIsRequired)]
-        public OrderPaymentSatus OrderPaymentStatus { get; set; }
+        public OrderPaymentStatus OrderPaymentStatus { get; set; }
     }
 }
 

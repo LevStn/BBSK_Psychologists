@@ -81,8 +81,6 @@ namespace BBSK_Psycho.Controllers
         public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
             return NoContent();
-        }
-
-        
+        } 
     }
 }

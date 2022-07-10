@@ -19,6 +19,8 @@ namespace BBSK_Psychologists.Tests
 
             //then
             var actualMessage = validationsResults[0].ErrorMessage;
+
+            Assert.IsNull(order.Message);
             Assert.AreEqual(errorMessage, actualMessage);
         }
     }

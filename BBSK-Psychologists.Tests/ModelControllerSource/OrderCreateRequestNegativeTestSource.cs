@@ -21,7 +21,7 @@ namespace ModelControllerSource
                 SessionDate = DateTime.Now,
                 OrderDate = DateTime.Now,
                 PayDate = DateTime.Now,
-                OrderPaymentStatus = (OrderPaymentSatus)random.Next(1, 4)
+                OrderPaymentStatus = (OrderPaymentStatus)random.Next(1, 4)
             };
 
             return order;

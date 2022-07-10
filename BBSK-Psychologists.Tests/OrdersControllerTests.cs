@@ -70,7 +70,7 @@ namespace BBSK_Psychologists.Tests
                 Message = "Программирование на C++",
                 SessionDate = DateTime.Now,
                 OrderDate = DateTime.Now,
-                OrderPaymentStatus = OrderPaymentSatus.Unpaid
+                OrderPaymentStatus = OrderPaymentStatus.Unpaid
 
             };
             var expectedId = 2;
