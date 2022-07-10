@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
+using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -17,11 +16,11 @@ namespace BBSK_Psycho.Controllers
 
     public class OrdersController : ControllerBase
     {
-        private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(ILogger<OrdersController> logger)
+        private readonly IOrdersRepository _ordersRepository;
+        public OrdersController(IOrdersRepository ordersRepository)
         {
-            _logger = logger;
+            _ordersRepository = ordersRepository;
         }
 
         [Authorize(Roles = nameof(Role.Manager))]
@@ -31,8 +30,9 @@ namespace BBSK_Psycho.Controllers
         [HttpGet]
         public ActionResult<OrderResponse> GetAllOrders()
         {
-            return Ok(new List <OrderResponse>());
+            var orders = _ordersRepository.GetAllOrders();
 
+            return Ok(orders);
         }
 
 
@@ -44,7 +44,14 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<OrderResponse> GetOrderById([FromRoute] int orderId)
         {
-            return Ok(new OrderResponse());
+            Order order = _ordersRepository.GetOrderById(orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
         }
 
 
@@ -56,8 +63,23 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
         {
-            int id = 2;
-            return Created($"{this.GetRequestPath()}/{id}", id);
+            Order newOrder = new Order()
+            {
+                PsychologistId = request.PsychologistId,
+                ClientId = request.ClientId,
+                Cost = request.Cost,
+                Duration = request.Duration,
+                Message = request.Message,
+                SessionDate = request.SessionDate,
+                OrderDate = request.OrderDate,
+                OrderStatus = OrderStatus.Created,
+                OrderPaymentStatus = request.OrderPaymentStatus,
+                IsDeleted = false
+            };
+
+            _ordersRepository.AddOrder(newOrder);
+
+            return Created($"{this.GetRequestPath()}/{newOrder.Id}", newOrder.Id);
         }
 
 
@@ -69,6 +91,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult DeleteOrderById([FromRoute] int orderId)
         {
+            _ordersRepository.DeleteOrderById(orderId);
+
             return NoContent();
         }
 
@@ -80,9 +104,9 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
+            _ordersRepository.UpdateOrderStatusById(orderId, (int)orderStatusPatch.OrderStatus, (int)orderStatusPatch.OrderPaymentStatus);
+
             return NoContent();
         }
-
-        
     }
 }
