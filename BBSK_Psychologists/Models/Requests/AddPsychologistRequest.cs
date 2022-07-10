@@ -9,12 +9,12 @@ namespace BBSK_Psycho.Models.Requests
 {
     public class AddPsychologistRequest
     {
-        //public int Id { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.LastNameIsRequired)]
-        public string Surname { get; set; }
+        public string LastName { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.PatronymicIsRequired)]
         public string Patronymic { get; set; }
