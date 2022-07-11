@@ -59,10 +59,45 @@ namespace BBSK_Psychologists.Tests
             Assert.True(psychologist.IsDeleted);
         }
 
-        [TestCaseSource(typeof(PsychologistRepositoryTestsSource))]
-        public void GetPsychologist_WhenCorrectIdPassed_ThenSoftDeleteApplied ()
+        [Test]
+        public void GetPsychologist_WhenCorrectIdPassed_ThenGetApplied ()
         {
+            //given
+            var context = new BBSK_PsychoContext(_dbContextOptions);
+            var sut = new PsychologistsRepository(context);
+            var expected = new Psychologist
+            {
+                Name = "лял",
+                LastName = "пвфа",
+                Patronymic = "ПВАПВА",
+                Gender = Gender.Male,
+                Phone = "85884859",
+                Educations = new List<Education> { new Education { Id = 1, EducationData = "2020-12-12", IsDeleted = false } },
+                CheckStatus = CheckStatus.Completed,
+                Email = "ros@fja.com",
+                PasportData = "23146456",
+                Price = 2000,
+                Problems = new List<Problem> { new Problem { Id = 1, ProblemName = "ds", IsDeleted = false } },
+                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Id = 1, Method = "therapy lal", IsDeleted = false } },
+                WorkExperience = 10,
+                BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                Password = "123"
+            };
 
+            context.Psychologists.Add(expected);
+            context.SaveChanges();
+
+            //when
+            var actual=sut.GetPsychologist(expected.Id);
+
+            //then
+            Assert.AreEqual( expected, actual);
+        }
+        
+        [Test]
+        public void AddPsychologist_WhenAddedInDB_ThenReturnId()
+        {
+         
         }
 }
 }
