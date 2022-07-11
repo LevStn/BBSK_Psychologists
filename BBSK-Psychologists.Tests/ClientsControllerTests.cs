@@ -32,6 +32,8 @@ public class ClientsControllerTests
     public void AddClient_ValidRequestPassed_CreatedResultReceived()
     {
         //given
+        _clientsRepositoryMock.Setup(c => c.AddClient(It.IsAny<Client>()))
+         .Returns(1);
 
         var client = new ClientRegisterRequest()
         {
@@ -42,11 +44,13 @@ public class ClientsControllerTests
 
         //when
         var actual = _sut.AddClient(client);
+        var a = actual.Result;
 
         //then
         var actualResult = actual.Result as CreatedResult;
 
         Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
+        Assert.True((int)actualResult.Value == 1);
 
     }
 
