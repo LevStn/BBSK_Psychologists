@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BBSK_Psycho.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using BBSK_Psycho.Models.Requests;
@@ -16,13 +16,13 @@ namespace BBSK_Psycho.Controllers
     [Route("[controller]")]
     public class PsychologistsController : ControllerBase
     {
-        private readonly ILogger<PsychologistsController> _logger;
+        //private readonly ILogger<PsychologistsController> _logger;
 
 
-        public PsychologistsController(ILogger<PsychologistsController> logger)
-        {
-            _logger = logger;
-        }
+        //public PsychologistsController(ILogger<PsychologistsController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         [AuthorizeByRole]
         [HttpGet("{id}")]
@@ -42,7 +42,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
-            return new List<GetAllPsychologistsResponse>();
+            return Ok(new List<GetAllPsychologistsResponse>());
         }
 
         [HttpGet("avg-price")]

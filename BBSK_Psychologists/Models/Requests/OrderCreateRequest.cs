@@ -1,21 +1,21 @@
 ﻿using System;
-using BBSK_Psycho.Enums;
 using BBSK_Psycho.Infrastructure;
 using BBSK_Psycho.Models.Responses;
 using System.ComponentModel.DataAnnotations;
+using BBSK_Psycho.DataLayer.Enums;
 
 namespace BBSK_Psycho.Models
 {
     public class OrderCreateRequest
     {
-        [Required(ErrorMessage = ApiErrorMessage.ClientIdIsRequired)]
+        
         public int ClientId { get; set; }
 
 
         [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
         public decimal Cost { get; set; }
 
-        [Required(ErrorMessage = ApiErrorMessage.DurationIsRequired)]
+        
         public int Duration { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.MessageIsRequired)]

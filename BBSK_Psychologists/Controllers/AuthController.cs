@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BBSK_Psycho.Infrastructure;
-using BBSK_Psycho.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Models;
 
 namespace BBSK_Psycho.Controllers

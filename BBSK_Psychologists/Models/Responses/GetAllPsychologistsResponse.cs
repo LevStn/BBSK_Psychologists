@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BBSK_Psycho.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 
 namespace BBSK_Psycho.Models.Responses
 {
@@ -8,7 +8,7 @@ namespace BBSK_Psycho.Models.Responses
 
         public string Name { get; set; }
 
-        public string Surname { get; set; }
+        public string LastName { get; set; }
 
         public Gender Gender { get; set; }
 

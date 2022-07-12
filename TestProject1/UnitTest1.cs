@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace BBSK_Psychologists.Tests
+namespace TestProject1
 {
     public class Tests
     {
