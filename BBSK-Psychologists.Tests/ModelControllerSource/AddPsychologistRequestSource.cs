@@ -57,7 +57,7 @@ namespace BBSK_Psychologists.Tests
             yield return new object[]
             {
              requestWithRequiredPasswordAdd,
-            ApiErrorMessage.PasswordIsRequire
+            ApiErrorMessage.PasswordIsRequired
             };
 
             var requestWithRequiredEmailAdd = ReturnModelOfAdd();
@@ -117,10 +117,7 @@ namespace BBSK_Psychologists.Tests
             requestWithRequiredProblemsAdd,
             ApiErrorMessage.ProblemsIsRequired
             };
-
-
         }
     }
-
  }
 

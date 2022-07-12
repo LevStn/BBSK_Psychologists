@@ -17,12 +17,12 @@ namespace BBSK_Psycho.Controllers
 
     public class OrdersController : ControllerBase
     {
-        private readonly ILogger<OrdersController> _logger;
+        //private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(ILogger<OrdersController> logger)
-        {
-            _logger = logger;
-        }
+        //public OrdersController(ILogger<OrdersController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         [AuthorizeByRole]
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
@@ -81,8 +81,6 @@ namespace BBSK_Psycho.Controllers
         public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
             return NoContent();
-        }
-
-        
+        } 
     }
 }
