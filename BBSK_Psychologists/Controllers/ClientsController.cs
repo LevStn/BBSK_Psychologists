@@ -1,11 +1,10 @@
-using System.Collections.Generic;
+using AutoMapper;
+using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
-using BBSK_Psycho.Extensions;
+using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -15,13 +14,16 @@ namespace BBSK_Psycho.Controllers
     [Route("[controller]")]
     public class ClientsController : ControllerBase
     {
+        private readonly IClientsRepository _clientsRepository;
 
-        //private readonly ILogger<ClientsController> _logger;
+        private readonly IMapper _mapper;
 
-        //public ClientsController(ILogger<ClientsController> logger)
-        //{
-        //    _logger = logger;
-        //}
+        public ClientsController(IClientsRepository clientsRepository, IMapper mapper)
+        {
+            _clientsRepository = clientsRepository;
+            _mapper = mapper;   
+        }
+       
 
 
         [AllowAnonymous]
@@ -30,7 +32,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddClient([FromBody] ClientRegisterRequest client)
         {
-            int id = 2;
+            var id = _clientsRepository.AddClient(_mapper.Map<Client>(client));
             return Created($"{this.GetRequestPath()}/{id}", id);
         }
 
@@ -43,7 +45,12 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<ClientResponse> GetClientById([FromRoute] int id)
         {
-            return Ok (new ClientResponse());
+            var client = _clientsRepository.GetClientById(id);
+
+            if (client is null)
+                return NotFound();
+            else
+                return Ok(_mapper.Map<ClientResponse>(client));
         }
 
 
@@ -56,6 +63,16 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
+            var client = new Client()
+            {
+                Name = request.Name,
+                LastName = request.LastName,
+                BirthDate = request.BirthDate,
+            };
+            
+
+            _clientsRepository.UpdateClient(client, id);
+
             return NoContent();
         }
 
@@ -66,9 +83,13 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<CommentResponse> GetCommentsByClientId([FromRoute] int id)
+        public ActionResult <List<CommentResponse>> GetCommentsByClientId([FromRoute] int id)
         {
-            return Ok(new List<CommentResponse>());
+            var clientComents = _clientsRepository.GetCommentsByClientId(id);
+            if (clientComents is null)
+                return NotFound();
+            else
+                return Ok(_mapper.Map<List<CommentResponse>>(clientComents));
         }
 
 
@@ -78,9 +99,13 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<OrderResponse> GetOrdersByClientId([FromRoute] int id)
+        public ActionResult <List<OrderResponse>> GetOrdersByClientId([FromRoute] int id)
         {
-            return Ok(new List<OrderResponse>());
+            var clientOrders = _clientsRepository.GetOrdersByClientId(id);
+            if(clientOrders is null)
+                return NotFound();
+            else
+                return Ok(_mapper.Map<List<OrderResponse>>(clientOrders));
         }
 
 
@@ -92,7 +117,12 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult DeleteClientById([FromRoute] int id)
         {
-            return NoContent();
+            var client = _clientsRepository.GetClientById(id);
+            if (client is null)
+                return NotFound();
+            else
+                _clientsRepository.DeleteClient(id);
+                return NoContent();
         }
 
 
@@ -101,10 +131,12 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<ClientResponse> GetClients()
+        public ActionResult <List<ClientResponse>> GetClients()
         {
-            return Ok(new List<ClientResponse>());
-            
+            var clients = _clientsRepository.GetClients();
+            return Ok(_mapper.Map <List<ClientResponse>>(clients));
+
+
         }
 
     }
