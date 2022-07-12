@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BBSK_Psycho.DataLayer;
 using BBSK_Psycho.DataLayer.Entities;
 using Moq;
+using AutoMapper;
 
 namespace BBSK_Psychologists.Tests;
 
@@ -18,13 +19,16 @@ public class ClientsControllerTests
 
     public ClientsController _sut;
     private Mock<IClientsRepository> _clientsRepositoryMock;
-    
+    private Mock<IMapper> _mapper;
+
+
 
     [SetUp]
     public void Setup()
     {
+        _mapper = new Mock<IMapper>();
         _clientsRepositoryMock = new Mock<IClientsRepository>();
-        _sut= new ClientsController(_clientsRepositoryMock.Object);
+        _sut= new ClientsController(_clientsRepositoryMock.Object, _mapper.Object);
         
     }
 
@@ -52,6 +56,13 @@ public class ClientsControllerTests
         Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
         Assert.True((int)actualResult.Value == 1);
 
+        _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Exactly(1));
+        _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClients(), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>(), It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Exactly(0));
     }
 
 
@@ -68,8 +79,8 @@ public class ClientsControllerTests
             Email = "Va@gmail.com",
             Password = "12345678dad",
             PhoneNumber = "89119856375",
-        };
-        _clientsRepositoryMock.Setup(o => o.GetClientById(expectedClient.Id)).Returns(expectedClient).Verifiable();
+        }; 
+        _clientsRepositoryMock.Setup(o => o.GetClientById(expectedClient.Id)).Returns(expectedClient);
 
 
         //when
@@ -78,8 +89,15 @@ public class ClientsControllerTests
         //then
         var actualResult = actual.Result as ObjectResult;
 
+        
         Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
-        Assert.AreEqual(actualResult.Value, expectedClient);
+        _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Exactly(1));
+        _clientsRepositoryMock.Verify(c => c.GetClients(), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>(), It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Exactly(0));
 
     }
 
@@ -105,7 +123,7 @@ public class ClientsControllerTests
             LastName = "Sobakov",
         };
 
-        _clientsRepositoryMock.Setup(o => o.UpdateClient(client, client.Id)).Verifiable();
+        _clientsRepositoryMock.Setup(o => o.UpdateClient(client, client.Id));
 
 
         //when
@@ -115,6 +133,13 @@ public class ClientsControllerTests
         var actualResult = actual as NoContentResult;
 
         Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
+        _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClients(), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>(), It.IsAny<int>()), Times.Exactly(1));
+        _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Exactly(0));
 
     }
 
@@ -145,7 +170,7 @@ public class ClientsControllerTests
         };
 
 
-        _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(expectedClient.Id)).Returns(expectedClient.Comments).Verifiable();
+        _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(expectedClient.Id)).Returns(expectedClient.Comments);
 
         //when
         var actual = _sut.GetCommentsByClientId(expectedClient.Id);
@@ -154,7 +179,13 @@ public class ClientsControllerTests
         var actualResult = actual.Result as ObjectResult;
 
         Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
-        Assert.AreEqual(expectedClient.Comments, actualResult.Value);
+        _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClients(), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>(), It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Exactly(1));
     }
 
 
@@ -185,7 +216,7 @@ public class ClientsControllerTests
 
         };
 
-        _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(expectedClient.Id)).Returns(expectedClient.Orders).Verifiable();
+        _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(expectedClient.Id)).Returns(expectedClient.Orders);
 
         //when
         var actual = _sut.GetOrdersByClientId(expectedClient.Id);
@@ -194,7 +225,13 @@ public class ClientsControllerTests
         var actualResult = actual.Result as ObjectResult;
 
         Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
-        Assert.AreEqual(expectedClient.Orders, actualResult.Value);
+        _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClients(), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>(), It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Exactly(1));
+        _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Exactly(0));
     }
 
     [Test]
@@ -213,7 +250,7 @@ public class ClientsControllerTests
 
         };
 
-        _clientsRepositoryMock.Setup(o => o.GetClientById(expectedClient.Id)).Returns(expectedClient).Verifiable();
+        _clientsRepositoryMock.Setup(o => o.GetClientById(expectedClient.Id)).Returns(expectedClient);
 
         //when
         var actual = _sut.DeleteClientById(expectedClient.Id);
@@ -222,6 +259,13 @@ public class ClientsControllerTests
         var actualResult = actual as NoContentResult;
 
         Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
+        _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<int>()), Times.Exactly(1));
+        _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Exactly(1));
+        _clientsRepositoryMock.Verify(c => c.GetClients(), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>(), It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Exactly(0));
 
     }
 
@@ -268,6 +312,13 @@ public class ClientsControllerTests
         var actualResult = actual.Result as ObjectResult;
 
         Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
+        _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetClients(), Times.Exactly(1));
+        _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>(), It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Exactly(0));
+        _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Exactly(0));
 
     }
 
