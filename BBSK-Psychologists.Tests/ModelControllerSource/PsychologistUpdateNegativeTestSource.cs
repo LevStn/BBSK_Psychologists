@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BBSK_Psycho.DataLayer.Enums;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource
 {
@@ -18,10 +19,10 @@ namespace BBSK_Psychologists.Tests.ModelControllerSource
                 Name = "лял",
                 LastName = "пвфа",
                 Patronymic = "ПВАПВА",
-                gender = BBSK_Psycho.Enums.Gender.Male,
+                gender = Gender.Male,
                 Phone = "85884859",
                 Education = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
-                checkStatus = BBSK_Psycho.Enums.CheckStatus.Completed,
+                checkStatus = CheckStatus.Completed,
                 Email = "rosgdsfg@fja.com",
                 PasportData = "23146456",
                 Price = 2000,
