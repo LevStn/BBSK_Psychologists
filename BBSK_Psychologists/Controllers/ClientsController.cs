@@ -29,12 +29,11 @@ namespace BBSK_Psycho.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult <int> AddClient([FromBody] ClientRegisterRequest client)
-        {    
-            var result = _clientsRepository.AddClient(_mapper.Map<Client>(client));
-            return Created("", result);
-   
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public ActionResult<int> AddClient([FromBody] ClientRegisterRequest client)
+        {
+            var id = _clientsRepository.AddClient(_mapper.Map<Client>(client));
+            return Created($"{this.GetRequestPath()}/{id}", id);
         }
 
 
@@ -60,8 +59,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
             var client = new Client()
@@ -81,9 +80,9 @@ namespace BBSK_Psycho.Controllers
         [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}/comments")]
         [ProducesResponseType(typeof(CommentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult <List<CommentResponse>> GetCommentsByClientId([FromRoute] int id)
         {
             var clientComents = _clientsRepository.GetCommentsByClientId(id);
@@ -97,9 +96,9 @@ namespace BBSK_Psycho.Controllers
         [AuthorizeByRole(Role.Client)]
         [HttpGet("{id}/orders")]
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult <List<OrderResponse>> GetOrdersByClientId([FromRoute] int id)
         {
             var clientOrders = _clientsRepository.GetOrdersByClientId(id);
@@ -113,9 +112,9 @@ namespace BBSK_Psycho.Controllers
         [AuthorizeByRole(Role.Client)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult DeleteClientById([FromRoute] int id)
         {
             var client = _clientsRepository.GetClientById(id);
