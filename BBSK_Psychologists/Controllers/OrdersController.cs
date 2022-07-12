@@ -1,10 +1,11 @@
 ﻿using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
-using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -18,9 +19,11 @@ namespace BBSK_Psycho.Controllers
     {
 
         private readonly IOrdersRepository _ordersRepository;
-        public OrdersController(IOrdersRepository ordersRepository)
+        private readonly IMapper _mapper;
+        public OrdersController(IOrdersRepository ordersRepository, IMapper mapper)
         {
             _ordersRepository = ordersRepository;
+            _mapper = mapper;
         }
 
         [Authorize(Roles = nameof(Role.Manager))]
@@ -63,19 +66,23 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
         {
-            Order newOrder = new Order()
-            {
-                PsychologistId = request.PsychologistId,
-                ClientId = request.ClientId,
-                Cost = request.Cost,
-                Duration = request.Duration,
-                Message = request.Message,
-                SessionDate = request.SessionDate,
-                OrderDate = request.OrderDate,
-                OrderStatus = OrderStatus.Created,
-                OrderPaymentStatus = request.OrderPaymentStatus,
-                IsDeleted = false
-            };
+            //Order newOrder = new Order()
+            //{
+            //    PsychologistId = request.PsychologistId,
+            //    ClientId = request.ClientId,
+            //    Cost = request.Cost,
+            //    Duration = request.Duration,
+            //    Message = request.Message,
+            //    SessionDate = request.SessionDate,
+            //    OrderDate = request.OrderDate,
+            //    OrderStatus = OrderStatus.Created,
+            //    OrderPaymentStatus = request.OrderPaymentStatus,
+            //    IsDeleted = false
+            //};
+
+            Order newOrder = new Order();
+
+            _mapper.Map(request, newOrder);
 
             _ordersRepository.AddOrder(newOrder);
 
