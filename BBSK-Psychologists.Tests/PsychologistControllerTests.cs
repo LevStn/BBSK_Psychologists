@@ -3,6 +3,7 @@ using BBSK_Psycho.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
+using BBSK_Psycho.DataLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,10 @@ namespace BBSK_Psychologists.Tests
             Name = "лял",
             LastName = "пвфа",
             Patronymic = "ПВАПВА",
-            gender = BBSK_Psycho.Enums.Gender.Male,
+            gender = Gender.Male,
             Phone = "85884859",
             Education = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
-            checkStatus = BBSK_Psycho.Enums.CheckStatus.Completed,
+            checkStatus = CheckStatus.Completed,
             Email = "ros@fja.com",
             PasportData = "23146456",
             Price = 2000,
@@ -38,10 +39,10 @@ namespace BBSK_Psychologists.Tests
             Name = "лял",
             LastName = "пвфа",
             Patronymic = "ПВАПВА",
-            gender = BBSK_Psycho.Enums.Gender.Male,
+            Gender = Gender.Male,
             Phone = "85884859",
             Education = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
-            checkStatus = BBSK_Psycho.Enums.CheckStatus.Completed,
+            CheckStatus = CheckStatus.Completed,
             Email = "ros@fja.com",
             PasportData = "23146456",
             Price = 2000,

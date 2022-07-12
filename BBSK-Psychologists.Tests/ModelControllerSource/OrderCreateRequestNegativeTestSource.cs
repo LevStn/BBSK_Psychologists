@@ -2,7 +2,7 @@
 using BBSK_Psycho.Models;
 using System.Collections;
 using System;
-using BBSK_Psycho.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 
 namespace ModelControllerSource
 {

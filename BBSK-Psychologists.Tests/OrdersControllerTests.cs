@@ -1,6 +1,6 @@
 ﻿using BBSK_Psycho;
 using BBSK_Psycho.Controllers;
-using BBSK_Psycho.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Models;
 using BBSK_Psychologists.Tests.ModelControllerSource;
 using Microsoft.AspNetCore.Http;
