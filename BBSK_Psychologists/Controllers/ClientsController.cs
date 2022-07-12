@@ -2,6 +2,7 @@ using AutoMapper;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
