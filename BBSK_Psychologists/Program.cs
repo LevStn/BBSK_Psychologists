@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using BBSK_Psycho.DataLayer;
+using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,8 +57,12 @@ builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
     o.UseSqlServer(@"Server=.\SQLEXPRESS;Database=BBSK_PsychoDb;Trusted_Connection=True;");
 });
 
+builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddAutoMapper(typeof(MapperConfigStorage));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
