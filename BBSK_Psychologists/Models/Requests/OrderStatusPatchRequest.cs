@@ -1,4 +1,4 @@
-﻿using BBSK_Psycho.Enums;
+﻿using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 

@@ -7,6 +7,7 @@ namespace BBSK_Psycho.Models;
 public class ClientRegisterRequest
 {
     [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
+   
     public string Name { get; set; }
 
     public string? LastName { get; set; }
@@ -19,7 +20,10 @@ public class ClientRegisterRequest
     [EmailAddress(ErrorMessage = ApiErrorMessage.InvalidCharacterInEmail)]
     public string Email { get; set; }
 
+
+    [MaxLength(12, ErrorMessage = ApiErrorMessage.LengthExceeded)]
     public string? PhoneNumber { get; set; }
+
 
     public DateTime? BirthDate { get; set; }
 }

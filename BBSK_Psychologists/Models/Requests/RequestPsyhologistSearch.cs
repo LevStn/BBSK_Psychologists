@@ -1,7 +1,7 @@
 using System;
-using BBSK_Psycho.Enums;
 using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using BBSK_Psycho.DataLayer.Enums;
 
 namespace BBSK_Psycho.Models
 {

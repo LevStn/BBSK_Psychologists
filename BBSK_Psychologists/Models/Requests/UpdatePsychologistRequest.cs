@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using BBSK_Psycho.Enums;
 using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using BBSK_Psycho.DataLayer;
+using BBSK_Psycho.DataLayer.Enums;
 
 namespace BBSK_Psycho.Models.Requests
 {
@@ -12,7 +13,7 @@ namespace BBSK_Psycho.Models.Requests
         [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.LastNameIsRequired)]
-        public string Surname { get; set; }
+        public string LastName { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.PatronymicIsRequired)]
         public string Patronymic { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.PsychologistGenderIsRequired)]
@@ -36,9 +37,9 @@ namespace BBSK_Psycho.Models.Requests
         [Required()]
         public CheckStatus checkStatus { get; set; }        //Enum
         [Required(ErrorMessage = ApiErrorMessage.TherapyMethodsIsRequired)]
-        public List<string>? TherapyMethods { get; set; }
+        public List<string> TherapyMethods { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.ProblemsIsRequired)]
-        public List<string>? Problems { get; set; }
+        public List<string> Problems { get; set; }
         [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
         public decimal Price { get; set; }
         [Required]
