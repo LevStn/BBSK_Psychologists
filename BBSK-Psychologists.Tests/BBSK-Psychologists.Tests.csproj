@@ -17,6 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\BBSK_Psycho.DataLayer\BBSK_Psycho.DataLayer.csproj" />
 	  <ProjectReference Include="..\BBSK_Psychologists\BBSK_Psycho.csproj" />
 	</ItemGroup>
 
