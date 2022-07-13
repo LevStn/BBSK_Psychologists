@@ -10,7 +10,7 @@ namespace BBSK_Psychologists.Tests
     public class OrderRequestsValidationTests
     {
         [Test]
-        public void WhenMessageIsNullShouldThrowException()
+        public void OrderCreateRequest_SendingIncorrectData_GetMessageRequiredError()
         {
             //given
             OrderCreateRequest order = new() 
