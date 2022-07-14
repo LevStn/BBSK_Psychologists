@@ -13,6 +13,7 @@ using BBSK_Psycho.DataLayer.Entities;
 
 namespace BBSK_Psycho.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class PsychologistsController : ControllerBase
@@ -24,10 +25,12 @@ namespace BBSK_Psycho.Controllers
             _psychologistsRepository = psychologistsRepository;
         }
 
-        [AuthorizeByRole(Role.Manager)]
+        [AuthorizeByRole]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PsychologistResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<PsychologistResponse> GetPsychologist(int id)
         {
             var result = _psychologistsRepository.GetPsychologist(id);
@@ -37,8 +40,11 @@ namespace BBSK_Psycho.Controllers
             return Ok(result);
         }
 
-        [AuthorizeByRole(Role.Client, Role.Psychologist)]
+        [AuthorizeByRole(Role.Client)]
         [HttpGet()]
+        [ProducesResponseType(typeof(GetAllPsychologistsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
             var result = _psychologistsRepository.GetAllPsychologists();
@@ -46,11 +52,21 @@ namespace BBSK_Psycho.Controllers
             return Ok(result);
         }
 
+        [HttpGet("avg-price")]
+        [Authorize(Roles = nameof(Role.Psychologist))]
+        [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+        public ActionResult<decimal> GetAveragePsychologistPrice()
+        {
+            return 0.20m;
+        }
+
         [AuthorizeByRole(Role.Psychologist)]
         [HttpPost()]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
@@ -78,8 +94,9 @@ namespace BBSK_Psycho.Controllers
         [AuthorizeByRole(Role.Psychologist)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
             var psychologist = new Psychologist
@@ -94,19 +111,19 @@ namespace BBSK_Psycho.Controllers
         [AuthorizeByRole(Role.Psychologist)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult DeletePsychologist(int id)
         {
             _psychologistsRepository.DeletePsychologist(id);
             return NoContent();
         }
 
-        [AuthorizeByRole(Role.Client, Role.Psychologist)]
+
         [HttpGet("{psychologistId}/comments")]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         public ActionResult <List<GetCommentsByPsychologistIdResponse>> GetCommentsByPsychologistId(int psychologistId)
         {
             var result=_psychologistsRepository.GetCommentsByPsychologistId(psychologistId);
@@ -128,7 +145,7 @@ namespace BBSK_Psycho.Controllers
         [Authorize(Roles = nameof(Role.Client))]
         [HttpPost("{psychologistId}/comments")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
@@ -145,6 +162,5 @@ namespace BBSK_Psycho.Controllers
             var result = _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);
             return Created("", result);
         }
-
     }
 }

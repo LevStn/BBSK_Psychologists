@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using BBSK_Psycho.DataLayer;
 using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,12 +54,16 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer("Data Source=DESKTOP-PMA057A;Initial Catalog=BBSK_PsychoDb;Integrated Security=True");
+    o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
 });
 
+builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddAutoMapper(typeof(MapperConfigStorage));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
