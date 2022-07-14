@@ -39,7 +39,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             return psychologist.Id;
         }
 
-        public int AddCommentToPsyhologist(Comment comment, int psychologistId)
+        public Comment AddCommentToPsyhologist(Comment comment, int psychologistId)
         {
             var psycho = GetPsychologist(psychologistId);
             comment.Psychologist = psycho;
@@ -50,17 +50,35 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context.Comments.Add(comment);
             _context.SaveChanges();
 
-            return psychologistId;
+            return comment;
         }
-
+        // Этот метод будет перенесен в клиента!!!!
         //public int AddRequestPsyhologistSearch(ApplicationForPsychologistSearch applicationForPsychologist)
         //{
-            
+
 
         //}
 
-        public void UpdatePsychologist(Psychologist psychologist)
+        public void UpdatePsychologist(Psychologist newProperty, int id)
         {
+            var psychologist = GetPsychologist(id);
+            psychologist.Gender = newProperty.Gender;
+            psychologist.Phone = newProperty.Phone;
+            psychologist.TherapyMethods.Clear();
+            _context.SaveChanges();
+            psychologist.TherapyMethods = newProperty.TherapyMethods;
+            _context.SaveChanges();
+            psychologist.Email = newProperty.Email;
+            psychologist.Educations.Clear();
+            _context.SaveChanges();
+            psychologist.Educations = newProperty.Educations;
+            _context.SaveChanges();
+            psychologist.Price = newProperty.Price;
+            psychologist.Password = newProperty.Password;
+            psychologist.Problems.Clear();
+            _context.SaveChanges();
+            psychologist.Problems = newProperty.Problems;
+            _context.SaveChanges();
             _context.Psychologists.Update(psychologist);
             _context.SaveChanges();
         }
