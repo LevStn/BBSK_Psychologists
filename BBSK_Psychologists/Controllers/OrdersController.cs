@@ -96,9 +96,9 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public ActionResult DeleteOrderById([FromRoute] int orderId)
+        public ActionResult DeleteOrder([FromRoute] int orderId)
         {
-            _ordersRepository.DeleteOrderById(orderId);
+            _ordersRepository.DeleteOrder(orderId);
 
             return NoContent();
         }

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using BBSK_Psycho.DataLayer.Entities;
+﻿using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
@@ -14,15 +13,11 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public List<Order> GetAllOrders()
-        {
-            return _context.Orders.Where(o => o.IsDeleted == false).ToList();
-        }
+        public List<Order> GetAllOrders() => _context.Orders.Where(o => o.IsDeleted == false).ToList();
+        
 
-        public Order? GetOrderById(int id)
-        {
-            return _context.Orders.FirstOrDefault(o => o.Id == id);
-        }
+        public Order? GetOrderById(int id) => _context.Orders.FirstOrDefault(o => o.Id == id);
+        
 
         public int AddOrder(Order order)
         {
@@ -32,9 +27,9 @@ namespace BBSK_Psycho.DataLayer.Repositories
             return order.Id;
         }
 
-        public void DeleteOrderById(int id)
+        public void DeleteOrder(int id)
         {
-            Order order = GetOrderById(id);
+            Order order = _context.Orders.FirstOrDefault(o => o.Id == id);
 
             order.IsDeleted = true;
 
@@ -43,12 +38,6 @@ namespace BBSK_Psycho.DataLayer.Repositories
 
         public void UpdateOrderStatusById(int orderId, int orderStatus, int paymentStatus)
         {
-            if (orderStatus > Enum.GetNames(typeof(OrderStatus)).Length ||
-                paymentStatus > Enum.GetNames(typeof(OrderPaymentStatus)).Length)
-            {
-                throw new ArgumentException("Invalid arguments");
-            }
-
             Order order = GetOrderById(orderId);
             order.OrderStatus = (OrderStatus)orderStatus;
             order.OrderPaymentStatus = (OrderPaymentStatus)paymentStatus;
