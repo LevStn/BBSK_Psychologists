@@ -178,9 +178,6 @@ namespace BBSK_Psychologists.Tests
                 Password = "155545"
             };
 
-            //when
-
-            sut.UpdatePsychologist(modelToUpdate, startPsychologist.Id);
             var expected = new Psychologist
             {
                 Id = startPsychologist.Id,
@@ -202,7 +199,10 @@ namespace BBSK_Psychologists.Tests
                 Comments = new List<Comment> { },
                 Schedules = new List<Schedule> { }
             };
+            //when
 
+            sut.UpdatePsychologist(modelToUpdate, startPsychologist.Id);
+            
             var actual = context.Psychologists.Find(startPsychologist.Id);
 
             //then
@@ -264,8 +264,29 @@ namespace BBSK_Psychologists.Tests
                 BirthDate = DateTime.Parse("1210 - 12 - 12"),
                 Password = "123543"
             };
+
+            var psych3 = new Psychologist
+            {
+                Name = "sdfs",
+                LastName = "sjfs",
+                Patronymic = "sgd",
+                Gender = Gender.Male,
+                Phone = "44885884859",
+                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                CheckStatus = CheckStatus.Completed,
+                Email = "rosj@fja.com",
+                PasportData = "23146456",
+                Price = 2000,
+                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
+                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
+                WorkExperience = 10,
+                BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                Password = "123543",
+                IsDeleted=true
+            };
             context.Psychologists.Add(psych1);
             context.Psychologists.Add(psych2);
+            context.Psychologists.Add(psych3);
             context.SaveChanges();
 
             //when
@@ -273,11 +294,12 @@ namespace BBSK_Psychologists.Tests
 
             //then
             Assert.IsNotEmpty(actual);
+            Assert.That(actual, Is.Not.Contains(psych3));
 
         }
 
         [Test]
-        public void AddCommentToPsyhologist_WhenChoosenPsych_ThenAddComment()
+        public void AddCommentToPsyhologist_WhenCorrectIdPassed_ThenAddComment()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -319,17 +341,14 @@ namespace BBSK_Psychologists.Tests
 
             };
 
-            var actual = sut.AddCommentToPsyhologist(comment, psychologist.Id);
-
-            //when
+            
             context.Clients.Add(client);
-            context.SaveChanges();
             context.Psychologists.Add(psychologist);
             context.SaveChanges();
- 
-
-            
+            var actual = sut.AddCommentToPsyhologist(comment, psychologist.Id);
+            //when
             var expected = context.Comments.Find(actual.Id);
+
             //then
             Assert.AreEqual(expected, actual);
         }
@@ -377,16 +396,27 @@ namespace BBSK_Psychologists.Tests
                 Client = client,
                 Psychologist = psychologist
             };
+            var comment2 = new Comment
+            {
+                Text = "fsdfsdjf",
+                Rating = 10,
+                Date = DateTime.Now,
+                Client = client,
+                IsDeleted= true,
+                Psychologist = psychologist
+            };
 
             context.Comments.Add(comment);
             context.SaveChanges();
 
             //when
             var actual = sut.GetCommentsByPsychologistId(psychologist.Id);
+            var actualComments = psychologist.Comments;
             var expected = context.Psychologists.Find(psychologist.Id);
 
             //then
             Assert.AreEqual(expected.Comments, actual);
+            Assert.That(actualComments, Is.Not.Contains(comment2));
         }
     }
 }

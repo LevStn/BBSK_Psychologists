@@ -24,12 +24,11 @@ namespace BBSK_Psycho.DataLayer.Repositories
             .Include(p => p.Problems)
             .Include(s => s.Schedules)
             .Include(c => c.Comments)
-            .Include(c => c.Comments)
             .FirstOrDefault(p => p.Id == id);
 
-        public List <Psychologist> GetAllPsychologists() => _context.Psychologists.ToList();
+        public List <Psychologist> GetAllPsychologists() => _context.Psychologists.Where(p => p.IsDeleted == false).ToList();
 
-        public List<Comment> GetCommentsByPsychologistId(int id) => _context.Comments.Where(p => p.IsDeleted == false && p.Psychologist.Id == id).ToList();
+        public List<Comment> GetCommentsByPsychologistId(int id) => _context.Comments.Where(с => с.IsDeleted == false).ToList();
 
         public int AddPsychologist (Psychologist psychologist)
         {
@@ -65,20 +64,15 @@ namespace BBSK_Psycho.DataLayer.Repositories
             psychologist.Gender = newProperty.Gender;
             psychologist.Phone = newProperty.Phone;
             psychologist.TherapyMethods.Clear();
-            _context.SaveChanges();
-            psychologist.TherapyMethods = newProperty.TherapyMethods;
-            _context.SaveChanges();
-            psychologist.Email = newProperty.Email;
             psychologist.Educations.Clear();
-            _context.SaveChanges();
-            psychologist.Educations = newProperty.Educations;
-            _context.SaveChanges();
-            psychologist.Price = newProperty.Price;
-            psychologist.Password = newProperty.Password;
             psychologist.Problems.Clear();
             _context.SaveChanges();
+            psychologist.TherapyMethods = newProperty.TherapyMethods;
             psychologist.Problems = newProperty.Problems;
-            _context.SaveChanges();
+            psychologist.Educations = newProperty.Educations;
+            psychologist.Email = newProperty.Email;
+            psychologist.Price = newProperty.Price;
+            psychologist.Password = newProperty.Password;
             _context.Psychologists.Update(psychologist);
             _context.SaveChanges();
         }

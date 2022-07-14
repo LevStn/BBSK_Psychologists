@@ -109,14 +109,18 @@ namespace BBSK_Psychologists.Tests
         [Test]
         public void GetPsychologist_ObjectResultPassed()
         {
-            _repository.Setup(r => r.GetPsychologist(It.IsAny<int>()))
-            .Returns(new Psychologist());   
+            //_repository.Setup(r => r.GetPsychologist(It.IsAny<int>()))
+            //.Returns(new Psychologist());   
             var clientId = 1;
+
+            _repository.Setup(r => r.GetPsychologist(clientId)).Returns(new Psychologist());
             // when
 
             var actual = _sut.GetPsychologist(clientId);
 
             // then
+
+            _repository.Verify(r => r.GetPsychologist(It.IsAny<int>()), Times.Once);
             var actualResult = actual.Result as ObjectResult;
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
 
