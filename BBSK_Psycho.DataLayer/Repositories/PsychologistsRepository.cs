@@ -87,8 +87,6 @@ namespace BBSK_Psycho.DataLayer.Repositories
             var psychologist = _context.Psychologists.FirstOrDefault(o => o.Id == id);
             psychologist.IsDeleted = true;
             _context.SaveChanges();
-            //_context.Psychologists.Remove(new Psychologist { Id=id});
-            //_context.SaveChanges ();
         }
     }
 }

@@ -3,6 +3,7 @@ using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
@@ -96,7 +97,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void AddPsychologist_WhenAddedInDB_ThenReturnId()
+        public void AddPsychologist_WhenCorrectIdPassed_ThenReturnId()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -165,7 +166,7 @@ namespace BBSK_Psychologists.Tests
                 Patronymic = "sd",
                 Gender = Gender.Famale,
                 Phone = "888888889",
-                Educations = new List<Education> { new Education { EducationData = "2022-11-10", IsDeleted = false } },
+                Educations = new List<Education> { new Education { EducationData = "2011-11-10", IsDeleted = false } },
                 CheckStatus = CheckStatus.Waiting,
                 Email = "urs@fja.com",
                 PasportData = "8888456",
@@ -188,7 +189,7 @@ namespace BBSK_Psychologists.Tests
                 Patronymic = "ПВАПВА",
                 Gender = Gender.Famale,
                 Phone = "888888889",
-                Educations = new List<Education> { new Education { EducationData = "2022-11-10", IsDeleted = false } },
+                Educations = new List<Education> { new Education { EducationData = "2011-11-10", IsDeleted = false } },
                 CheckStatus = CheckStatus.Completed,
                 Email = "urs@fja.com",
                 PasportData = "23146456",
@@ -213,6 +214,10 @@ namespace BBSK_Psychologists.Tests
                .Excluding(o => o.Problems)
 
            );
+
+            expected.Educations.Should().BeEquivalentTo(actual.Educations, options =>  options.Excluding(o => o.Id).Excluding(o=>o.Psychologist));
+            expected.Problems.Should().BeEquivalentTo(actual.Problems, options => options.Excluding(o => o.Id).Excluding(o => o.Psychologists));
+            expected.TherapyMethods.Should().BeEquivalentTo(actual.TherapyMethods, options => options.Excluding(o => o.Id).Excluding(o => o.Psychologists));
         }
 
         [Test]
@@ -272,7 +277,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void AddCommentToPsyhologist_When_Then()
+        public void AddCommentToPsyhologist_WhenChoosenPsych_ThenAddComment()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -323,15 +328,15 @@ namespace BBSK_Psychologists.Tests
             context.SaveChanges();
  
 
-            //when
+            
             var expected = context.Comments.Find(actual.Id);
-
+            //then
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
 
-        public void GetCommentsByPsychologistId()
+        public void GetCommentsByPsychologistId_WhenCorrectIdPassed_ThenReturnComments()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
