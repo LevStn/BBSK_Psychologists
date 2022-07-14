@@ -54,7 +54,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer(@"Server=.\SQLEXPRESS;Database=BBSK_PsychoDb;Trusted_Connection=True;");
+    o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
 });
 
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
