@@ -13,7 +13,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public List<Order> GetAllOrders() => _context.Orders.Where(o => o.IsDeleted == false).ToList();
+        public List<Order> GetOrders() => _context.Orders.Where(o => o.IsDeleted == false).ToList();
         
 
         public Order? GetOrderById(int id) => _context.Orders.FirstOrDefault(o => o.Id == id);

@@ -33,7 +33,7 @@ namespace BBSK_Psycho.Controllers
         [HttpGet]
         public ActionResult<OrderResponse> GetAllOrders()
         {
-            var orders = _ordersRepository.GetAllOrders();
+            var orders = _ordersRepository.GetOrders();
 
             return Ok(orders);
         }
