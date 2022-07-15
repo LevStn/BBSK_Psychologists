@@ -16,14 +16,20 @@ namespace BBSK_Psychologists.Tests
 {
     public class PsychologistRepositoryTests
     {
-        private readonly DbContextOptions<BBSK_PsychoContext> _dbContextOptions;
-
-        public PsychologistRepositoryTests()
+        private DbContextOptions<BBSK_PsychoContext> _dbContextOptions;
+        [SetUp]
+        public void Setup()
         {
             _dbContextOptions = new DbContextOptionsBuilder<BBSK_PsychoContext>()
-                .UseInMemoryDatabase(databaseName: "TestDb")
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
         }
+        //public PsychologistRepositoryTests()
+        //{
+        //    _dbContextOptions = new DbContextOptionsBuilder<BBSK_PsychoContext>()
+        //        .UseInMemoryDatabase(databaseName: "TestDb")
+        //        .Options;
+        //}
         [Test]
         public void DeletePsychologist_WhenCorrectIdPassed_ThenSoftDeleteApplied()
         {
@@ -31,24 +37,7 @@ namespace BBSK_Psychologists.Tests
             var context = new BBSK_PsychoContext(_dbContextOptions);
             var sut = new PsychologistsRepository(context);
 
-            var psychologist = new Psychologist
-            {
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
-                Gender = Gender.Male,
-                Phone = "85884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "12334534"
-            };
+            var psychologist = TestDataPsychologist.GetValidPsychologist();
 
             context.Psychologists.Add(psychologist);
             context.SaveChanges();
@@ -67,24 +56,7 @@ namespace BBSK_Psychologists.Tests
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
             var sut = new PsychologistsRepository(context);
-            var expected = new Psychologist
-            {
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
-                Gender = Gender.Male,
-                Phone = "85884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "12334534"
-            };
+            var expected = TestDataPsychologist.GetValidPsychologist();
 
             context.Psychologists.Add(expected);
             context.SaveChanges();
@@ -103,24 +75,7 @@ namespace BBSK_Psychologists.Tests
             var context = new BBSK_PsychoContext(_dbContextOptions);
             var sut = new PsychologistsRepository(context);
 
-            var expected = new Psychologist
-            {
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
-                Gender = Gender.Male,
-                Phone = "85884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "1233453"
-            };
+            var expected = TestDataPsychologist.GetValidPsychologist();
 
 
             //when
@@ -138,24 +93,7 @@ namespace BBSK_Psychologists.Tests
             var context = new BBSK_PsychoContext(_dbContextOptions);
             var sut = new PsychologistsRepository(context);
 
-            var startPsychologist = new Psychologist
-            {
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
-                Gender = Gender.Male,
-                Phone = "85884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "123345"
-            };
+            var startPsychologist = TestDataPsychologist.GetValidPsychologist();
             context.Psychologists.Add(startPsychologist);
             context.SaveChanges();
 
@@ -227,43 +165,8 @@ namespace BBSK_Psychologists.Tests
             var context = new BBSK_PsychoContext(_dbContextOptions);
             var sut = new PsychologistsRepository(context);
 
-            var psych1 = new Psychologist
-            {
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
-                Gender = Gender.Male,
-                Phone = "85884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "123345"
-            };
-
-            var psych2 = new Psychologist
-            {
-                Name = "sdfs",
-                LastName = "sjfs",
-                Patronymic = "sgd",
-                Gender = Gender.Male,
-                Phone = "44885884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "rosj@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "123543"
-            };
+            var psych1 = TestDataPsychologist.GetValidPsychologist();
+            var psych2 = TestDataPsychologist.GetValidPsychologist();
 
             var psych3 = new Psychologist
             {
@@ -305,25 +208,7 @@ namespace BBSK_Psychologists.Tests
             var context = new BBSK_PsychoContext(_dbContextOptions);
             var sut = new PsychologistsRepository(context);
 
-            var psychologist = new Psychologist
-            {
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
-                Gender = Gender.Male,
-                Phone = "85884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "123345"
-
-            };
+            var psychologist = TestDataPsychologist.GetValidPsychologist();
 
             var client = new Client
             {
@@ -353,33 +238,16 @@ namespace BBSK_Psychologists.Tests
             Assert.AreEqual(expected, actual);
         }
 
+
         [Test]
 
-        public void GetCommentsByPsychologistId_WhenCorrectIdPassed_ThenReturnComments()
+        public void GetCommentsByPsychologistId()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
             var sut = new PsychologistsRepository(context);
 
-            var psychologist = new Psychologist
-            {
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
-                Gender = Gender.Male,
-                Phone = "85884859",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "123345"
-
-            };
+            var psychologist = TestDataPsychologist.GetValidPsychologist();
             var client = new Client
             {
                 Name = "Ляляка",
@@ -402,21 +270,24 @@ namespace BBSK_Psychologists.Tests
                 Rating = 10,
                 Date = DateTime.Now,
                 Client = client,
-                IsDeleted= true,
+                IsDeleted = true,
                 Psychologist = psychologist
             };
 
             context.Comments.Add(comment);
             context.SaveChanges();
+            context.Comments.Add(comment2);
+            context.SaveChanges();
 
             //when
             var actual = sut.GetCommentsByPsychologistId(psychologist.Id);
-            var actualComments = psychologist.Comments;
-            var expected = context.Psychologists.Find(psychologist.Id);
-
+            //var expected = context.Psychologists.(psychologist.Id);
+            var expected= new List<Comment> { comment};
+            var isContains = actual.Contains(comment2);
             //then
-            Assert.AreEqual(expected.Comments, actual);
-            Assert.That(actualComments, Is.Not.Contains(comment2));
+            Assert.AreEqual(expected, actual);
+            Assert.IsFalse(isContains);
+
         }
     }
 }

@@ -26,7 +26,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             .Include(c => c.Comments)
             .FirstOrDefault(p => p.Id == id);
 
-        public List <Psychologist> GetAllPsychologists() => _context.Psychologists.Where(p => p.IsDeleted == false).ToList();
+        public List <Psychologist> GetAllPsychologists() => _context.Psychologists.Where(p => p.IsDeleted == false ).ToList();
 
         public List<Comment> GetCommentsByPsychologistId(int id) => _context.Comments.Where(с => с.IsDeleted == false).ToList();
 
