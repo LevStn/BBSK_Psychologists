@@ -111,7 +111,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
-            _ordersRepository.UpdateOrderStatusById(orderId, (int)orderStatusPatch.OrderStatus, (int)orderStatusPatch.OrderPaymentStatus);
+            _ordersRepository.UpdateOrderStatus(orderId, (int)orderStatusPatch.OrderStatus, (int)orderStatusPatch.OrderPaymentStatus);
 
             return NoContent();
         }

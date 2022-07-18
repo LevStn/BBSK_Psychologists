@@ -36,7 +36,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context.SaveChanges();
         }
 
-        public void UpdateOrderStatusById(int orderId, int orderStatus, int paymentStatus)
+        public void UpdateOrderStatus(int orderId, int orderStatus, int paymentStatus)
         {
             Order order = GetOrderById(orderId);
             order.OrderStatus = (OrderStatus)orderStatus;
