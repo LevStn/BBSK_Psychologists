@@ -58,6 +58,7 @@ builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 });
 
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
+builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 
 builder.Services.AddAuthorization();
 
