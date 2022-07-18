@@ -1,12 +1,7 @@
 ﻿using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Infrastructure;
 using BBSK_Psycho.Models.Requests;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BBSK_Psychologists.Tests.ModelControllerSource
 {
@@ -19,10 +14,10 @@ namespace BBSK_Psychologists.Tests.ModelControllerSource
                 Name = "лял",
                 LastName = "пвфа",
                 Patronymic = "ПВАПВА",
-                gender = Gender.Male,
+                Gender = Gender.Male,
                 Phone = "85884859",
                 Education = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
-                checkStatus = CheckStatus.Completed,
+                CheckStatus = CheckStatus.Completed,
                 Email = "rosgdsfg@fja.com",
                 PasportData = "23146456",
                 Price = 2000,
@@ -58,7 +53,7 @@ namespace BBSK_Psychologists.Tests.ModelControllerSource
             yield return new object[]
             {
              requestWithRequiredPassword,
-            ApiErrorMessage.PasswordIsRequire
+            ApiErrorMessage.PasswordIsRequired
             };
 
             var requestWithRequiredEmail = ReturnModelOfUpdate();

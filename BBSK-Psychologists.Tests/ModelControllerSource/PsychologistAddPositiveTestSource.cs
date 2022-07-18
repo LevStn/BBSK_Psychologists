@@ -29,7 +29,6 @@ namespace BBSK_Psychologists.Tests
                 BirthDate = DateTime.Parse("1210 - 12 - 12"),
                 Password = "12356764"
             },
-
             ApiErrorMessage.NoErrorForTest
             };
         }

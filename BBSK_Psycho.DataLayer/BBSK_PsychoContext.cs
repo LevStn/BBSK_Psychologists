@@ -12,8 +12,8 @@ public class BBSK_PsychoContext : DbContext
     public DbSet<Schedule> Schedules { get; set; }
     public DbSet<Problem> Problems { get; set; }
     public DbSet<TherapyMethod> TherapyMethods { get; set; }
-    public DbSet<Education> Educations { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<Education> Educations { get; set; }
 
 
 
@@ -70,7 +70,7 @@ public class BBSK_PsychoContext : DbContext
             entity.Property(c => c.LastName).HasMaxLength(50);
             entity.Property(c => c.Email).HasMaxLength(140);
             entity.Property(c => c.Password).HasMaxLength(140);
-
+            entity.Property(c => c.PhoneNumber).HasMaxLength(12);
 
         });
 
@@ -90,7 +90,6 @@ public class BBSK_PsychoContext : DbContext
             entity.Property(p => p.Email).HasMaxLength(140);
             entity.Property(p => p.Password).HasMaxLength(140);
             entity.Property(p => p.PasportData).HasMaxLength(255);
-
 
         });
 
@@ -141,6 +140,27 @@ public class BBSK_PsychoContext : DbContext
 
 
             entity.Property(e =>e.EducationData ).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<ApplicationForPsychologistSearch>(entity =>
+        {
+            entity.ToTable(nameof(ApplicationForPsychologistSearch));
+            entity.HasKey(r => r.Id);
+
+            entity
+            .HasOne(r => r.Client)
+            .WithMany(r => r.ApplicationForPsychologistSearch);
+
+            entity.Property(r => r.Name).HasMaxLength(50);
+            entity.Property(r => r.PhoneNumber).HasMaxLength(11);
+            entity.Property(r => r.Description).HasMaxLength(255);
+            entity.Property(r => r.Description).HasMaxLength(255);
+            
+            entity.Property(r => r.CostMin)
+                .HasPrecision(7, 2);
+
+            entity.Property(r => r.CostMax)
+                .HasPrecision(7, 2);
         });
     }
 } 
