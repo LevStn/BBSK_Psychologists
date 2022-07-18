@@ -1,27 +1,32 @@
-﻿using BBSK_Psycho;
-using BBSK_Psycho.Controllers;
+﻿using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using BBSK_Psycho.DataLayer.Enums;
-using BBSK_Psycho.Models;
-using BBSK_Psychologists.Tests.ModelControllerSource;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BBSK_Psycho.Controllers;
+using BBSK_Psycho.Models;
 using NUnit.Framework;
-using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using Moq;
 
 namespace BBSK_Psychologists.Tests
 {
     public class OrdersControllerTests
     {
         private OrdersController _sut;
+        private Mock<IOrdersRepository> _ordersRepository;
+        private Mock<IMapper> _mapper;
+
 
         [SetUp]
         public void Setup()
         {
-            _sut = new OrdersController();
+            _mapper = new Mock<IMapper>();
+            _ordersRepository = new Mock<IOrdersRepository>();
+            _sut = new OrdersController(_ordersRepository.Object, _mapper.Object);
         }
 
         [Test]
-        public void GetAllOrders_NoValidationRequired_RequestedTypeReceived()
+        public void GetOrders_NoValidationRequired_RequestedTypeReceived()
         {
             //given
             var allOrders = new List<OrderResponse>();
@@ -35,7 +40,6 @@ namespace BBSK_Psychologists.Tests
 
             Assert.IsNotNull(actualResult);
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
-            Assert.AreEqual(allOrders.GetType(), actualResult.Value.GetType());
         }
 
         [Test]
