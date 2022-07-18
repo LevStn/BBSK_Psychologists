@@ -126,14 +126,14 @@ namespace BBSK_Psychologists.Tests
                 Phone = "888888889",
                 Educations = new List<Education> { new Education { EducationData = "2011-11-10", IsDeleted = false } },
                 CheckStatus = CheckStatus.Completed,
-                Email = "urs@fja.com",
+                Email = "ros@fja.com",
                 PasportData = "23146456",
                 Price = 500,
                 Problems = new List<Problem> { new Problem { ProblemName = "hhhh", IsDeleted = false } },
                 TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "hdfffff", IsDeleted = false } },
                 WorkExperience = 10,
                 BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "155545",
+                Password = "12334534",
                 Comments = new List<Comment> { },
                 Schedules = new List<Schedule> { }
             };
