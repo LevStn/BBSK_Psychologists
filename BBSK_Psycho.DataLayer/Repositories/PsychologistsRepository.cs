@@ -70,9 +70,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             psychologist.TherapyMethods = newProperty.TherapyMethods;
             psychologist.Problems = newProperty.Problems;
             psychologist.Educations = newProperty.Educations;
-            psychologist.Email = newProperty.Email;
             psychologist.Price = newProperty.Price;
-            psychologist.Password = newProperty.Password;
             _context.Psychologists.Update(psychologist);
             _context.SaveChanges();
         }
