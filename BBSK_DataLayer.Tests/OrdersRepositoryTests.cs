@@ -51,21 +51,94 @@ namespace BBSK_DataLayer.Tests
             _context.Orders.Add(secondOrder);
             _context.SaveChanges();
 
+            List<Order> actualOrders = new() {firstOrder, secondOrder};
+
             //when
-            List<Order> orders = _sut.GetOrders();
+            List<Order> expectedOrders = _sut.GetOrders();
 
 
             //then
-            Assert.NotNull(orders);
-            Assert.That(orders != null);
 
-            Assert.That(orders, Contains.Item(firstOrder));
-            Assert.That(orders, Contains.Item(secondOrder));
+            Assert.NotNull(expectedOrders);
+            CollectionAssert.AreEqual(actualOrders, expectedOrders);
 
-            Assert.That(firstOrder.ClientId == client.Id);
-            Assert.That(firstOrder.Client.Id == client.Id);
-            Assert.That(firstOrder.PsychologistId == psychologist.Id);
-            Assert.That(firstOrder.Psychologist.Id == psychologist.Id);
+            Assert.That(expectedOrders, Contains.Item(firstOrder));
+            Assert.That(expectedOrders, Contains.Item(secondOrder));
+            Assert.AreEqual(expectedOrders[0], actualOrders[0]);
+            Assert.AreEqual(expectedOrders[1], actualOrders[1]);
+        }
+
+        [Test]
+        public void GetOrderById_WhenCorrectIdPassed_ThenOrderReturned()
+        {
+            //given
+            Order givenOrder = OrdersHelper.GetOrder();
+
+            _context.Orders.Add(givenOrder);
+            _context.SaveChanges();
+
+            //when
+            Order expectedOrder = _sut.GetOrderById(givenOrder.Id);
+
+            //then
+            Assert.AreEqual(givenOrder, expectedOrder);
+        }
+
+        [Test]
+        public void AddOrder_WhenCorrectDataPassed_ThenOrderAdded()
+        {
+            //given
+            Order givenOrder = OrdersHelper.GetOrder();
+
+            //when
+            _sut.AddOrder(givenOrder);
+
+            Order expectedOrder = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id);
+            
+            //then
+            Assert.AreEqual(givenOrder, expectedOrder);
+            Assert.AreEqual(expectedOrder.Id, expectedOrder.Id);
+        }
+
+        [Test]
+        public void DeleteOrder_WhenCorrectIdPassed_ThenOrderDeleted()
+        {
+            //given
+            Order givenOrder = OrdersHelper.GetOrder();
+
+            _context.Orders.Add(givenOrder);
+            _context.SaveChanges();
+
+            //when
+            _sut.DeleteOrder(givenOrder.Id);
+
+            bool actual = givenOrder.IsDeleted;
+            bool expected = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id).IsDeleted;
+
+            //then
+            Assert.AreEqual(actual, expected);
+            Assert.That(expected == true);
+        }
+
+        [Test]
+        public void UpdateOrdersStatus_WhenCorrectDataPassed_ThenOrderStatusUpdated()
+        {
+            //given
+            Order givenOrder = OrdersHelper.GetOrder();
+            givenOrder.OrderPaymentStatus = OrderPaymentStatus.Unpaid;
+            givenOrder.OrderStatus = OrderStatus.Created;
+
+            _context.Orders.Add(givenOrder);
+            _context.SaveChanges();
+
+            //when
+            _sut.UpdateOrderStatus(givenOrder.Id, (int)(OrderStatus.Completed), (int)(OrderPaymentStatus.Paid));
+
+            Order expectedOrder = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id);
+
+            //then
+            Assert.That(expectedOrder.OrderStatus == OrderStatus.Completed 
+                && expectedOrder.OrderPaymentStatus == OrderPaymentStatus.Paid);
         }
     }
 }
