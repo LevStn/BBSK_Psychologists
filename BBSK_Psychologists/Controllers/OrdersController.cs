@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
+using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -17,12 +20,13 @@ namespace BBSK_Psycho.Controllers
 
     public class OrdersController : ControllerBase
     {
-        //private readonly ILogger<OrdersController> _logger;
-
-        //public OrdersController(ILogger<OrdersController> logger)
-        //{
-        //    _logger = logger;
-        //}
+        private readonly IOrdersRepository _ordersRepository;
+        private readonly IMapper _mapper;
+        public OrdersController(IOrdersRepository ordersRepository, IMapper mapper)
+        {
+            _ordersRepository = ordersRepository;
+            _mapper = mapper;
+        }
 
         [AuthorizeByRole]
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
@@ -31,8 +35,9 @@ namespace BBSK_Psycho.Controllers
         [HttpGet]
         public ActionResult<OrderResponse> GetAllOrders()
         {
-            return Ok(new List<OrderResponse>());
+            var orders = _ordersRepository.GetOrders();
 
+            return Ok(orders);
         }
 
 
@@ -43,7 +48,14 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<OrderResponse> GetOrderById([FromRoute] int orderId)
         {
-            return Ok(new OrderResponse());
+            Order order = _ordersRepository.GetOrderById(orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
         }
 
 
@@ -55,8 +67,13 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
         {
-            int id = 2;
-            return Created($"{this.GetRequestPath()}/{id}", id);
+            Order newOrder = new Order();
+
+            _mapper.Map(request, newOrder);
+
+            _ordersRepository.AddOrder(newOrder);
+
+            return Created($"{this.GetRequestPath()}/{newOrder.Id}", newOrder.Id);
         }
 
 
@@ -68,6 +85,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult DeleteOrderById([FromRoute] int orderId)
         {
+            _ordersRepository.DeleteOrder(orderId);
+
             return NoContent();
         }
 
@@ -80,6 +99,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
+            _ordersRepository.UpdateOrderStatus(orderId, (int)orderStatusPatch.OrderStatus, (int)orderStatusPatch.OrderPaymentStatus);
+
             return NoContent();
         } 
     }
