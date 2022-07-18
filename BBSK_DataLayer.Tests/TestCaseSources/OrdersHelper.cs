@@ -22,7 +22,7 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
                 Email = "GA@gmail.com",
                 Password = "password",
                 BirthDate = DateTime.Parse($"19{random.Next(0, 9)}{random.Next(0, 9)} - 01 - 01"),
-                RegistrationDate = DateTime.Parse($"2022 - 06 - {random.Next(0, 2)}{random.Next(0, 9)}"),
+                RegistrationDate = DateTime.Parse($"2022 - 06 - {random.Next(0, 2)}{random.Next(1, 9)}"),
                 IsDeleted = false,
                 Orders = new List<Order>(),
                 Comments = new List<Comment>(),
