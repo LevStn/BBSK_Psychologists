@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
+    <ProjectReference Include="..\BBSK_Psycho.DataLayer\BBSK_Psycho.DataLayer.csproj" />
   </ItemGroup>
 
 </Project>
