@@ -34,43 +34,43 @@ namespace BBSK_Psycho.Middleware
             }
             catch (AccessException exception)
             {
-                await HandleExceptionAsync(context, exception);
+                await HandleExceptionAsync(context, HttpStatusCode.Accepted, exception.Message);
             }
 
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private Task HandleExceptionAsync(HttpContext context, HttpStatusCode statusCode, string message)
         {
             var code = HttpStatusCode.InternalServerError;
             var result = string.Empty;
 
-            switch (exception)
-            {
-                case ValidationException validationException:
-                    code = HttpStatusCode.BadRequest;
-                    result = JsonSerializer.Serialize(validationException.Message);
-                    break;
-                case EntityNotFoundException:
-                    code = HttpStatusCode.NotFound;
-                    break;
-                case UniquenessException:
-                    code = HttpStatusCode.UnprocessableEntity;
-                    break;
-                case DataException:
-                    code = HttpStatusCode.UnprocessableEntity;
-                    break;
-                case AccessException:
-                    code = HttpStatusCode.Forbidden;
-                    break;
+            //switch (exception)
+            //{
+            //    case ValidationException validationException:
+            //        code = HttpStatusCode.BadRequest;
+            //        result = JsonSerializer.Serialize(validationException.Message);
+            //        break;
+            //    case EntityNotFoundException:
+            //        code = HttpStatusCode.NotFound;
+            //        break;
+            //    case UniquenessException:
+            //        code = HttpStatusCode.UnprocessableEntity;
+            //        break;
+            //    case DataException:
+            //        code = HttpStatusCode.UnprocessableEntity;
+            //        break;
+            //    case AccessException:
+            //        code = HttpStatusCode.Forbidden;
+            //        break;
 
-            }
+            //}
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = (int)statusCode;
 
             if (result == string.Empty)
             {
-                result = JsonSerializer.Serialize(new { error = exception.Message });
+                result = JsonSerializer.Serialize(new { error = message });
             }
 
             return context.Response.WriteAsync(result);
