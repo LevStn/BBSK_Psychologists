@@ -5,10 +5,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BBSK_Psycho.DataLayer.Migrations
 {
-    public partial class AddEntityApplication : Migration
+    public partial class FixingMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<DateTime>(
+                name: "RegistrationDate",
+                table: "Client",
+                type: "datetime2",
+                nullable: false,
+                defaultValueSql: "getdate()");
+
             migrationBuilder.CreateTable(
                 name: "ApplicationForPsychologistSearch",
                 columns: table => new
@@ -46,6 +53,10 @@ namespace BBSK_Psycho.DataLayer.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ApplicationForPsychologistSearch");
+
+            migrationBuilder.DropColumn(
+                name: "RegistrationDate",
+                table: "Client");
         }
     }
 }
