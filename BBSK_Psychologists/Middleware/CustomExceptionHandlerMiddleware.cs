@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Net;
+using System.Text.Json;
 
 namespace BBSK_Psycho.Middleware
 {
@@ -6,7 +9,7 @@ namespace BBSK_Psycho.Middleware
     {
         private readonly RequestDelegate _next;
 
-        public CustomExeptionHandlerMiddleware(RequestDelegate next) =>
+        public CustomExceptionHandlerMiddleware(RequestDelegate next) =>
             _next = next;
 
         public async Task Invoke(HttpContext context)
