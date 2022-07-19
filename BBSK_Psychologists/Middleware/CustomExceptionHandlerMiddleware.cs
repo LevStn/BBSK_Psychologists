@@ -45,7 +45,6 @@ namespace BBSK_Psycho.Middleware
 
         private Task HandleExceptionAsync(HttpContext context, HttpStatusCode statusCode, string message)
         {
-            var code = HttpStatusCode.InternalServerError;
             var result = string.Empty;
 
             context.Response.ContentType = "application/json";
