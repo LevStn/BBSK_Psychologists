@@ -34,7 +34,6 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<PsychologistResponse> GetPsychologist(int id)
         {
-            throw new AccessException("лялялял");
             var result = _psychologistsRepository.GetPsychologist(id);
             if (result == null)
                 return NotFound();
