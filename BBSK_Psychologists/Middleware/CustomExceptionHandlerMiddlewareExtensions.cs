@@ -1,6 +1,6 @@
 ﻿namespace BBSK_Psycho.Middleware
 {
-    public class CustomExceptionHandlerMiddlewareExtensions
+    public static class CustomExceptionHandlerMiddlewareExtensions
     {
         public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder)
         {

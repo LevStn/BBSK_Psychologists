@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BBSK_Psycho.BusinessLayer.Exceptions;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Net;
 using System.Text.Json;
+using DataException = BBSK_Psycho.BusinessLayer.Exceptions.DataException;
 
 namespace BBSK_Psycho.Middleware
 {
