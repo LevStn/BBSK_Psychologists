@@ -45,15 +45,11 @@ namespace BBSK_Psycho.Middleware
 
         private Task HandleExceptionAsync(HttpContext context, HttpStatusCode statusCode, string message)
         {
-            var result = string.Empty;
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)statusCode;
 
-            if (result == string.Empty)
-            {
-                result = JsonSerializer.Serialize(new { error = message });
-            }
+            var result = JsonSerializer.Serialize(new { error = message });
 
             return context.Response.WriteAsync(result);
         }
