@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using BBSK_Psycho.DataLayer;
 using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho;
+using BBSK_Psycho.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +90,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
+app.UseCustomExceptionHandler();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
