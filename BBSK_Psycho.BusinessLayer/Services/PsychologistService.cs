@@ -1,10 +1,17 @@
 ﻿using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Entities;
+using BBSK_Psycho.DataLayer.Repositories;
 
 namespace BBSK_Psycho.BusinessLayer
 {
-    public class PsychologistServices : IPsychologistServices
+    public class PsychologistService : IPsychologistServices
     {
+        private readonly IPsychologistsRepository _psychologistsRepository;
+
+        public PsychologistService(IPsychologistsRepository psychologistsRepository)
+        {
+            _psychologistsRepository= psychologistsRepository;
+        }
         public Comment AddCommentToPsyhologist(Comment comment, int psychologistId)
         {
             throw new NotImplementedException();
@@ -18,8 +25,7 @@ namespace BBSK_Psycho.BusinessLayer
         public void DeletePsychologist(int id)
         {
             throw new NotImplementedException();
-        }
-
+     
         public List<Psychologist> GetAllPsychologists()
         {
             throw new NotImplementedException();
