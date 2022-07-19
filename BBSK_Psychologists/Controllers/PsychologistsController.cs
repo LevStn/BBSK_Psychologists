@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.DataLayer.Entities;
+using BBSK_Psycho.BusinessLayer.Exceptions;
 
 namespace BBSK_Psycho.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class PsychologistsController : ControllerBase
@@ -25,7 +26,7 @@ namespace BBSK_Psycho.Controllers
             _psychologistsRepository = psychologistsRepository;
         }
 
-        [AuthorizeByRole]
+        //[AuthorizeByRole]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PsychologistResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
