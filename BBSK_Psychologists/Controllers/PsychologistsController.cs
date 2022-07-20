@@ -147,14 +147,14 @@ namespace BBSK_Psycho.Controllers
             return Created($"{this.GetRequestPath()}/{id}", id);
         }
 
-        [Authorize(Roles = nameof(Role.Client))]
+        [AuthorizeByRole(Role.Client)]
         [HttpPost("{psychologistId}/comments")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<CommentResponse> AddCommentToPsyhologist([FromBody] CommentRequest commentRequest, int psychologistId)
+        public ActionResult<int> AddCommentToPsyhologist([FromBody] CommentRequest commentRequest, int psychologistId)
         {
             var comment = new Comment
             {
@@ -165,7 +165,7 @@ namespace BBSK_Psycho.Controllers
             };
 
             var result = _psychologistServices.AddCommentToPsyhologist(comment, psychologistId);
-            return Created("", result);
+            return Created("", result.Id);
         }
     }
 }

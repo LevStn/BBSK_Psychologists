@@ -12,6 +12,7 @@ namespace BBSK_Psycho.BusinessLayer
         {
             _psychologistsRepository = psychologistsRepository;
         }
+
         public Comment AddCommentToPsyhologist(Comment comment, int psychologistId)
         {
             var result = _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);

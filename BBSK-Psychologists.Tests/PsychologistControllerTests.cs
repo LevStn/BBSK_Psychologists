@@ -58,12 +58,12 @@ namespace BBSK_Psychologists.Tests
             Password = "1235345"
         };
 
-        [SetUp]
-        public void Setup()
-        {
-            _repository = new Mock<IPsychologistsRepository>();
-            _sut = new PsychologistsController(_repository.Object);
-        }
+        //[SetUp]
+        //public void Setup()
+        //{
+        //    _repository = new Mock<IPsychologistsRepository>();
+        //    _sut = new PsychologistsController(_repository.Object);
+        //}
 
         [Test]
         public void AddRequestForPsy_ValidRequestPassed_CreatedResultReceived()
