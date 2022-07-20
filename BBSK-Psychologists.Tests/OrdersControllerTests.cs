@@ -1,4 +1,6 @@
 ﻿using BBSK_Psycho.DataLayer.Repositories.Interfaces;
+using BBSK_DataLayer.Tests.TestCaseSources;
+using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +31,11 @@ namespace BBSK_Psychologists.Tests
         public void GetOrders_NoValidationRequired_RequestedTypeReceived()
         {
             //given
-            var allOrders = new List<OrderResponse>();
+            var allOrders = new List<Order>();
+            allOrders.Add(OrdersHelper.GetOrder());
+            allOrders.Add(OrdersHelper.GetOrder());
+
+            _ordersRepository.Setup(c => c.GetOrders()).Returns(allOrders).Verifiable();
 
             //when
             var actual = _sut.GetAllOrders();
@@ -38,20 +44,27 @@ namespace BBSK_Psychologists.Tests
             var actualResult = actual.Result as ObjectResult;
 
 
-            Assert.IsNotNull(actualResult);
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
+            Assert.IsNotNull(actualResult);
+
+            _ordersRepository.Verify(c => c.GetOrders(), Times.Once);
+
+            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
+            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
         public void GetOrderById_ValidIdPassed_OkReceived()
         {
             //given
-            var requestedOrderId = 42;
-            var expectedOrder = new OrderResponse();
-            expectedOrder.Id = 42;
+            var expectedOrder = OrdersHelper.GetOrder();
+
+            _ordersRepository.Setup(c => c.GetOrderById(expectedOrder.Id)).Returns(expectedOrder);
 
             //when
-            var actual = _sut.GetOrderById(requestedOrderId);
+            var actual = _sut.GetOrderById(expectedOrder.Id);
 
             //then
             var actualResult = actual.Result as ObjectResult;
@@ -59,65 +72,90 @@ namespace BBSK_Psychologists.Tests
 
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
             Assert.AreEqual(expectedOrder.GetType(), actualResult.Value.GetType());
-            Assert.AreEqual(expectedOrder.Id, requestedOrderId);
+
+            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Once);
+
+            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
+            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
+            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+
         }
 
         [Test]
         public void AddOrder_ValidRequestPassed_CreatedResultReceived()
         {
             //given
-            var orderCreateRequest = new OrderCreateRequest()
-            {
-                ClientId = 42,
-                Cost = 1200,
-                Duration = SessionDuration.OneAcademicHour,
-                Message = "Программирование на C++",
-                SessionDate = DateTime.Now,
-                OrderDate = DateTime.Now,
-                OrderPaymentStatus = OrderPaymentStatus.Unpaid
-
-            };
-            var expectedId = 2;
+            OrderCreateRequest givenRequest = new();
+            _ordersRepository.Setup(c => c.AddOrder(It.IsAny<Order>())).Returns(1);
 
             //when
-            var actual = _sut.AddOrder(orderCreateRequest);
+            var actual = _sut.AddOrder(givenRequest);
 
             //then
-            var actualResult = actual.Result as ObjectResult;
+            var actualResult = actual.Result as CreatedResult;
 
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
-            Assert.AreEqual(expectedId, actualResult.Value);
+
+            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Once);
+
+            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
+            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
         public void DeleteOrderById_ValidIdPassed_NoContentReceived()
         {
             //given
-            var orderId = 42;
+            Order givenOrder = OrdersHelper.GetOrder();
 
             //when
-            var actual = _sut.DeleteOrderById(orderId);
+            var actual = _sut.DeleteOrderById(givenOrder.Id);
 
             //then
             var actualResult = actual as NoContentResult;
 
             Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
+
+            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Once);
+
+            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
+            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
+            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
         public void UpdateOrderStatusById_ValidRequestAndIdPassed_NoContentReceived()
         {
             //given
-            var orderId = 42;
-            var incomingOrder = new OrderStatusPatchRequest();
+            Order givenOrder = OrdersHelper.GetOrder();
+            //givenOrder.Id = 42;
+
+            var givenRequest = new OrderStatusPatchRequest() 
+            { 
+                OrderPaymentStatus = OrderPaymentStatus.MoneyReturned,
+                OrderStatus = OrderStatus.Cancelled
+            };
+
+            _ordersRepository.Setup(c => c.UpdateOrderStatus(givenOrder.Id, (int)givenRequest.OrderPaymentStatus, (int)givenRequest.OrderStatus));
 
             //when
-            var actual = _sut.UpdateOrderStatusById(orderId, incomingOrder);
+            var actual = _sut.UpdateOrderStatusById(givenOrder.Id, givenRequest);
 
             //then
             var actualResult = actual as NoContentResult;
 
             Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
+
+            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+
+            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
+            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
+            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
         }
     }
 }
