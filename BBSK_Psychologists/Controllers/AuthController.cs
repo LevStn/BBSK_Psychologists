@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BBSK_Psycho.Infrastructure;
-using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Models;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+
 
 namespace BBSK_Psycho.Controllers
 {
@@ -14,33 +13,20 @@ namespace BBSK_Psycho.Controllers
     [Route("[controller]")]
     public class AuthController : Controller
     {
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+        }
+
+
         [HttpPost]
         public string Login([FromBody] LoginRequest request)
         {
-            if (request == default || request.Email == default) return string.Empty;
-
-            Role role;
-
-            if(request.Email == "manager@p.ru")
-            {
-                role = Role.Manager;
-            }
-            else
-            {
-                if(request.Email == "psyh@p.ru")
-                {
-                    role = Role.Psychologist;
-                }
-                else
-                {
-                    role = Role.Client;
-                }
-            }
-            var tmp = role.ToString();
-
-            var roleClaim = new Claim(ClaimTypes.Role, role.ToString()); //присвоение ролей (клиент, психолог, менеджер)
-
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, request.Email), roleClaim };
+            var user = _authService.GetUserForLogin(request.Email, request.Password);
+            
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email), {new Claim(ClaimTypes.Role, user.Role) } };
 
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.Issuer,
