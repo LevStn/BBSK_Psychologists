@@ -8,6 +8,8 @@ using BBSK_Psycho.DataLayer;
 using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho;
 using BBSK_Psycho.Middleware;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +62,7 @@ builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
+builder.Services.AddScoped<IPsychologistServices, PsychologistService>();
 
 builder.Services.AddAuthorization();
 

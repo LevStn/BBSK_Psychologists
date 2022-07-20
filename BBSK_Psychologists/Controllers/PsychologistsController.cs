@@ -11,22 +11,25 @@ using Microsoft.Extensions.Logging;
 using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.BusinessLayer.Exceptions;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 
 namespace BBSK_Psycho.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class PsychologistsController : ControllerBase
     {
 
         private readonly IPsychologistsRepository _psychologistsRepository;
-        public PsychologistsController(IPsychologistsRepository psychologistsRepository)
+        private readonly IPsychologistServices _psychologistServices;
+        public PsychologistsController(IPsychologistsRepository psychologistsRepository, IPsychologistServices psychologistServices)
         {
             _psychologistsRepository = psychologistsRepository;
+            _psychologistServices = psychologistServices;
         }
 
-        //[AuthorizeByRole]
+        [AuthorizeByRole]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(PsychologistResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -161,7 +164,7 @@ namespace BBSK_Psycho.Controllers
                 Client = new Client() { Id = commentRequest.ClientId }
             };
 
-            var result = _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);
+            var result = _psychologistServices.AddCommentToPsyhologist(comment, psychologistId);
             return Created("", result);
         }
     }

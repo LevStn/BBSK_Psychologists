@@ -10,11 +10,12 @@ namespace BBSK_Psycho.BusinessLayer
 
         public PsychologistService(IPsychologistsRepository psychologistsRepository)
         {
-            _psychologistsRepository= psychologistsRepository;
+            _psychologistsRepository = psychologistsRepository;
         }
         public Comment AddCommentToPsyhologist(Comment comment, int psychologistId)
         {
-            throw new NotImplementedException();
+            var result = _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);
+            return result;
         }
 
         public int AddPsychologist(Psychologist psychologist)
@@ -25,7 +26,8 @@ namespace BBSK_Psycho.BusinessLayer
         public void DeletePsychologist(int id)
         {
             throw new NotImplementedException();
-     
+        }
+
         public List<Psychologist> GetAllPsychologists()
         {
             throw new NotImplementedException();
@@ -45,5 +47,7 @@ namespace BBSK_Psycho.BusinessLayer
         {
             throw new NotImplementedException();
         }
+
+
     }
 }
