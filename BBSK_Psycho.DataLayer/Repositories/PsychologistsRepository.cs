@@ -28,6 +28,8 @@ namespace BBSK_Psycho.DataLayer.Repositories
 
         public List <Psychologist> GetAllPsychologists() => _context.Psychologists.Where(p => p.IsDeleted == false ).ToList();
 
+        public Psychologist? GetPsychologistByEmail(string email) => _context.Psychologists.FirstOrDefault(p => p.Email == email);
+
         public List<Comment> GetCommentsByPsychologistId(int id) => _context.Comments.Where(с => с.IsDeleted == false).ToList();
 
         public int AddPsychologist (Psychologist psychologist)
