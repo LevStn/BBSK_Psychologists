@@ -1,9 +1,13 @@
 ﻿
 
 using BBSK_Psycho.BusinessLayer.Exceptions;
+using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BBSK_Psycho.BusinessLayer.Services;
 
@@ -54,7 +58,25 @@ public class AuthServices : IAuthServices
             }
            
         }
+        if(claimModel is null)
+        {
+            throw new EntityNotFoundException("Invalid  password");
+        }
         
         return claimModel;
+    }
+
+    public string GetToken(ClaimModel model)
+    {
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Email), { new Claim(ClaimTypes.Role, model.Role) } };
+
+        var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.Issuer,
+                audience: AuthOptions.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromDays(1)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+        return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 }

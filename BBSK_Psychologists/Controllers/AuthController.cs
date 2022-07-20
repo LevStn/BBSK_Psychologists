@@ -26,16 +26,7 @@ namespace BBSK_Psycho.Controllers
         {
             var user = _authService.GetUserForLogin(request.Email, request.Password);
             
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email), {new Claim(ClaimTypes.Role, user.Role) } };
-
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.Issuer,
-                    audience: AuthOptions.Audience,
-                    claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromDays(1)), // время действия - 1 сутки
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
+            return  _authService.GetToken(user);
         }
     }
 }

@@ -10,6 +10,7 @@ using BBSK_Psycho;
 using BBSK_Psycho.Middleware;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.BusinessLayer.Services;
+using BBSK_Psycho.BusinessLayer.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
