@@ -163,6 +163,66 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         }
 
+        [Test]
+        public void GetToken_ValidData_TokenReturned()
+        {
+            //given
+            var model = new ClaimModel()
+            {
+                Email = "ada@gmail.com",
+                Role = "Client"
+            };
+
+            //when
+            var actual=_sut.GetToken(model);
+
+            //then
+
+            Assert.True(actual is not null);
+           
+        }
+
+        [Test]
+        public void GetToken_EmailEmpty_ThrowDataException()
+        {
+            //given
+            var model = new ClaimModel()
+            {
+                Email = null,
+                Role = "Client"
+            };
+
+            //when, then
+            Assert.Throws<Exceptions.DataException>(() => _sut.GetToken(model));
+
+        }
+
+        [Test]
+        public void GetToken_RoleEmpty_ThrowDataException()
+        {
+            //given
+            var model = new ClaimModel()
+            {
+                Email = "aa@gmail.com",
+                Role = null
+            };
+
+            //when, then
+            Assert.Throws<Exceptions.DataException>(() => _sut.GetToken(model));
+
+        }
+
+        [Test]
+        public void GetToken_PropertysEmpty_ThrowDataException()
+        {
+            //given
+            var model = new ClaimModel();
+            
+
+            //when, then
+            Assert.Throws<Exceptions.DataException>(() => _sut.GetToken(model));
+
+        }
     }
 }
 
