@@ -41,37 +41,20 @@ public class AuthServices : IAuthServices
                 throw new EntityNotFoundException("User not found");
             }
 
-            if (client != null)
+            dynamic user = client != null ? client : psychologist;
+
+            if (user.Password != password)
             {
-                if (client.Password == password)
-                {
-
-                    claimModel.Email = client.Email;
-                    claimModel.Password = client.Password;
-                    claimModel.Role = Role.Client.ToString();
-
-                }
-                else
-                    throw new EntityNotFoundException("Invalid  password");
-
+                throw new EntityNotFoundException("Invalid  password");
             }
-            if (psychologist != null)
+            else
             {
-                if (psychologist.Password == password)
-                {
-
-                    claimModel.Email = psychologist.Email;
-                    claimModel.Password = psychologist.Password;
-                    claimModel.Role = Role.Psychologist.ToString();
-                }
-                else
-                    throw new EntityNotFoundException("Invalid  password");
-
+                claimModel.Email = user.Email;
+                claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
             }
-
+           
         }
         
-
         return claimModel;
     }
 }

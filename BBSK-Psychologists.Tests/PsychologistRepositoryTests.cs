@@ -289,5 +289,70 @@ namespace BBSK_Psychologists.Tests
             Assert.IsFalse(isContains);
 
         }
+
+        [Test]
+        public void GetPsychologistByEmail_WhenCorrectDate_ThenPsychologistReturned()
+        {
+            //given
+            var context = new BBSK_PsychoContext(_dbContextOptions);
+            var sut = new PsychologistsRepository(context);
+
+            var PsychologistFirst = new Psychologist
+            {
+
+                Name = "лял",
+                LastName = "пвфа",
+                Patronymic = "ПВАПВА",
+                Gender = Gender.Famale,
+                Phone = "888888889",
+                Educations = new List<Education> { new Education { EducationData = "2011-11-10", IsDeleted = false } },
+                CheckStatus = CheckStatus.Completed,
+                Email = "ros@fja.com",
+                PasportData = "23146456",
+                Price = 500,
+                Problems = new List<Problem> { new Problem { ProblemName = "hhhh", IsDeleted = false } },
+                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "hdfffff", IsDeleted = false } },
+                WorkExperience = 10,
+                BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                Password = "12334534",
+                Comments = new List<Comment> { },
+                Schedules = new List<Schedule> { }
+            };
+
+            var PsychologistSecond = new Psychologist
+            {
+
+                Name = "Металл",
+                LastName = "Огородович",
+                Patronymic = "ПВАПВА",
+                Gender = Gender.Famale,
+                Phone = "888888889",
+                Educations = new List<Education> { new Education { EducationData = "2011-11-10", IsDeleted = false } },
+                CheckStatus = CheckStatus.Completed,
+                Email = "r@fja.com",
+                PasportData = "23146456",
+                Price = 500,
+                Problems = new List<Problem> { new Problem { ProblemName = "hhhh", IsDeleted = false } },
+                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "hdfffff", IsDeleted = false } },
+                WorkExperience = 10,
+                BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                Password = "12334534",
+                Comments = new List<Comment> { },
+                Schedules = new List<Schedule> { }
+            };
+
+            context.Psychologists.Add(PsychologistFirst);
+            context.Psychologists.Add(PsychologistSecond);
+            context.SaveChanges();
+
+            //when
+            var actual = sut.GetPsychologistByEmail(PsychologistFirst.Email);
+
+            //then
+
+            Assert.True(actual.Id == PsychologistFirst.Id);
+            Assert.True(actual.Email == PsychologistFirst.Email);
+            Assert.True(actual.Name == PsychologistFirst.Name);
+        }
     }
 }
