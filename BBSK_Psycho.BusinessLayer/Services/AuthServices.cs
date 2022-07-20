@@ -1,17 +1,18 @@
 ﻿
 
 using BBSK_Psycho.BusinessLayer.Exceptions;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
 
 namespace BBSK_Psycho.BusinessLayer.Services;
 
-public class AuthService
+public class AuthServices : IAuthServices
 {
     private readonly IClientsRepository _clientsRepository;
     private readonly IPsychologistsRepository _psychologistsRepository;
 
-    public AuthService(IClientsRepository clientsRepository, IPsychologistsRepository psychologistsRepository)
+    public AuthServices(IClientsRepository clientsRepository, IPsychologistsRepository psychologistsRepository)
     {
         _clientsRepository = clientsRepository;
         _psychologistsRepository = psychologistsRepository;
@@ -24,7 +25,7 @@ public class AuthService
     {
         ClaimModel claimModel = new();
 
-        if(email == "manager@p.ru")
+        if(email == "manager@p.ru" && password == "Manager777" )
         {
             claimModel.Email = email;
             claimModel.Role = Role.Manager.ToString();

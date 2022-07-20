@@ -24,6 +24,8 @@ public class ClientsRepository : IClientsRepository
 
     public List<Order> GetOrdersByClientId(int id) => _context.Orders.Where(c => c.IsDeleted == false && c.Client.Id == id).ToList();
 
+    public Client? GetClientByEmail(string email) => _context.Clients.FirstOrDefault(c => c.Email == email);
+
     public int AddClient(Client client)
     {
         _context.Clients.Add(client);
