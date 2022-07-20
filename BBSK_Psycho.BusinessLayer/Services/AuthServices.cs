@@ -31,42 +31,46 @@ public class AuthServices : IAuthServices
             claimModel.Role = Role.Manager.ToString();
             
         }
-
-        var client = _clientsRepository.GetClientByEmail(email);
-        var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
-
-        if(client == null && psychologist == null)
+        else
         {
-            throw new EntityNotFoundException("User not found");
-        }
+            var client = _clientsRepository.GetClientByEmail(email);
+            var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
 
-        if (client != null)
-        {
-            if(client.Password == password)
+            if (client == null && psychologist == null)
             {
+                throw new EntityNotFoundException("User not found");
+            }
 
-                claimModel.Email = client.Email;
-                claimModel.Password = client.Password;
-                claimModel.Role = Role.Client.ToString();
+            if (client != null)
+            {
+                if (client.Password == password)
+                {
+
+                    claimModel.Email = client.Email;
+                    claimModel.Password = client.Password;
+                    claimModel.Role = Role.Client.ToString();
+
+                }
+                else
+                    throw new EntityNotFoundException("Invalid  password");
 
             }
-            else
-                throw new EntityNotFoundException("Invalid  password");
-
-        }
-        if (psychologist != null)
-        {
-            if (psychologist.Password == password)
+            if (psychologist != null)
             {
+                if (psychologist.Password == password)
+                {
 
-                claimModel.Email = psychologist.Email;
-                claimModel.Password = psychologist.Password;
-                claimModel.Role= Role.Psychologist.ToString();
+                    claimModel.Email = psychologist.Email;
+                    claimModel.Password = psychologist.Password;
+                    claimModel.Role = Role.Psychologist.ToString();
+                }
+                else
+                    throw new EntityNotFoundException("Invalid  password");
+
             }
-            else
-                throw new EntityNotFoundException("Invalid  password");
 
         }
+        
 
         return claimModel;
     }
