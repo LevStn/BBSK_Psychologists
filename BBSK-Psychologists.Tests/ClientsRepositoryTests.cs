@@ -384,7 +384,7 @@ public class ClientsRepositoryTests
     }
 
     [Test]
-    public void GetClientByEmail_WhenCorrectDate_ThenClientReturned()
+    public void GetClientByEmail_WhenTheCorrectEmail_ThenClientReturned()
     {
         //given
         var expectedClientFirst = new Client()

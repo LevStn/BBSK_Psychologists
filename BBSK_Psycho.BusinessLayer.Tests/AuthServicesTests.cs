@@ -37,8 +37,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var claim= _sut.GetUserForLogin(managerEmail, managerPassword);
             //then
 
-            Assert.True(claim.Role == "Manager");
-            Assert.True(claim.Email == "manager@p.ru");
+            Assert.True(claim.Role == Role.Manager.ToString());
+            Assert.True(claim.Email == managerEmail);
 
 
         }
@@ -57,7 +57,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(2020, 05, 05),
             };
 
-            _clientsRepositoryMock.Setup(c => c.GetClientByEmail("J@gmail.com")).Returns(clientExpected);
+            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).Returns(clientExpected);
 
 
             //when
@@ -95,13 +95,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail("ros@fja.com")).Returns(psychologistsExpected);
+            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).Returns(psychologistsExpected);
 
             //when
             var claim = _sut.GetUserForLogin(psychologistsExpected.Email, psychologistsExpected.Password);
 
             //then
-            Assert.True(claim.Role == "Psychologist");
+            Assert.True(claim.Role == Role.Psychologist.ToString());
             Assert.True(claim.Email == psychologistsExpected.Email);
             _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Once);
             _psychologistsRepository.Verify(c => c.GetPsychologistByEmail(It.IsAny<string>()), Times.Once);
@@ -117,22 +117,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 Name = "Dantes",
                 LastName = "Don",
-                Patronymic = "Petrovich",
-                Gender = Gender.Male,
-                Phone = "891198883526",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
-                Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                Patronymic = "Petrovich",   
+                Email = "ros@fja.com",             
                 Password = "12334534"
             };
 
-            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail("ros@fja.com")).Returns(psychologistsExpected);
+            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).Returns(psychologistsExpected);
 
 
             //when, then
@@ -147,6 +137,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var badEmail = "ad@mmm.com";
             var clientExpected = new Client()
             {
+                Id = 1,
                 Name = "Petro",
                 LastName = "Petrov",
                 Password = "12345678",
@@ -155,12 +146,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(2020, 05, 05),
             };
 
-            _clientsRepositoryMock.Setup(c => c.GetClients());
+            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).Returns(clientExpected);
 
 
             //when, then
             Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(badEmail, clientExpected.Password));
-
+            
         }
 
         [Test]

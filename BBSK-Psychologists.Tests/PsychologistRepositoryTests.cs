@@ -291,7 +291,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetPsychologistByEmail_WhenCorrectDate_ThenPsychologistReturned()
+        public void GetPsychologistByEmail_WhenTheCorrectEmail_ThenPsychologistReturned()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
