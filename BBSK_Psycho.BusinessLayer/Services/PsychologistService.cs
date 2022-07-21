@@ -21,17 +21,19 @@ namespace BBSK_Psycho.BusinessLayer
 
         public int AddPsychologist(Psychologist psychologist)
         {
-            throw new NotImplementedException();
+            var result = _psychologistsRepository.AddPsychologist(psychologist);
+            return result;
         }
 
         public void DeletePsychologist(int id)
         {
-            throw new NotImplementedException();
+            _psychologistsRepository.DeletePsychologist(id);
         }
 
         public List<Psychologist> GetAllPsychologists()
         {
-            throw new NotImplementedException();
+            var result=_psychologistsRepository.GetAllPsychologists();
+            return result;
         }
 
         public List<Comment> GetCommentsByPsychologistId(int id)

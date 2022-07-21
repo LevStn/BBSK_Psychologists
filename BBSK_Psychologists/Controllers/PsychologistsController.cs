@@ -88,8 +88,7 @@ namespace BBSK_Psycho.Controllers
                 CheckStatus= psychologistRequest.checkStatus,
                 Price= psychologistRequest.Price
             };
-            var id = 42;
-            var result = _psychologistsRepository.AddPsychologist(psychologist);
+            var result = _psychologistServices.AddPsychologist(psychologist);
             return Created("", result);
             //return Created($"{this.GetRequestPath()}/{id}", id); 
             //return psychologistRequest.Id;
@@ -120,7 +119,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult DeletePsychologist(int id)
         {
-            _psychologistsRepository.DeletePsychologist(id);
+            _psychologistServices.DeletePsychologist(id);
             return NoContent();
         }
 
