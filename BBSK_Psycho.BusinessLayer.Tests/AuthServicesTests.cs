@@ -22,7 +22,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _clientsRepositoryMock = new Mock<IClientsRepository>();
             _psychologistsRepository = new Mock<IPsychologistsRepository>();
-            _sut = new AuthServices(_clientsRepositoryMock.Object, _psychologistsRepository.Object);
+            _sut = new AuthServices(_clientsRepositoryMock.Object, _psychologistsRepository.Object, null);
         }
 
 

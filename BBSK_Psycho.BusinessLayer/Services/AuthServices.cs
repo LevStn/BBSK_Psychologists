@@ -5,6 +5,7 @@ using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,12 +16,13 @@ public class AuthServices : IAuthServices
 {
     private readonly IClientsRepository _clientsRepository;
     private readonly IPsychologistsRepository _psychologistsRepository;
+    private readonly IManagerRepository _managerRepository;
 
-    public AuthServices(IClientsRepository clientsRepository, IPsychologistsRepository psychologistsRepository)
+    public AuthServices(IClientsRepository clientsRepository, IPsychologistsRepository psychologistsRepository, IManagerRepository managerRepository)
     {
         _clientsRepository = clientsRepository;
         _psychologistsRepository = psychologistsRepository;
-
+        _managerRepository=managerRepository;
     }
 
     
@@ -29,7 +31,9 @@ public class AuthServices : IAuthServices
     {
         ClaimModel claimModel = new();
 
-        if(email == "manager@p.ru" && password == "Manager777" )
+        var manager = _managerRepository.GetManagerByEmail(email);
+
+        if (email == manager.Email && password == manager.Password)
         {
             claimModel.Email = email;
             claimModel.Role = Role.Manager.ToString();
@@ -39,6 +43,7 @@ public class AuthServices : IAuthServices
         {
             var client = _clientsRepository.GetClientByEmail(email);
             var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
+            
 
             if (client == null && psychologist == null)
             {
