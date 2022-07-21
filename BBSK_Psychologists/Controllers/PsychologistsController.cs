@@ -12,6 +12,7 @@ using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.BusinessLayer.Exceptions;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using AutoMapper;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -23,10 +24,12 @@ namespace BBSK_Psycho.Controllers
 
         private readonly IPsychologistsRepository _psychologistsRepository;
         private readonly IPsychologistServices _psychologistServices;
-        public PsychologistsController(IPsychologistsRepository psychologistsRepository, IPsychologistServices psychologistServices)
+        private readonly IMapper _mapper;
+        public PsychologistsController(IPsychologistsRepository psychologistsRepository, IPsychologistServices psychologistServices, IMapper mapper)
         {
             _psychologistsRepository = psychologistsRepository;
             _psychologistServices = psychologistServices;
+            _mapper = mapper;
         }
 
         [AuthorizeByRole]
@@ -41,7 +44,7 @@ namespace BBSK_Psycho.Controllers
             if (result == null)
                 return NotFound();
             else
-            return Ok(result);
+            return Ok(_mapper.Map<PsychologistResponse>(result));
         }
 
         [AuthorizeByRole(Role.Client)]
@@ -53,7 +56,7 @@ namespace BBSK_Psycho.Controllers
         {
             var result = _psychologistServices.GetAllPsychologists();
             
-            return Ok(result);
+            return Ok(_mapper.Map<List<GetAllPsychologistsResponse>>(result));
         }
 
         [HttpGet("avg-price")]
@@ -74,24 +77,9 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
-            var psychologist = new Psychologist
-            {
-                Name = psychologistRequest.Name,
-                LastName= psychologistRequest.LastName,
-                Patronymic= psychologistRequest.Patronymic,
-                BirthDate= (DateTime)psychologistRequest.BirthDate,
-                Gender= (Gender)psychologistRequest.gender,
-                Phone= psychologistRequest.Phone,
-                Email= psychologistRequest.Email,
-                Password= psychologistRequest.Password,
-                PasportData= psychologistRequest.PasportData,
-                CheckStatus= psychologistRequest.checkStatus,
-                Price= psychologistRequest.Price
-            };
-            var result = _psychologistServices.AddPsychologist(psychologist);
+            var tmp = _mapper.Map<Psychologist>(psychologistRequest);
+            var result = _psychologistServices.AddPsychologist(_mapper.Map<Psychologist>(psychologistRequest));
             return Created("", result);
-            //return Created($"{this.GetRequestPath()}/{id}", id); 
-            //return psychologistRequest.Id;
         }
 
         [AuthorizeByRole(Role.Psychologist)]
@@ -102,12 +90,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
-            var psychologist = new Psychologist
-            {
-                Name = psychologistRequest.Name,
-                BirthDate = psychologistRequest.BirthDate
-            };
-            _psychologistServices.UpdatePsychologist(psychologist, psychologist.Id);
+            _psychologistServices.UpdatePsychologist(_mapper.Map<Psychologist>(psychologistRequest), id);
             return Ok();
         }
 
