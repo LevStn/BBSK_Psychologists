@@ -38,17 +38,19 @@ namespace BBSK_Psycho.BusinessLayer
 
         public List<Comment> GetCommentsByPsychologistId(int id)
         {
-            throw new NotImplementedException();
+            var result= _psychologistsRepository.GetCommentsByPsychologistId(id);
+            return result;
         }
 
         public Psychologist? GetPsychologist(int id)
         {
-            throw new NotImplementedException();
+            var result = _psychologistsRepository.GetPsychologist(id);
+            return result;
         }
 
         public void UpdatePsychologist(Psychologist psychologist, int id)
         {
-            throw new NotImplementedException();
+            var result = _psychologistsRepository.GetPsychologist(id);
         }
 
 

@@ -37,7 +37,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<PsychologistResponse> GetPsychologist(int id)
         {
-            var result = _psychologistsRepository.GetPsychologist(id);
+            var result = _psychologistServices.GetPsychologist(id);
             if (result == null)
                 return NotFound();
             else
@@ -51,7 +51,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
-            var result = _psychologistsRepository.GetAllPsychologists();
+            var result = _psychologistServices.GetAllPsychologists();
             
             return Ok(result);
         }
@@ -107,8 +107,8 @@ namespace BBSK_Psycho.Controllers
                 Name = psychologistRequest.Name,
                 BirthDate = psychologistRequest.BirthDate
             };
-            _psychologistsRepository.UpdatePsychologist(psychologist, psychologist.Id);
-            return NoContent();
+            _psychologistServices.UpdatePsychologist(psychologist, psychologist.Id);
+            return Ok();
         }
 
         [AuthorizeByRole(Role.Psychologist)]
@@ -129,7 +129,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         public ActionResult <List<GetCommentsByPsychologistIdResponse>> GetCommentsByPsychologistId(int psychologistId)
         {
-            var result=_psychologistsRepository.GetCommentsByPsychologistId(psychologistId);
+            var result=_psychologistServices.GetCommentsByPsychologistId(psychologistId);
                 return Ok(result);
         }
 
