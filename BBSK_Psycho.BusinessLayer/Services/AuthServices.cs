@@ -33,7 +33,8 @@ public class AuthServices : IAuthServices
 
         var manager = _managerRepository.GetManagerByEmail(email);
        
-        if (manager is not null && email == manager.Email && PasswordHash.ValidatePassword(password, manager.Password))
+        if (manager is not null && email == manager.Email && 
+            PasswordHash.ValidatePassword(password, manager.Password) && !manager.IsDeleted)
         {
             claimModel.Email = email;
             claimModel.Role = Role.Manager.ToString();
@@ -45,7 +46,7 @@ public class AuthServices : IAuthServices
             var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
             
 
-            if (client == null && psychologist == null)
+            if ((client == null && psychologist == null)|| client.IsDeleted || psychologist.IsDeleted)
             {
                 throw new EntityNotFoundException("User not found");
             }
