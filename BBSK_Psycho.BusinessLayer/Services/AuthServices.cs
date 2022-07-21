@@ -32,8 +32,8 @@ public class AuthServices : IAuthServices
         ClaimModel claimModel = new();
 
         var manager = _managerRepository.GetManagerByEmail(email);
-
-        if (email == manager.Email && password == manager.Password)
+       
+        if (manager is not null && email == manager.Email && PasswordHash.ValidatePassword(password, manager.Password))
         {
             claimModel.Email = email;
             claimModel.Role = Role.Manager.ToString();
@@ -51,8 +51,8 @@ public class AuthServices : IAuthServices
             }
 
             dynamic user = client != null ? client : psychologist;
-
-            if (user.Password != password)
+            
+            if (!PasswordHash.ValidatePassword(password, user.Password))
             {
                 throw new EntityNotFoundException("Invalid  password");
             }
