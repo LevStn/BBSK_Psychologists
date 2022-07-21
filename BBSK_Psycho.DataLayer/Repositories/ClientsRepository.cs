@@ -14,7 +14,7 @@ public class ClientsRepository : IClientsRepository
 
     public Client? GetClientById(int id) => _context.Clients.FirstOrDefault(c => c.Id == id);
 
-    public List<Client> GetClients() => (List<Client>)_context.Clients
+    public List<Client> GetClients() => _context.Clients
         .Where(c => c.IsDeleted== false)
         .AsNoTracking()
         .ToList();
@@ -23,6 +23,8 @@ public class ClientsRepository : IClientsRepository
     public List<Comment> GetCommentsByClientId(int id) => _context.Comments.Where(c => c.IsDeleted == false && c.Client.Id == id).ToList();
 
     public List<Order> GetOrdersByClientId(int id) => _context.Orders.Where(c => c.IsDeleted == false && c.Client.Id == id).ToList();
+
+    public Client? GetClientByEmail(string email) => _context.Clients.FirstOrDefault(c => c.Email == email);
 
     public int AddClient(Client client)
     {
