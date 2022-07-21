@@ -11,5 +11,6 @@ namespace BBSK_Psycho.DataLayer.Repositories
         List<Comment> GetCommentsByClientId(int id);
         List<Order> GetOrdersByClientId(int id);
         void UpdateClient(Client client, int id);
+        Client? GetClientByEmail(string email);
     }
 }

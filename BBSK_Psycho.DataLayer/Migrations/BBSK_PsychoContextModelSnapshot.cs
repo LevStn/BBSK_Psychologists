@@ -110,7 +110,9 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("nvarchar(12)");
 
                     b.Property<DateTime>("RegistrationDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
@@ -381,7 +383,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.HasIndex("PsychologistsId");
 
-                    b.ToTable("ProblemPsychologist", (string)null);
+                    b.ToTable("ProblemPsychologist");
                 });
 
             modelBuilder.Entity("PsychologistTherapyMethod", b =>
@@ -396,7 +398,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.HasIndex("TherapyMethodsId");
 
-                    b.ToTable("PsychologistTherapyMethod", (string)null);
+                    b.ToTable("PsychologistTherapyMethod");
                 });
 
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.ApplicationForPsychologistSearch", b =>
