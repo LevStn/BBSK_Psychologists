@@ -146,7 +146,6 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(2020, 05, 05),
             };
 
-            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).Returns(clientExpected);
 
 
             //when, then
