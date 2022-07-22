@@ -382,5 +382,43 @@ public class ClientsRepositoryTests
         Assert.Null(actualOrders.Find(x => x.Id == 3));
 
     }
+
+    [Test]
+    public void GetClientByEmail_WhenTheCorrectEmail_ThenClientReturned()
+    {
+        //given
+        var expectedClientFirst = new Client()
+        {
+
+            Name = "Vasya",
+            LastName = "Petrov",
+            Email = "Va@gmail.com",
+            Password = "12345678dad",
+            PhoneNumber = "89119856375"
+        };
+
+        var expectedClientSecond = new Client()
+        {
+
+            Name = "Petya",
+            LastName = "Petrov",
+            Email = "aaa@gmail.com",
+            Password = "12345678dad",
+            PhoneNumber = "89119856375"
+        };
+
+        context.Clients.Add(expectedClientFirst);
+        context.Clients.Add(expectedClientSecond);
+        context.SaveChanges();
+
+        //when
+        var actualClient = _sut.GetClientByEmail(expectedClientSecond.Email);
+
+        //then
+
+        Assert.True(actualClient.Id == expectedClientSecond.Id);
+        Assert.True(actualClient.Email == expectedClientSecond.Email);
+        Assert.True(actualClient.Name == expectedClientSecond.Name);
+    }
 }
 

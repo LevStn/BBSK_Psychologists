@@ -16,19 +16,11 @@ public class Client
     public string? PhoneNumber { get; set; }
     public DateTime? BirthDate { get; set; }
 
-    public DateTime RegistrationDate
-    {
-        get
-        {
-            return DateTime.Now;
-        }
-        set { }
-       
-    }
+    public DateTime RegistrationDate { get; set; }
+    
 
     public bool IsDeleted { get; set; }
  
-
 
     public List<Order> Orders { get; set; }
     public List<Comment> Comments { get; set; }

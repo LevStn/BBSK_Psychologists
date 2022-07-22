@@ -1,6 +1,7 @@
 ﻿using System;
 using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using BBSK_Psycho.CustomAttributes;
 
 namespace BBSK_Psycho.Models;
 
@@ -21,8 +22,9 @@ public class ClientRegisterRequest
     public string Email { get; set; }
 
 
-    [MaxLength(12, ErrorMessage = ApiErrorMessage.LengthExceeded)]
+    [PhoneCheker]
     public string? PhoneNumber { get; set; }
 
+    [ClientBirthDate]
     public DateTime? BirthDate { get; set; }
 }

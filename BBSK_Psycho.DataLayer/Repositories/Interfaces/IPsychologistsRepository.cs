@@ -11,5 +11,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
         int AddPsychologist(Psychologist psychologist);
         void UpdatePsychologist(Psychologist psychologist, int id);
         void DeletePsychologist(int id);
+
+        public Psychologist? GetPsychologistByEmail(string email);
     }
 }

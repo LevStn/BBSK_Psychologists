@@ -9,6 +9,8 @@ using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho;
 using BBSK_Psycho.Middleware;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer.Services;
+using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.BusinessLayer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,13 +62,18 @@ builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
     o.UseSqlServer((@"Server=DESKTOP-PMA057A;Database=BBSK_PsychoDb;Trusted_Connection=True"));
 });
 
+
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 builder.Services.AddScoped<IPsychologistServices, PsychologistService>();
+builder.Services.AddScoped<IAuthServices, AuthServices>();
+
 
 builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(MapperConfigStorage));
+
+builder.Services.AddScoped<IClientsServices, ClientsService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -94,12 +101,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 app.UseCustomExceptionHandler();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
