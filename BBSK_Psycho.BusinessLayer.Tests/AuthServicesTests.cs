@@ -49,8 +49,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             Assert.True(claim.Role == Role.Manager.ToString());
             Assert.True(claim.Email == managerExpected.Email);
             _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
-
-
+            _psychologistsRepository.Verify(c => c.GetPsychologistByEmail(It.IsAny<string>()), Times.Never);
+            _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Never);
         }
 
         [Test]
