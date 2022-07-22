@@ -14,6 +14,7 @@ public class BBSK_PsychoContext : DbContext
     public DbSet<TherapyMethod> TherapyMethods { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<Education> Educations { get; set; }
+    public DbSet<ApplicationForPsychologistSearch> ApplicationForPsychologistSearches { get; set; }
 
 
     public BBSK_PsychoContext(DbContextOptions<BBSK_PsychoContext> option)
