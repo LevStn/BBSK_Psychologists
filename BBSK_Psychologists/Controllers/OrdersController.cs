@@ -22,6 +22,8 @@ namespace BBSK_Psycho.Controllers
     {
         private readonly IOrdersRepository _ordersRepository;
         private readonly IMapper _mapper;
+        private readonly 
+        
         public OrdersController(IOrdersRepository ordersRepository, IMapper mapper)
         {
             _ordersRepository = ordersRepository;
@@ -68,8 +70,19 @@ namespace BBSK_Psycho.Controllers
         public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
         {
             Order newOrder = new Order();
+            Client client = new();
+            Psychologist psycho = new();
 
+            _mapper.Map(request, client);
+            _mapper.Map(request, psycho);
             _mapper.Map(request, newOrder);
+
+            newOrder.Client = client;
+            newOrder.Psychologist = psycho;
+            
+            //
+            
+            
 
             _ordersRepository.AddOrder(newOrder);
 
