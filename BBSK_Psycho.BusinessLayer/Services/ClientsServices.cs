@@ -96,6 +96,9 @@ public class ClientsService : IClientsServices
         }
 
         else
+
+            client.Password = PasswordHash.HashPassword(client.Password);
+
             return _clientsRepository.AddClient(client);
 
     }

@@ -15,7 +15,7 @@ public class BBSK_PsychoContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<Education> Educations { get; set; }
 
-
+    public DbSet<Manager> Managers { get; set; }
     public BBSK_PsychoContext(DbContextOptions<BBSK_PsychoContext> option)
         : base(option)
     {
@@ -71,7 +71,7 @@ public class BBSK_PsychoContext : DbContext
             entity.Property(c => c.Password).HasMaxLength(140);
             entity.Property(c => c.PhoneNumber).HasMaxLength(12);
             entity.Property(c => c.RegistrationDate)
-            .HasDefaultValueSql("getdate()");
+                  .HasDefaultValueSql("getdate()");
 
         });
 
@@ -162,6 +162,16 @@ public class BBSK_PsychoContext : DbContext
 
             entity.Property(r => r.CostMax)
                 .HasPrecision(7, 2);
+        });
+
+        modelBuilder.Entity<Manager>(entity =>
+        {
+            entity.ToTable(nameof(Manager));
+            entity.HasKey(m => m.Id);
+
+            entity.Property(m => m.Email).HasMaxLength(255);          
+            entity.Property(m => m.Password).HasMaxLength(255);
+
         });
     }
 } 
