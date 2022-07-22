@@ -12,14 +12,25 @@ using System.Threading.Tasks;
 using BBSK_Psycho.DataLayer.Repositories;
 using Moq;
 using BBSK_Psycho.DataLayer.Entities;
+using AutoMapper;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 
 namespace BBSK_Psychologists.Tests
 {
     public class PsychologistControllerTests
-{       
-        private Mock <IPsychologistsRepository> _repository;
-
-        private PsychologistsController _sut;
+{       private PsychologistsController _sut;
+        //private Mock <IPsychologistsRepository> _repository;
+        private Mock<IMapper> _mapper;
+        private Mock <IPsychologistServices> _services;
+        [SetUp]
+        public void Setup()
+        {
+            _mapper = new Mock<IMapper>();
+            _services = new Mock<IPsychologistServices>();
+            //_repository = new Mock<IPsychologistsRepository>();
+            _sut = new PsychologistsController(/*_repository.Object,*/ _services.Object, _mapper.Object);
+        }
+        
         private AddPsychologistRequest psychologistDataAdd = new AddPsychologistRequest
         {
             Name = "лял",
@@ -58,18 +69,18 @@ namespace BBSK_Psychologists.Tests
             Password = "1235345"
         };
 
-        //[SetUp]
-        //public void Setup()
-        //{
-        //    _repository = new Mock<IPsychologistsRepository>();
-        //    _sut = new PsychologistsController(_repository.Object);
-        //}
+       
 
         [Test]
-        public void AddRequestForPsy_ValidRequestPassed_CreatedResultReceived()
+        public void AddCommentForPsy_ValidRequestPassed_CreatedResultReceived()
         {
             // given
-
+            var comment = new Comment()
+            {
+                Id =121212
+            };
+            _services.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), It.IsAny<int>()))
+                .Returns(comment);
             var request = new CommentRequest
             {
               ClientId=1,
@@ -101,8 +112,8 @@ namespace BBSK_Psychologists.Tests
             var actual = _sut.UpdatePsychologist(psychologist, id);
 
             // then
-            var actualResult = actual as NoContentResult;
-            Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
+            var actualResult = actual as OkResult;
+            Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
 
         }
 
@@ -113,14 +124,14 @@ namespace BBSK_Psychologists.Tests
             //.Returns(new Psychologist());   
             var clientId = 1;
 
-            _repository.Setup(r => r.GetPsychologist(clientId)).Returns(new Psychologist());
+            _services.Setup(r => r.GetPsychologist(clientId)).Returns(new Psychologist());
             // when
 
             var actual = _sut.GetPsychologist(clientId);
 
             // then
 
-            _repository.Verify(r => r.GetPsychologist(It.IsAny<int>()), Times.Once);
+            _services.Verify(r => r.GetPsychologist(It.IsAny<int>()), Times.Once);
             var actualResult = actual.Result as ObjectResult;
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
 
