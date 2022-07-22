@@ -23,5 +23,9 @@ public class MapperConfigStorage : Profile
 			.ForMember(x => x.Educations, s => s.MapFrom(x => x.Educations!.Select(education => new Education() { EducationData = education })))
 			.ForMember(x => x.Problems, s => s.MapFrom(x => x.Problems!.Select(problemName => new Problem() { ProblemName = problemName })))
 			.ForMember(x => x.TherapyMethods, s => s.MapFrom(x => x.TherapyMethods!.Select(therapyMethod => new TherapyMethod() { Method = therapyMethod })));
+		CreateMap<Comment, GetCommentsByPsychologistIdResponse>();
+		CreateMap<CommentRequest, Comment>()
+			.ForMember(x => x.Psychologist, s => s.MapFrom((x => (new Psychologist { Id= x.PsychologistId}))))
+			.ForMember(x => x.Client, s => s.MapFrom((x => (new Client { Id= x.ClientId}))));
 	}
 }

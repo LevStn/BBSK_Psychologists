@@ -113,7 +113,7 @@ namespace BBSK_Psycho.Controllers
         public ActionResult <List<GetCommentsByPsychologistIdResponse>> GetCommentsByPsychologistId(int psychologistId)
         {
             var result=_psychologistServices.GetCommentsByPsychologistId(psychologistId);
-                return Ok(result);
+                return Ok(_mapper.Map <List<GetCommentsByPsychologistIdResponse>>(result));
         }
 
         // Этот метод будет перенесен в клиента!!!!
@@ -138,15 +138,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddCommentToPsyhologist([FromBody] CommentRequest commentRequest, int psychologistId)
         {
-            var comment = new Comment
-            {
-                Text = commentRequest.Text,
-                Rating = commentRequest.Rating,
-                Date = commentRequest.Date,
-                Client = new Client() { Id = commentRequest.ClientId }
-            };
-
-            var result = _psychologistServices.AddCommentToPsyhologist(comment, psychologistId);
+            var result = _psychologistServices.AddCommentToPsyhologist(_mapper.Map<Comment>(commentRequest), psychologistId);
             return Created("", result.Id);
         }
     }
