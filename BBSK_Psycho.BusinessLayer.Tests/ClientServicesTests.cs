@@ -1,6 +1,7 @@
 ﻿using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Tests.ModelControllerSource;
 using BBSK_Psycho.DataLayer.Entities;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
 using Moq;
 
@@ -119,7 +120,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         {
             //given
             var clients = new List<Client>
-        {
+            {
             new Client()
             {
                 Name = "John",
@@ -184,7 +185,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            if (role == "Manager")
+            if (role == Role.Manager.ToString())
             {
                 clientInDb.Email = null;
             }
@@ -231,7 +232,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
 
-            _claims = new() { Email = clientInDb.Email, Role = "Client" };
+            _claims = new() { Email = clientInDb.Email, Role = Role.Client.ToString() };
 
 
             _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
@@ -265,7 +266,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist.ToString())
             {
                 testEmail = clientInDb.Email;
             }
@@ -314,7 +315,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager.ToString())
             {
                 clientInDb.Email = null;
             }
@@ -345,7 +346,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             Client? eptyClient = null;
 
 
-            _claims = new() { Email = clientInDb.Email, Role = "Client" };
+            _claims = new() { Email = clientInDb.Email, Role = Role.Client.ToString() };
 
             _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(eptyClient);
             _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).Returns(clientInDb.Comments);
@@ -391,7 +392,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist.ToString())
             {
                 testEmail = clientInDb.Email;
             }
@@ -437,7 +438,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager.ToString())
             {
                 clientInDb.Email = null;
             }
@@ -513,7 +514,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 }
 
             };
-            if (role == "Psychologist")
+            if (role == Role.Psychologist.ToString())
             {
                 testEmail = clientInDb.Email;
             }
@@ -555,7 +556,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(1998, 10, 10),
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager.ToString())
             {
                 client.Email = null;
             }
@@ -634,7 +635,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(1998, 10, 10),
             };
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist.ToString())
             {
                 testEmail = client.Email;
             }
@@ -667,7 +668,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager.ToString())
             {
                 expectedClient.Email = null;
             }
@@ -742,7 +743,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist.ToString())
             {
                 clientFirst.Email = clientSecond.Email;
             }

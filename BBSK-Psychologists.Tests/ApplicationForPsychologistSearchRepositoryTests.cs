@@ -190,7 +190,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
         //given
         var client = new Client()
         {
-            Name = "Vasya",
+            Name = "Petya",
             LastName = "Petrov",
             Email = "Va@gmail.com",
             Password = "12345678dad",

@@ -58,14 +58,15 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
+   // o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
 });
 
 
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 builder.Services.AddScoped<IAuthServices, AuthServices>();
-
+builder.Services.AddScoped<IAuthServices, AuthServices>();
+builder.Services.AddScoped<IApplicationForPsychologistSearchServices, ApplicationForPsychologistSearchServices>();
 
 builder.Services.AddAuthorization();
 
