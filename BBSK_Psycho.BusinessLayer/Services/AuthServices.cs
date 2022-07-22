@@ -1,6 +1,4 @@
-﻿
-
-using BBSK_Psycho.BusinessLayer.Exceptions;
+﻿using BBSK_Psycho.BusinessLayer.Exceptions;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Enums;
@@ -32,13 +30,13 @@ public class AuthServices : IAuthServices
         ClaimModel claimModel = new();
 
         var manager = _managerRepository.GetManagerByEmail(email);
-       
-        if (manager is not null && email == manager.Email && 
+
+        if (manager is not null && email == manager.Email &&
             PasswordHash.ValidatePassword(password, manager.Password) && !manager.IsDeleted)
         {
             claimModel.Email = email;
             claimModel.Role = Role.Manager.ToString();
-            
+
         }
         else
         {
@@ -46,7 +44,7 @@ public class AuthServices : IAuthServices
             var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
             
 
-            if ((client == null && psychologist == null)|| client.IsDeleted || psychologist.IsDeleted)
+            if (client == null && psychologist == null)
             {
                 throw new EntityNotFoundException("User not found");
             }
@@ -59,16 +57,25 @@ public class AuthServices : IAuthServices
             }
             else
             {
-                claimModel.Email = user.Email;
-                claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
+                if(user.IsDeleted)
+                {
+                    throw new EntityNotFoundException("User not found");
+                }
+                else
+                {
+                    claimModel.Email = user.Email;
+                    claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
+
+                }
+                
             }
-           
+
         }
-        if(claimModel is null)
+        if (claimModel is null)
         {
             throw new EntityNotFoundException("Invalid  password");
         }
-        
+
         return claimModel;
     }
 
