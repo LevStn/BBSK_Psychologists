@@ -91,7 +91,7 @@ namespace BBSK_Psycho.Controllers
         public ActionResult UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
             _psychologistServices.UpdatePsychologist(_mapper.Map<Psychologist>(psychologistRequest), id);
-            return Ok();
+            return NoContent();
         }
 
         [AuthorizeByRole(Role.Psychologist)]

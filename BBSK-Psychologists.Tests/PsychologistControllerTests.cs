@@ -96,9 +96,7 @@ namespace BBSK_Psychologists.Tests
             // then
             var actualResult = actual.Result as CreatedResult;
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
-
         }
-
 
         [Test]
         public void UpdatePsychologist_NoContentResult()
@@ -112,8 +110,8 @@ namespace BBSK_Psychologists.Tests
             var actual = _sut.UpdatePsychologist(psychologist, id);
 
             // then
-            var actualResult = actual as OkResult;
-            Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
+            var actualResult = actual as NoContentResult;
+            Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
 
         }
 
