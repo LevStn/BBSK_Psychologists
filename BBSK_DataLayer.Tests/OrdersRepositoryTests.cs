@@ -46,9 +46,12 @@ namespace BBSK_DataLayer.Tests
             Psychologist psychologist = OrdersHelper.GetPsychologist();
             Order firstOrder = OrdersHelper.GetOrder(client, psychologist);
             Order secondOrder = OrdersHelper.GetOrder();
+            Order thirdOrder = OrdersHelper.GetOrder();
+            thirdOrder.IsDeleted = true;
 
             _context.Orders.Add(firstOrder);
             _context.Orders.Add(secondOrder);
+            _context.Orders.Add(thirdOrder);
             _context.SaveChanges();
 
             List<Order> actualOrders = new() {firstOrder, secondOrder};
@@ -64,8 +67,12 @@ namespace BBSK_DataLayer.Tests
 
             Assert.That(expectedOrders, Contains.Item(firstOrder));
             Assert.That(expectedOrders, Contains.Item(secondOrder));
+            Assert.That(expectedOrders, Does.Not.Contains(thirdOrder));
+
             Assert.AreEqual(expectedOrders[0], actualOrders[0]);
             Assert.AreEqual(expectedOrders[1], actualOrders[1]);
+            Assert.That(!expectedOrders[0].IsDeleted);
+            Assert.That(!expectedOrders[1].IsDeleted);
         }
 
         [Test]
@@ -112,12 +119,11 @@ namespace BBSK_DataLayer.Tests
             //when
             _sut.DeleteOrder(givenOrder.Id);
 
-            bool actual = givenOrder.IsDeleted;
-            bool expected = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id).IsDeleted;
+            Order expected = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id);
 
             //then
-            Assert.AreEqual(actual, expected);
-            Assert.That(expected == true);
+            Assert.AreEqual(givenOrder.IsDeleted, expected.IsDeleted);
+            Assert.That(expected.IsDeleted);
         }
 
         [Test]
@@ -132,7 +138,7 @@ namespace BBSK_DataLayer.Tests
             _context.SaveChanges();
 
             //when
-            _sut.UpdateOrderStatus(givenOrder.Id, (int)(OrderStatus.Completed), (int)(OrderPaymentStatus.Paid));
+            _sut.UpdateOrderStatus(givenOrder.Id, OrderStatus.Completed, OrderPaymentStatus.Paid);
 
             Order expectedOrder = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id);
 

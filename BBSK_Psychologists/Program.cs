@@ -11,6 +11,7 @@ using BBSK_Psycho.Middleware;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,13 +59,16 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
+    //o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
+    string connString = builder.Configuration.GetValue<string>("CON_STRING");
+    o.UseSqlServer(connString);
 });
 
 
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 builder.Services.AddScoped<IAuthServices, AuthServices>();
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 
 
 builder.Services.AddAuthorization();

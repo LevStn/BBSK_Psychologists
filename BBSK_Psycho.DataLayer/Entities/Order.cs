@@ -4,9 +4,7 @@ namespace BBSK_Psycho.DataLayer.Entities;
 
 public class Order
 {
-    public int Id { get; set; }
-    public int ClientId { get; set; }
-    public int PsychologistId { get; set; }
+    public int Id { get; set; } 
     public decimal Cost { get; set; }
     public int Duration { get; set; }
     public string Message { get; set; }
@@ -25,8 +23,8 @@ public class Order
     {
         if (obj is null
                 || Id != ((Order)obj).Id
-                || ClientId != ((Order)obj).ClientId
-                || PsychologistId != ((Order)obj).PsychologistId
+                || Client != ((Order)obj).Client
+                || Psychologist != ((Order)obj).Psychologist
                 || Cost != ((Order)obj).Cost
                 || Duration != ((Order)obj).Duration
                 || Message != ((Order)obj).Message
@@ -42,5 +40,3 @@ public class Order
         return true;
     }
 }
-
-

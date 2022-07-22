@@ -11,7 +11,13 @@ namespace BBSK_Psycho.Configuration
         {
             CreateMap<OrderCreateRequest, Order>()
                 .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false));
-                //.ForMember("IsDeleted", o => )
+            //.ForMember(dest => dest.Client.Id, opt => opt.MapFrom(src => src.ClientId))
+            //.ForMember(dest => dest.Psychologist.Id, opt => opt.MapFrom(src => src.PsychologistId));
+
+            CreateMap<OrderCreateRequest, Client>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
+            CreateMap<OrderCreateRequest, Psychologist>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
         }
     }
 }

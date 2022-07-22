@@ -35,7 +35,7 @@ namespace BBSK_Psychologists.Tests
             allOrders.Add(OrdersHelper.GetOrder());
             allOrders.Add(OrdersHelper.GetOrder());
 
-            _ordersRepository.Setup(c => c.GetOrders()).Returns(allOrders).Verifiable();
+            _ordersRepository.Setup(c => c.GetOrders()).Returns(allOrders);
 
             //when
             var actual = _sut.GetAllOrders();
@@ -48,11 +48,6 @@ namespace BBSK_Psychologists.Tests
             Assert.IsNotNull(actualResult);
 
             _ordersRepository.Verify(c => c.GetOrders(), Times.Once);
-
-            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
-            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
-            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
-            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -74,12 +69,6 @@ namespace BBSK_Psychologists.Tests
             Assert.AreEqual(expectedOrder.GetType(), actualResult.Value.GetType());
 
             _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Once);
-
-            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
-            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
-            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
-            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
-
         }
 
         [Test]
@@ -98,11 +87,6 @@ namespace BBSK_Psychologists.Tests
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
 
             _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Once);
-
-            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
-            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
-            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
-            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -120,11 +104,6 @@ namespace BBSK_Psychologists.Tests
             Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
 
             _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Once);
-
-            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
-            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
-            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
-            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
         [Test]
@@ -140,7 +119,7 @@ namespace BBSK_Psychologists.Tests
                 OrderStatus = OrderStatus.Cancelled
             };
 
-            _ordersRepository.Setup(c => c.UpdateOrderStatus(givenOrder.Id, (int)givenRequest.OrderPaymentStatus, (int)givenRequest.OrderStatus));
+            _ordersRepository.Setup(c => c.UpdateOrderStatus(givenOrder.Id, givenRequest.OrderStatus, givenRequest.OrderPaymentStatus));
 
             //when
             var actual = _sut.UpdateOrderStatusById(givenOrder.Id, givenRequest);
@@ -150,12 +129,7 @@ namespace BBSK_Psychologists.Tests
 
             Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
 
-            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
-
-            _ordersRepository.Verify(c => c.GetOrders(), Times.Never);
-            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
-            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Never);
-            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Never);
+            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<OrderStatus>(), It.IsAny<OrderPaymentStatus>()), Times.Once);
         }
     }
 }

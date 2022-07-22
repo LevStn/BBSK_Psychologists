@@ -35,8 +35,8 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
         {
             Order order = new()
             {
-                ClientId = random.Next(1, 100),
-                PsychologistId = random.Next(1, 100),
+                Client = GetClient(),
+                Psychologist = GetPsychologist(),
                 Cost = 1200,
                 Duration = 90,
                 Message = "Программирование на C++",
@@ -54,8 +54,8 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
         {
             Order order = GetOrder();
 
-            order.ClientId = client.Id;
-            order.PsychologistId = psychologist.Id;
+            order.Client.Id = client.Id;
+            order.Psychologist.Id = psychologist.Id;
             order.Client = client;
             order.Psychologist = psychologist;
 

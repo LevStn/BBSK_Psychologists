@@ -13,7 +13,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public List<Order> GetOrders() => _context.Orders.Where(o => o.IsDeleted == false).ToList();
+        public List<Order> GetOrders() => _context.Orders.Where(o => !o.IsDeleted).ToList();
         
 
         public Order? GetOrderById(int id) => _context.Orders.FirstOrDefault(o => o.Id == id);
@@ -36,7 +36,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context.SaveChanges();
         }
 
-        public void UpdateOrderStatus(int orderId, int orderStatus, int paymentStatus)
+        public void UpdateOrderStatus(int orderId, OrderStatus orderStatus, OrderPaymentStatus paymentStatus)
         {
             Order order = GetOrderById(orderId);
             order.OrderStatus = (OrderStatus)orderStatus;

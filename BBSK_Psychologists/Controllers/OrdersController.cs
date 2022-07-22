@@ -97,9 +97,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+
         public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
-            _ordersRepository.UpdateOrderStatus(orderId, (int)orderStatusPatch.OrderStatus, (int)orderStatusPatch.OrderPaymentStatus);
+            _ordersRepository.UpdateOrderStatus(orderId, orderStatusPatch.OrderStatus, orderStatusPatch.OrderPaymentStatus);
 
             return NoContent();
         } 
