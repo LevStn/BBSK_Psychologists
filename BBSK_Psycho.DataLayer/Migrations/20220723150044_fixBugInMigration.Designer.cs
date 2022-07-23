@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BBSK_Psycho.DataLayer.Migrations
 {
     [DbContext(typeof(BBSK_PsychoContext))]
-    [Migration("20220719212451_FixingMigration")]
-    partial class FixingMigration
+    [Migration("20220723150044_fixBugInMigration")]
+    partial class fixBugInMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,6 +182,32 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasIndex("PsychologistId");
 
                     b.ToTable("Education", (string)null);
+                });
+
+            modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Manager", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Manager", (string)null);
                 });
 
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Order", b =>
