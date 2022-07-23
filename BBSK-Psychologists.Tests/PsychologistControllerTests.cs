@@ -1,4 +1,5 @@
 ﻿using BBSK_Psycho.Controllers;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -6,6 +6,5 @@
         Completed,
         Cancelled,
         Deleted
-
     }
 }
