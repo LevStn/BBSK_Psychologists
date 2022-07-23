@@ -58,7 +58,9 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
+    //o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
+    string connString = builder.Configuration.GetValue<string>("CON_STRING");
+    o.UseSqlServer(connString);
 });
 
 
@@ -69,6 +71,9 @@ builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 
 
 builder.Services.AddScoped<IAuthServices, AuthServices>();
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+builder.Services.AddScoped<IClientsServices, ClientsService>();
+builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
 builder.Services.AddScoped<IApplicationForPsychologistSearchRepository, ApplicationForPsychologistSearchRepository>();
 builder.Services.AddScoped<IApplicationForPsychologistSearchServices, ApplicationForPsychologistSearchServices>();
@@ -76,6 +81,7 @@ builder.Services.AddScoped<IApplicationForPsychologistSearchServices, Applicatio
 builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(MapperConfigStorage));
+
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -104,12 +110,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 app.UseCustomExceptionHandler();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

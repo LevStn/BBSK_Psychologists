@@ -2,6 +2,7 @@
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using Moq;
 
 namespace BBSK_Psycho.BusinessLayer.Tests
@@ -11,7 +12,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         private AuthServices _sut;
         private Mock<IClientsRepository> _clientsRepositoryMock;
         private Mock<IPsychologistsRepository> _psychologistsRepository;
-
+        private Mock<IManagerRepository> _managerRepository;
 
         [SetUp]
         public void Setup()
@@ -19,7 +20,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _clientsRepositoryMock = new Mock<IClientsRepository>();
             _psychologistsRepository = new Mock<IPsychologistsRepository>();
-            _sut = new AuthServices(_clientsRepositoryMock.Object, _psychologistsRepository.Object);
+            _managerRepository = new Mock<IManagerRepository>();
+            _sut = new AuthServices(_clientsRepositoryMock.Object, _psychologistsRepository.Object, _managerRepository.Object);
         }
 
 
@@ -27,28 +29,37 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void Login_ValidManagerEmailAndPassword_ClaimModelReturned()
         {
             //given
-            var managerEmail = "manager@p.ru";
-            var managerPassword = "Manager777";
+            var managerPassword = "12345678954";
+            var managerExpected = new Manager()
+            {
+                Password = PasswordHash.HashPassword("12345678954"),
+                Email = "J@gmail.com",
+                IsDeleted = false,
+            };
+
+            _managerRepository.Setup(m => m.GetManagerByEmail(managerExpected.Email)).Returns(managerExpected);
             //when
 
-            var claim= _sut.GetUserForLogin(managerEmail, managerPassword);
+            var claim= _sut.GetUserForLogin(managerExpected.Email, managerPassword);
             //then
 
             Assert.True(claim.Role == Role.Manager.ToString());
-            Assert.True(claim.Email == managerEmail);
-
-
+            Assert.True(claim.Email == managerExpected.Email);
+            _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
+            _psychologistsRepository.Verify(c => c.GetPsychologistByEmail(It.IsAny<string>()), Times.Never);
+            _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Never);
         }
 
         [Test]
         public void Login_ValidClientEmailAndPassword_ClaimModelReturned()
         {
             //given
+            var clientPassword = "12345678";
             var clientExpected = new Client()
             {
                 Name = "Petro",
                 LastName = "Petrov",
-                Password = "12345678",
+                Password = PasswordHash.HashPassword("12345678"),
                 Email = "J@gmail.com",
                 PhoneNumber = "89119118696",
                 BirthDate = new DateTime(2020, 05, 05),
@@ -58,12 +69,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
             //when
-            var claim = _sut.GetUserForLogin(clientExpected.Email, clientExpected.Password);
+            var claim = _sut.GetUserForLogin(clientExpected.Email, clientPassword);
 
             //then
-            Assert.True(claim.Role == "Client");
+            Assert.True(claim.Role == Role.Client.ToString());
             Assert.True(claim.Email == clientExpected.Email);
             _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Once);
+            _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
             _psychologistsRepository.Verify(c => c.GetPsychologistByEmail(It.IsAny<string>()), Times.Once);
 
         }
@@ -72,35 +84,26 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void Login_ValidPsychologistsEmailAndPassword_ClaimModelReturned()
         {
             //given
+            var passwordPsychologistsExpected = "12334534";
             var psychologistsExpected = new Psychologist()
             {
                 Name = "Dantes",
                 LastName = "Don",
-                Patronymic = "Petrovich",
-                Gender = Gender.Male,
-                Phone = "891198883526",
-                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
-                CheckStatus = CheckStatus.Completed,
                 Email = "ros@fja.com",
-                PasportData = "23146456",
-                Price = 2000,
-                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
-                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
-                WorkExperience = 10,
-                BirthDate = DateTime.Parse("1210 - 12 - 12"),
-                Password = "12334534"
+                Password = PasswordHash.HashPassword("12334534")
             };
 
 
             _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).Returns(psychologistsExpected);
 
             //when
-            var claim = _sut.GetUserForLogin(psychologistsExpected.Email, psychologistsExpected.Password);
+            var claim = _sut.GetUserForLogin(psychologistsExpected.Email, passwordPsychologistsExpected);
 
             //then
             Assert.True(claim.Role == Role.Psychologist.ToString());
             Assert.True(claim.Email == psychologistsExpected.Email);
             _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Once);
+            _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
             _psychologistsRepository.Verify(c => c.GetPsychologistByEmail(It.IsAny<string>()), Times.Once);
         }
 
@@ -116,15 +119,37 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 LastName = "Don",
                 Patronymic = "Petrovich",   
                 Email = "ros@fja.com",             
-                Password = "12334534"
+                Password = PasswordHash.HashPassword("12334534"),
             };
-
+            
             _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).Returns(psychologistsExpected);
 
 
             //when, then
             Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(psychologistsExpected.Email, badPassword));
             
+        }
+
+        [Test]
+        public void Login_IsDeletedTrue_ThrowEntityNotFoundException()
+        {
+            //given
+            var password = "12334534";
+            var clientExpected = new Client()
+            {
+                Name = "Dantes",
+                LastName = "Don",
+                Email = "ros@fja.com",
+                Password = PasswordHash.HashPassword("12334534"),
+                IsDeleted = true
+            };
+
+            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).Returns(clientExpected);
+
+
+            //when, then
+            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(clientExpected.Email, password));
+
         }
 
         [Test]

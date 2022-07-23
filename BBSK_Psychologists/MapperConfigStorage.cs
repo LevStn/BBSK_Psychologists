@@ -23,6 +23,14 @@ public class MapperConfigStorage: Profile
 
 
 
-	}
 
+		CreateMap<Comment, CommentResponse>();
+
+        CreateMap<OrderCreateRequest, Order>();
+
+        CreateMap<OrderCreateRequest, Client>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
+        CreateMap<OrderCreateRequest, Psychologist>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
+    }
 }
