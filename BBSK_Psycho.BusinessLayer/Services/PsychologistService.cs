@@ -33,6 +33,11 @@ namespace BBSK_Psycho.BusinessLayer
 
         public void DeletePsychologist(int id)
         {
+            var psychologist = _psychologistsRepository.GetPsychologist(id);
+            if (psychologist == null)
+            {
+                throw new EntityNotFoundException($"Psychologist {id} not found");
+            }
             _psychologistsRepository.DeletePsychologist(id);
         }
 
@@ -44,8 +49,25 @@ namespace BBSK_Psycho.BusinessLayer
 
         public List<Comment> GetCommentsByPsychologistId(int id)
         {
+            var psychologist = _psychologistsRepository.GetPsychologist(id);
+            if (psychologist == null)
+            {
+                throw new EntityNotFoundException($"Psychologist {id} not found");
+            }
             var result= _psychologistsRepository.GetCommentsByPsychologistId(id);
             return result;
+        }
+
+        public List<Order> GetOrdersByPsychologistId(int id)
+        {
+            var psycho = _psychologistsRepository.GetPsychologist(id);
+            if (psycho == null)
+            {
+                throw new EntityNotFoundException($"Orders by psychologist {id} not found");
+            }
+
+            else
+                return _psychologistsRepository.GetOrdersByPsychologistsId(id);
         }
 
         public Psychologist? GetPsychologist(int id)
@@ -57,6 +79,7 @@ namespace BBSK_Psycho.BusinessLayer
         public void UpdatePsychologist(Psychologist psychologist, int id)
         {
             var result = _psychologistsRepository.GetPsychologist(id);
+            _psychologistsRepository.UpdatePsychologist(psychologist, id);
         }
 
         private bool CheckEmailForUniqueness(string email) => _psychologistsRepository.GetPsychologistByEmail(email) == null;

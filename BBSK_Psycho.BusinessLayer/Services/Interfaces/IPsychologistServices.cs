@@ -13,6 +13,7 @@ namespace BBSK_Psycho.BusinessLayer.Services.Interfaces
         List<Psychologist> GetAllPsychologists();
         public Comment AddCommentToPsyhologist(Comment comment, int psychologistId);
         List<Comment> GetCommentsByPsychologistId(int id);
+        List <Order> GetOrdersByPsychologistId(int id);
         int AddPsychologist(Psychologist psychologist);
         void UpdatePsychologist(Psychologist psychologist, int id);
         void DeletePsychologist(int id);
