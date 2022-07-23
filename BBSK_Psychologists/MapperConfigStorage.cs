@@ -12,8 +12,7 @@ public class MapperConfigStorage: Profile
 		CreateMap<Client, ClientResponse>();
 		CreateMap<Comment, CommentResponse>();
 
-        CreateMap<OrderCreateRequest, Order>()
-            .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => false));
+        CreateMap<OrderCreateRequest, Order>();
 
         CreateMap<OrderCreateRequest, Client>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));

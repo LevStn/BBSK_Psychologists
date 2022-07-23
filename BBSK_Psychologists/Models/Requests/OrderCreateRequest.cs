@@ -29,12 +29,6 @@ namespace BBSK_Psycho.Models
 
         [Required(ErrorMessage = ApiErrorMessage.OrderPaymentStatusIsRequired)]
         public OrderPaymentStatus OrderPaymentStatus { get; set; }
-
-        ////[Required]
-        //public Client client { get; set; }
-
-        ////[Required]
-        //public Psychologist psychologist { get; set; }
     }
 }
 
