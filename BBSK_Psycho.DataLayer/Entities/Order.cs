@@ -6,8 +6,8 @@ namespace BBSK_Psycho.DataLayer.Entities;
 public class Order
 {
     public int Id { get; set; }
-    public int PsychologistId { get; set; }
-    public int ClientId { get; set; }
+    //public int PsychologistId { get; set; }
+    //public int ClientId { get; set; }
     public decimal Cost { get; set; }
     public int Duration { get; set; }
     public string Message { get; set; } 

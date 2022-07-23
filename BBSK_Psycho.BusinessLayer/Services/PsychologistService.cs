@@ -1,4 +1,5 @@
-﻿using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+﻿using BBSK_Psycho.BusinessLayer.Exceptions;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Repositories;
 
@@ -21,6 +22,11 @@ namespace BBSK_Psycho.BusinessLayer
 
         public int AddPsychologist(Psychologist psychologist)
         {
+            var isChecked = CheckEmailForUniqueness(psychologist.Email);
+            if(!isChecked)
+            {
+                throw new UniquenessException($"That email is registred");
+            }
             var result = _psychologistsRepository.AddPsychologist(psychologist);
             return result;
         }
@@ -53,6 +59,6 @@ namespace BBSK_Psycho.BusinessLayer
             var result = _psychologistsRepository.GetPsychologist(id);
         }
 
-
+        private bool CheckEmailForUniqueness(string email) => _psychologistsRepository.GetPsychologistByEmail(email) == null;
     }
 }
