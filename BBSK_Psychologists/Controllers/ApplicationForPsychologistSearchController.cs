@@ -35,7 +35,7 @@ public class ApplicationForPsychologistSearchController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public ActionResult<int> AddClient([FromBody] ApplicationForPsychologistSearchRequest request)
+    public ActionResult<int> AddApplicationForPsychologist([FromBody] ApplicationForPsychologistSearchRequest request)
     {
         var claims = this.GetClaims();
         var id = _applicationForPsychologistSearchServices.AddApplicationForPsychologist(_mapper.Map<ApplicationForPsychologistSearch>(request), claims);
