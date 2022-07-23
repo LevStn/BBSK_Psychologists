@@ -12,7 +12,10 @@ public class ClientsRepository : IClientsRepository
         _context = context;
     }
 
-    public Client? GetClientById(int id) => _context.Clients.FirstOrDefault(c => c.Id == id);
+    public Client? GetClientById(int id) => _context.Clients
+        .Include(c => c.ApplicationForPsychologistSearch.Where(a=>a.IsDeleted == false))
+        .FirstOrDefault(c => c.Id == id);
+
 
     public List<Client> GetClients() => _context.Clients
         .Where(c => c.IsDeleted== false)

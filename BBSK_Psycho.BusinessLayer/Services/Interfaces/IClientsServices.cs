@@ -13,4 +13,6 @@ public interface IClientsServices
     List<Comment> GetCommentsByClientId(int id, ClaimModel claim);
     List<Order> GetOrdersByClientId(int id, ClaimModel claim);
     void UpdateClient(Client newClientModel, int id, ClaimModel claim);
+    List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id, ClaimModel claim);
+
 }

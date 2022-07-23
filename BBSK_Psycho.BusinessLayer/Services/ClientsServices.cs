@@ -146,6 +146,25 @@ public class ClientsService : IClientsServices
 
     }
 
+    public List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id, ClaimModel claim)
+    {
+        var client = _clientsRepository.GetClientById(id);
+
+        if (client is null)
+        {
+            throw new EntityNotFoundException($"Client {id} not found");
+        }
+        if (!(((claim.Email == client.Email
+           || claim.Role == Role.Manager.ToString())
+           && claim.Role != Role.Psychologist.ToString()) && claim is not null))
+        {
+            throw new AccessException($"Access denied");
+        }
+        else
+
+            return client.ApplicationForPsychologistSearch.ToList();
+    }
+
 
     private bool CheckEmailForUniqueness(string email) => _clientsRepository.GetClientByEmail(email) == null;
 

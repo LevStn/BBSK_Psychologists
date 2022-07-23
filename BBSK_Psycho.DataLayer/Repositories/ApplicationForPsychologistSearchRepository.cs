@@ -13,12 +13,15 @@ public class ApplicationForPsychologistSearchRepository : IApplicationForPsychol
         _context = context;
     }
 
-    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch application)
+    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch request, int clientId)
     {
-        _context.ApplicationForPsychologistSearches.Add(application);
+        var client = _context.Clients.FirstOrDefault(c=>c.Id == clientId);
+        request.Client = client;
+        _context.ApplicationForPsychologistSearches.Add(request);
+        
         _context.SaveChanges();
 
-        return application.Id;
+        return request.Id;
     }
 
     public List<ApplicationForPsychologistSearch> GetAllApplicationsForPsychologist() => _context.ApplicationForPsychologistSearches
@@ -27,13 +30,15 @@ public class ApplicationForPsychologistSearchRepository : IApplicationForPsychol
        .ToList();
 
 
-    public ApplicationForPsychologistSearch? GetApplicationForPsychologistById(int id) => _context.ApplicationForPsychologistSearches.FirstOrDefault(c => c.Id == id);
+    public ApplicationForPsychologistSearch? GetApplicationForPsychologistById(int id) => _context.ApplicationForPsychologistSearches
+        .Include(a => a.Client)
+        .FirstOrDefault(c => c.Id == id);
 
 
-    public List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id) => _context.ApplicationForPsychologistSearches.Where(c => c.Client.Id == id && c.IsDeleted == false).ToList();
+    
 
 
-    public void DeleteApplicationsForPsychologist(int id)
+    public void DeleteApplicationForPsychologist(int id)
     {
         var application = GetApplicationForPsychologistById(id);
         application.IsDeleted = true;

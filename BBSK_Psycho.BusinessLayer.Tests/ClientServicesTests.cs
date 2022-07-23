@@ -758,6 +758,113 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
+        [TestCase("Client")]
+        [TestCase("Manager")]
+        public void GetApplicationsForPsychologistByClientId_ValidRequestPassed_ApplicationsReceived(string role)
+        {
+            //given
+            var client = new Client()
+            {
+                Id = 1,
+                Name = "Vasya",
+                Email = "a@gmail.com",
+                ApplicationForPsychologistSearch = new()
+            {
+                new()
+                {
+                    Id=1,
+                    Description ="Help"
+                },
+                 new()
+                {
+                    Id=2,
+                    Description ="Hi"
+                }
+            }
+            };
+
+
+            if (role == Role.Manager.ToString())
+            {
+                client.Email = null;
+            }
+            _claims = new() { Email = client.Email, Role = role };
+
+            _clientsRepositoryMock.Setup(c => c.GetClientById(client.Id)).Returns(client);
+
+            //when
+            var actual = _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims);
+
+            //then
+
+            Assert.AreEqual(actual, client.ApplicationForPsychologistSearch);
+            _clientsRepositoryMock.Verify(a => a.GetClientById(It.IsAny<int>()), Times.Once);
+
+        }
+
+        [Test]
+        public void GetApplicationsForPsychologistByClientId_EmptyClientRequest_ThrowEntityNotFoundException()
+        {
+            //given
+            var client = new Client()
+            {
+                Id = 1,
+                Name = "Vasya",
+                Email = "a@gmail.com",
+
+            };
+            _claims = new() { Email = client.Email, Role = Role.Client.ToString() };
+
+
+
+            //when, then
+            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims));
+            _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Once);
+
+        }
+
+
+        [TestCase("Client")]
+        [TestCase("Psychologist")]
+        public void GetApplicationsForPsychologistByClientId_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(string role)
+        {
+            //given
+            var testEmail = "pp@mail.com";
+
+            var client = new Client()
+            {
+                Id = 1,
+                Name = "Vasya",
+                Email = "a@gmail.com",
+                ApplicationForPsychologistSearch = new()
+            {
+                new()
+                {
+                    Id=1,
+                    Description ="Help"
+                },
+                new()
+                {
+                    Id=2,
+                    Description ="Hi"
+                }
+            }
+            };
+
+            if (role == Role.Psychologist.ToString())
+            {
+                testEmail = client.Email;
+            }
+
+            _claims = new() { Email = testEmail, Role = role };
+            _clientsRepositoryMock.Setup(o => o.GetClientById(client.Id)).Returns(client);
+
+            //when, then
+            Assert.Throws<Exceptions.AccessException>(() => _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims));
+            _clientsRepositoryMock.Verify(c => c.GetClientById(It.IsAny<int>()), Times.Once);
+        }
+
+
 
     }
 }

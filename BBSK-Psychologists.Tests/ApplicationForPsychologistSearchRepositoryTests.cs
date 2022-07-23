@@ -42,6 +42,18 @@ public class ApplicationForPsychologistSearchRepositoryTests
     public void AddApplicationForPsychologist_WhenCorrectData_ThenAddApplicationForPsychologistInDbAndReturnedId()
     {
         //given
+
+        var client = new Client()
+        {
+            Name = "vasya",
+            Email = "a@mail.ru",
+            Password = "11111111",
+            PhoneNumber = "89119802569",
+        };
+
+        context.Clients.Add(client);
+        context.SaveChanges();
+
         var application = new ApplicationForPsychologistSearch()
         {
 
@@ -52,11 +64,14 @@ public class ApplicationForPsychologistSearchRepositoryTests
             CostMin = 100,
             CostMax = 200,
             Date = new DateTime(2022, 02, 02),
-            Time = TimeOfDay.Day
-        };
+            Time = TimeOfDay.Day,
+            Client= client
+           
 
+        };
+       
         //when
-        var actualId = _sut.AddApplicationForPsychologist(application);
+        var actualId = _sut.AddApplicationForPsychologist(application, client.Id);
         context.SaveChanges();
 
         //then
@@ -80,6 +95,17 @@ public class ApplicationForPsychologistSearchRepositoryTests
     public void DeleteApplicationForPsychologist_WhenCorrecId_ThenSoftDelete()
     {
         //given
+        var client = new Client()
+        {
+            Name = "vasya",
+            Email = "a@mail.ru",
+            Password = "11111111",
+            PhoneNumber = "89119802569",
+        };
+
+        context.Clients.Add(client);
+        context.SaveChanges();
+
         var application = new ApplicationForPsychologistSearch()
         {
             Name = "Alla",
@@ -89,13 +115,15 @@ public class ApplicationForPsychologistSearchRepositoryTests
             CostMin = 100,
             CostMax = 200,
             Date = new DateTime(2022, 02, 02),
-            Time = TimeOfDay.Day
+            Time = TimeOfDay.Day,
+            Client = client
+            
         };
         context.ApplicationForPsychologistSearches.Add(application);
         context.SaveChanges();
 
         //when
-        _sut.DeleteApplicationsForPsychologist(application.Id);
+        _sut.DeleteApplicationForPsychologist(application.Id);
 
         //then
         var actualdApplications = _sut.GetApplicationForPsychologistById(application.Id);
@@ -151,55 +179,18 @@ public class ApplicationForPsychologistSearchRepositoryTests
     public void GetApplicationForPsychologistById_WhenCorrectDataPassed_ThenApplicationReturned()
     {
         //given
-        var application = new ApplicationForPsychologistSearch()
-        {
-            Name = "Alla",
-            PhoneNumber = "89119856375",
-            Description = "give me a help",
-            PsychologistGender = Gender.Male,
-            CostMin = 100,
-            CostMax = 200,
-            Date = new DateTime(2022, 02, 02),
-            Time = TimeOfDay.Day
-        };
-        context.ApplicationForPsychologistSearches.Add(application);
-        context.SaveChanges();
 
-        //when
-
-        var actualdApplications = _sut.GetApplicationForPsychologistById(application.Id);
-
-        //then
-
-        Assert.NotNull(actualdApplications);
-        Assert.True(actualdApplications.Name == application.Name);
-        Assert.True(actualdApplications.PhoneNumber == application.PhoneNumber);
-        Assert.True(actualdApplications.Description == application.Description);
-        Assert.True(actualdApplications.PsychologistGender == application.PsychologistGender);
-        Assert.True(actualdApplications.CostMax == application.CostMax);
-        Assert.True(actualdApplications.CostMin == application.CostMin);
-        Assert.True(actualdApplications.Date == application.Date);
-        Assert.True(actualdApplications.Time == application.Time);
-        Assert.False(actualdApplications.IsDeleted);
-    }
-
-
-    [Test]
-    public void GetApplicationForPsychologistByClientId_WhenCorrectDataPassed_ThenApplicationReturned()
-    {
-        //given
         var client = new Client()
         {
-            Name = "Petya",
-            LastName = "Petrov",
-            Email = "Va@gmail.com",
-            Password = "12345678dad",
-            PhoneNumber = "89119856375",
+
+            Name = "vasya",
+            Email = "a@mail.ru",
+            Password = "11111111",
+            PhoneNumber = "89119802569",
             ApplicationForPsychologistSearch = new()
             {
                 new()
                 {
-                    Id =1,
                     Name = "Alla",
                     PhoneNumber = "89119856375",
                     Description = "give me a help",
@@ -208,24 +199,8 @@ public class ApplicationForPsychologistSearchRepositoryTests
                     CostMax = 200,
                     Date = new DateTime(2022, 02, 02),
                     Time = TimeOfDay.Day,
-                    IsDeleted = true
-                },
-                new()
-                {
-                    Id =2,
-                    Name = "Petya",
-                    PhoneNumber = "89119856375",
-                    Description = "give me a help",
-                    PsychologistGender = Gender.Male,
-                    CostMin = 100,
-                    CostMax = 200,
-                    Date = new DateTime(2022, 02, 02),
-                    Time = TimeOfDay.Day,
-                    
-                },
-
-            },
-
+                }
+            }
         };
         
         context.Clients.Add(client);
@@ -233,22 +208,24 @@ public class ApplicationForPsychologistSearchRepositoryTests
 
         //when
 
-        var actualdApplications = _sut.GetApplicationsForPsychologistByClientId(client.Id);
+        var actualdApplications = _sut.GetApplicationForPsychologistById(client.ApplicationForPsychologistSearch[0].Id);
 
         //then
 
-        Assert.True(actualdApplications is not null);
-        Assert.NotNull(actualdApplications.Count == 1);
-        Assert.True(actualdApplications[0].Name == client.ApplicationForPsychologistSearch[1].Name);
-        Assert.True(actualdApplications[0].PhoneNumber == client.ApplicationForPsychologistSearch[1].PhoneNumber);
-        Assert.True(actualdApplications[0].Description == client.ApplicationForPsychologistSearch[1].Description);
-        Assert.True(actualdApplications[0].PsychologistGender == client.ApplicationForPsychologistSearch[1].PsychologistGender);
-        Assert.True(actualdApplications[0].CostMax == client.ApplicationForPsychologistSearch[1].CostMax);
-        Assert.True(actualdApplications[0].CostMin == client.ApplicationForPsychologistSearch[1].CostMin);
-        Assert.True(actualdApplications[0].Date == client.ApplicationForPsychologistSearch[1].Date);
-        Assert.True(actualdApplications[0].Time == client.ApplicationForPsychologistSearch[1].Time);
-        
+        Assert.NotNull(actualdApplications);
+        Assert.True(actualdApplications.Name == client.ApplicationForPsychologistSearch[0].Name);
+        Assert.True(actualdApplications.PhoneNumber == client.ApplicationForPsychologistSearch[0].PhoneNumber);
+        Assert.True(actualdApplications.Description == client.ApplicationForPsychologistSearch[0].Description);
+        Assert.True(actualdApplications.PsychologistGender == client.ApplicationForPsychologistSearch[0].PsychologistGender);
+        Assert.True(actualdApplications.CostMax == client.ApplicationForPsychologistSearch[0].CostMax);
+        Assert.True(actualdApplications.CostMin == client.ApplicationForPsychologistSearch[0].CostMin);
+        Assert.True(actualdApplications.Date == client.ApplicationForPsychologistSearch[0].Date);
+        Assert.True(actualdApplications.Time == client.ApplicationForPsychologistSearch[0].Time);
+        Assert.False(actualdApplications.IsDeleted);
     }
+
+
+    
 
 
     [Test]
@@ -256,6 +233,16 @@ public class ApplicationForPsychologistSearchRepositoryTests
     {
         //given
 
+        var client = new Client()
+        {
+            Name = "vasya",
+            Email = "a@mail.ru",
+            Password = "11111111",
+            PhoneNumber = "89119802569",
+        };
+
+        context.Clients.Add(client);
+        context.SaveChanges();
 
         ApplicationForPsychologistSearch dataForUpdate = new ApplicationForPsychologistSearch()
         {
@@ -284,6 +271,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
             CostMax = 2555550,
             Date = new DateTime(2022, 01, 01),
             Time = TimeOfDay.Evening,
+            Client = client
 
         };
 

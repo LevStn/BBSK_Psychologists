@@ -2,7 +2,6 @@
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
-using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 namespace BBSK_Psycho.BusinessLayer.Services;
@@ -11,20 +10,26 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
 {
 
     private readonly IApplicationForPsychologistSearchRepository _applicationForPsychologistSearchRepository;
-    private readonly IClientsRepository _clientsRepository;
 
-    public ApplicationForPsychologistSearchServices(IApplicationForPsychologistSearchRepository applicationForPsychologistSearchRepository, IClientsRepository clientsRepository)
+    public ApplicationForPsychologistSearchServices(IApplicationForPsychologistSearchRepository applicationForPsychologistSearchRepository)
     {
         _applicationForPsychologistSearchRepository = applicationForPsychologistSearchRepository;
-        _clientsRepository = clientsRepository;
+       
     }
 
-    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch application)
+    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch application, ClaimModel claim)
     {
-        return _applicationForPsychologistSearchRepository.AddApplicationForPsychologist(application);
+        if(claim is null)
+        {
+            throw new AccessException($"Access denied");
+        }
+        
+
+        return _applicationForPsychologistSearchRepository.AddApplicationForPsychologist(application, (int)claim.Id);
     }
 
-    public List<ApplicationForPsychologistSearch> GetAllApplicationsForPsychologist() => _applicationForPsychologistSearchRepository.GetAllApplicationsForPsychologist();
+    public List<ApplicationForPsychologistSearch> GetAllApplicationsForPsychologist() =>
+        _applicationForPsychologistSearchRepository.GetAllApplicationsForPsychologist();
 
 
 
@@ -49,26 +54,8 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
     }
 
 
-    public List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id, ClaimModel claim)
-    {
-        var client = _clientsRepository.GetClientById(id);
-
-        if (client is null)
-        {
-            throw new EntityNotFoundException($"Client {id} not found");
-        }
-        if (!(((claim.Email == client.Email
-           || claim.Role == Role.Manager.ToString())
-           && claim.Role != Role.Psychologist.ToString()) && claim is not null))
-        {
-            throw new AccessException($"Access denied");
-        }
-        else
-            return client.ApplicationForPsychologistSearch.ToList();
-    }
-
-
-    public void DeleteApplicationsForPsychologist(int id, ClaimModel claim)
+   
+    public void DeleteApplicationForPsychologist(int id, ClaimModel claim)
     {
         var application = _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
 
@@ -84,7 +71,7 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
             throw new AccessException($"Access denied");
         }
         else
-            _applicationForPsychologistSearchRepository.DeleteApplicationsForPsychologist(id);
+            _applicationForPsychologistSearchRepository.DeleteApplicationForPsychologist(id);
     }
 
 

@@ -1,11 +1,10 @@
-using System;
 using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using BBSK_Psycho.DataLayer.Enums;
 
 namespace BBSK_Psycho.Models
 {
-    public class ApplicationForPsychologistSearch
+    public class ApplicationForPsychologistSearchRequest
     {
         [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
@@ -20,7 +19,7 @@ namespace BBSK_Psycho.Models
 
 
         [Required(ErrorMessage = ApiErrorMessage.PsychologistGenderIsRequired)]
-        public Gender PsychologistGender { get; set; } // enum
+        public Gender PsychologistGender { get; set; } 
 
 
         [Required(ErrorMessage = ApiErrorMessage.CostMinIsRequired)]
@@ -36,10 +35,8 @@ namespace BBSK_Psycho.Models
 
 
         [Required(ErrorMessage = ApiErrorMessage.TimeIsRequired)]
-        public TimeOfDay Time { get; set; } // enum
+        public TimeOfDay Time { get; set; } 
 
 
-        [Required(ErrorMessage = ApiErrorMessage.ClientIdIsRequired)]
-        public int ClientId { get; set; }
     }
 }

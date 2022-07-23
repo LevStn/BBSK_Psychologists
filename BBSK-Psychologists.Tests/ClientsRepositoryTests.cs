@@ -1,5 +1,6 @@
 ﻿using BBSK_Psycho.DataLayer;
 using BBSK_Psycho.DataLayer.Entities;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -420,5 +421,7 @@ public class ClientsRepositoryTests
         Assert.True(actualClient.Email == expectedClientSecond.Email);
         Assert.True(actualClient.Name == expectedClientSecond.Name);
     }
+
+    
 }
 

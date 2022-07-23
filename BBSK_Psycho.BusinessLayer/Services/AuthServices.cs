@@ -55,6 +55,7 @@ public class AuthServices : IAuthServices
             {
                 claimModel.Email = user.Email;
                 claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
+                claimModel.Id = user.Id;
             }
            
         }
@@ -73,7 +74,9 @@ public class AuthServices : IAuthServices
             throw new DataException("Object or part of it is empty");
         }
 
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Email), { new Claim(ClaimTypes.Role, model.Role) } };
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Email), 
+            { new Claim(ClaimTypes.Role, model.Role) }, 
+            { new Claim(ClaimTypes.NameIdentifier, model.Id.ToString()) } };
 
         var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.Issuer,

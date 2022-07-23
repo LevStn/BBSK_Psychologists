@@ -49,6 +49,9 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -383,7 +386,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.HasIndex("PsychologistsId");
 
-                    b.ToTable("ProblemPsychologist");
+                    b.ToTable("ProblemPsychologist", (string)null);
                 });
 
             modelBuilder.Entity("PsychologistTherapyMethod", b =>
@@ -398,7 +401,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.HasIndex("TherapyMethodsId");
 
-                    b.ToTable("PsychologistTherapyMethod");
+                    b.ToTable("PsychologistTherapyMethod", (string)null);
                 });
 
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.ApplicationForPsychologistSearch", b =>

@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using BBSK_Psycho.Infrastructure;
 using BBSK_Psycho.Models;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 
