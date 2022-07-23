@@ -22,7 +22,7 @@ namespace BBSK_Psycho.Controllers
     {
         private readonly IOrdersRepository _ordersRepository;
         private readonly IMapper _mapper;
-        private readonly 
+        //private readonly 
         
         public OrdersController(IOrdersRepository ordersRepository, IMapper mapper)
         {

@@ -1,4 +1,3 @@
-using BBSK_Psycho.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -69,13 +68,14 @@ builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
-
+builder.Services.AddScoped<IClientsServices, ClientsService>();
+builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
 builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(MapperConfigStorage));
 
-builder.Services.AddScoped<IClientsServices, ClientsService>();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -103,12 +103,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 app.UseCustomExceptionHandler();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
