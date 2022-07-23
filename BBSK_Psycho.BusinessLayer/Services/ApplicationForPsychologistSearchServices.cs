@@ -104,6 +104,19 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
             throw new AccessException($"Access denied");
         }
         else
+        {
+            application.Name = newModel.Name;
+            application.PhoneNumber = newModel.PhoneNumber;
+            application.Description = newModel.Description;
+            application.PsychologistGender = newModel.PsychologistGender;
+            application.CostMin = newModel.CostMin;
+            application.CostMax = newModel.CostMax;
+            application.Date = newModel.Date;
+            application.Time = newModel.Time;
             _applicationForPsychologistSearchRepository.UpdateApplicationForPsychologist(newModel, id);
+        }
+
     }
+
+            
 }

@@ -116,8 +116,13 @@ public class ClientsService : IClientsServices
             throw new AccessException($"Access denied");
         }
         else
-            _clientsRepository.UpdateClient(newClientModel, id);
+        {
+            client.Name = newClientModel.Name;
+            client.LastName = newClientModel.LastName;
+            client.BirthDate = newClientModel.BirthDate;
 
+            _clientsRepository.UpdateClient(newClientModel, id);
+        }
     }
 
     public void DeleteClient(int id, ClaimModel claims)

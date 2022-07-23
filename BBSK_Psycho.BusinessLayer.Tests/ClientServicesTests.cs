@@ -596,7 +596,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(1998, 10, 10),
             };
 
-            _claims = new() { Email = client.Email, Role = "Client" };
+            _claims = new() { Email = client.Email, Role = Role.Client.ToString() };
 
             _clientsRepositoryMock.Setup(o => o.UpdateClient(newClientModel, client.Id));
 

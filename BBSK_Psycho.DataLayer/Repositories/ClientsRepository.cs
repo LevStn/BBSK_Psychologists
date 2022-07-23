@@ -36,7 +36,7 @@ public class ClientsRepository : IClientsRepository
 
     public void UpdateClient(Client newModel, int id)
     {
-        var client=GetClientById(id);
+        var client = GetClientById(id);
 
         client.Name = newModel.Name;
         client.LastName = newModel.LastName;

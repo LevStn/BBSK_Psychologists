@@ -42,6 +42,7 @@ public class ApplicationForPsychologistSearchRepository : IApplicationForPsychol
 
     public void UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel, int id)
     {
+
         var application = GetApplicationForPsychologistById(id);
 
         application.Name = newModel.Name;
