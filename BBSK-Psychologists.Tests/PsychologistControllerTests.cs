@@ -1,5 +1,5 @@
 ﻿using BBSK_Psycho.Controllers;
-using BBSK_Psycho.DataLayer.Enums;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,21 +15,24 @@ using Moq;
 using BBSK_Psycho.DataLayer.Entities;
 using AutoMapper;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer;
 
 namespace BBSK_Psychologists.Tests
 {
     public class PsychologistControllerTests
 {       private PsychologistsController _sut;
-        //private Mock <IPsychologistsRepository> _repository;
+
         private Mock<IMapper> _mapper;
         private Mock <IPsychologistServices> _services;
+        private ClaimModel _claims;
+
         [SetUp]
         public void Setup()
         {
             _mapper = new Mock<IMapper>();
             _services = new Mock<IPsychologistServices>();
-            //_repository = new Mock<IPsychologistsRepository>();
-            _sut = new PsychologistsController(/*_repository.Object,*/ _services.Object, _mapper.Object);
+            _sut = new PsychologistsController( _services.Object, _mapper.Object);
+            _claims = new ClaimModel();
         }
         
         private AddPsychologistRequest psychologistDataAdd = new AddPsychologistRequest
@@ -76,11 +79,12 @@ namespace BBSK_Psychologists.Tests
         public void AddCommentForPsy_ValidRequestPassed_CreatedResultReceived()
         {
             // given
+            
             var comment = new Comment()
             {
                 Id =121212
             };
-            _services.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), It.IsAny<int>()))
+            _services.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), It.IsAny<int>(), It.IsAny<ClaimModel>()))
                 .Returns(comment);
             var request = new CommentRequest
             {
@@ -122,15 +126,14 @@ namespace BBSK_Psychologists.Tests
             //_repository.Setup(r => r.GetPsychologist(It.IsAny<int>()))
             //.Returns(new Psychologist());   
             var clientId = 1;
-
-            _services.Setup(r => r.GetPsychologist(clientId)).Returns(new Psychologist());
+            _services.Setup(r => r.GetPsychologist(clientId, It.IsAny<ClaimModel>())).Returns(new Psychologist());
             // when
 
             var actual = _sut.GetPsychologist(clientId);
 
             // then
 
-            _services.Verify(r => r.GetPsychologist(It.IsAny<int>()), Times.Once);
+            _services.Verify(r => r.GetPsychologist(It.IsAny<int>(), It.IsAny<ClaimModel>()), Times.Once);
             var actualResult = actual.Result as ObjectResult;
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
 

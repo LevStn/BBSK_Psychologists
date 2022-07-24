@@ -12,6 +12,7 @@ using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.BusinessLayer;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
+using BBSK_Psycho.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -13,6 +13,7 @@ using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.BusinessLayer.Exceptions;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using AutoMapper;
+using BBSK_Psycho.BusinessLayer;
 
 namespace BBSK_Psycho.Controllers
 {
@@ -25,9 +26,9 @@ namespace BBSK_Psycho.Controllers
         private readonly IPsychologistsRepository _psychologistsRepository;
         private readonly IPsychologistServices _psychologistServices;
         private readonly IMapper _mapper;
-        public PsychologistsController(/*IPsychologistsRepository psychologistsRepository, */IPsychologistServices psychologistServices, IMapper mapper)
+        public ClaimModel Claims;
+        public PsychologistsController(IPsychologistServices psychologistServices, IMapper mapper)
         {
-            //_psychologistsRepository = psychologistsRepository;
             _psychologistServices = psychologistServices;
             _mapper = mapper;
         }
@@ -40,7 +41,9 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
         public ActionResult<PsychologistResponse> GetPsychologist(int id)
         {
-            var result = _psychologistServices.GetPsychologist(id);
+            var claims = this.GetClaims();
+
+            var result = _psychologistServices.GetPsychologist(id, claims);
             if (result == null)
                 return NotFound();
             else
@@ -54,7 +57,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
         {
-            var result = _psychologistServices.GetAllPsychologists();
+            var claims = this.GetClaims();
+            var result = _psychologistServices.GetAllPsychologists(claims);
 
             return Ok(_mapper.Map<List<GetAllPsychologistsResponse>>(result));
         }
@@ -69,7 +73,7 @@ namespace BBSK_Psycho.Controllers
             return 0.20m;
         }
 
-        [AuthorizeByRole(Role.Psychologist)]
+        [AllowAnonymous]
         [HttpPost()]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -90,7 +94,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
-            _psychologistServices.UpdatePsychologist(_mapper.Map<Psychologist>(psychologistRequest), id);
+            var claims = this.GetClaims();
+            _psychologistServices.UpdatePsychologist(_mapper.Map<Psychologist>(psychologistRequest), id, claims);
             return NoContent();
         }
 
@@ -102,18 +107,31 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public ActionResult DeletePsychologist(int id)
         {
-            _psychologistServices.DeletePsychologist(id);
+            var claims = this.GetClaims();
+            _psychologistServices.DeletePsychologist(id, claims);
             return NoContent();
         }
 
-
+        [AuthorizeByRole(Role.Psychologist, Role.Client)]
         [HttpGet("{psychologistId}/comments")]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         public ActionResult<List<GetCommentsByPsychologistIdResponse>> GetCommentsByPsychologistId(int psychologistId)
         {
-            var result = _psychologistServices.GetCommentsByPsychologistId(psychologistId);
+            var claims = this.GetClaims();
+            var result = _psychologistServices.GetCommentsByPsychologistId(psychologistId, claims);
             return Ok(_mapper.Map<List<GetCommentsByPsychologistIdResponse>>(result));
+        }
+
+        [AuthorizeByRole(Role.Psychologist, Role.Client)]
+        [HttpGet("{psychologistId}/orders")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+        public ActionResult <List<OrderResponse>> GetOrdersByPsychologistId(int id)
+        {
+            var claims = this.GetClaims();
+            var result = _psychologistServices.GetOrdersByPsychologistId(id, claims);
+            return Ok(_mapper.Map<List<OrderResponse>>(result));
         }
 
         // Этот метод будет перенесен в клиента!!!!
@@ -138,7 +156,8 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddCommentToPsyhologist([FromBody] CommentRequest commentRequest, int psychologistId)
         {
-            var result = _psychologistServices.AddCommentToPsyhologist(_mapper.Map<Comment>(commentRequest), psychologistId);
+            var claims = this.GetClaims();
+            var result = _psychologistServices.AddCommentToPsyhologist(_mapper.Map<Comment>(commentRequest), psychologistId, claims);
             return Created("", result.Id);
         }
     }

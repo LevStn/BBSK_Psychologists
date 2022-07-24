@@ -30,6 +30,7 @@ public class MapperConfigStorage : Profile
         CreateMap<Comment, CommentResponse>();
 
         CreateMap<OrderCreateRequest, Order>();
+        CreateMap<OrderResponse, Order>();
 
         CreateMap<OrderCreateRequest, Client>()
 
