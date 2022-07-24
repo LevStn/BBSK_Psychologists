@@ -1,10 +1,9 @@
-﻿
-
-using BBSK_Psycho.BusinessLayer.Exceptions;
+﻿using BBSK_Psycho.BusinessLayer.Exceptions;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,12 +14,13 @@ public class AuthServices : IAuthServices
 {
     private readonly IClientsRepository _clientsRepository;
     private readonly IPsychologistsRepository _psychologistsRepository;
+    private readonly IManagerRepository _managerRepository;
 
-    public AuthServices(IClientsRepository clientsRepository, IPsychologistsRepository psychologistsRepository)
+    public AuthServices(IClientsRepository clientsRepository, IPsychologistsRepository psychologistsRepository, IManagerRepository managerRepository)
     {
         _clientsRepository = clientsRepository;
         _psychologistsRepository = psychologistsRepository;
-
+        _managerRepository=managerRepository;
     }
 
     
@@ -29,16 +29,20 @@ public class AuthServices : IAuthServices
     {
         ClaimModel claimModel = new();
 
-        if(email == "manager@p.ru" && password == "Manager777" )
+        var manager = _managerRepository.GetManagerByEmail(email);
+
+        if (manager is not null && email == manager.Email &&
+            PasswordHash.ValidatePassword(password, manager.Password) && !manager.IsDeleted)
         {
             claimModel.Email = email;
             claimModel.Role = Role.Manager.ToString();
-            
+
         }
         else
         {
             var client = _clientsRepository.GetClientByEmail(email);
             var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
+            
 
             if (client == null && psychologist == null)
             {
@@ -46,23 +50,32 @@ public class AuthServices : IAuthServices
             }
 
             dynamic user = client != null ? client : psychologist;
-
-            if (user.Password != password)
+            
+            if (!PasswordHash.ValidatePassword(password, user.Password))
             {
                 throw new EntityNotFoundException("Invalid  password");
             }
             else
             {
-                claimModel.Email = user.Email;
-                claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
+                if(user.IsDeleted)
+                {
+                    throw new EntityNotFoundException("User not found");
+                }
+                else
+                {
+                    claimModel.Email = user.Email;
+                    claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
+
+                }
+                
             }
-           
+
         }
-        if(claimModel is null)
+        if (claimModel is null)
         {
             throw new EntityNotFoundException("Invalid  password");
         }
-        
+
         return claimModel;
     }
 

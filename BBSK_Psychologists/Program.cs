@@ -1,4 +1,3 @@
-using BBSK_Psycho.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +11,7 @@ using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.BusinessLayer;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,13 +67,15 @@ builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 builder.Services.AddScoped<IPsychologistServices, PsychologistService>();
 builder.Services.AddScoped<IAuthServices, AuthServices>();
-
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+builder.Services.AddScoped<IClientsServices, ClientsService>();
+builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
 builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(MapperConfigStorage));
 
-builder.Services.AddScoped<IClientsServices, ClientsService>();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

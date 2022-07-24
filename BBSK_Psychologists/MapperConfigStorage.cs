@@ -27,5 +27,17 @@ public class MapperConfigStorage : Profile
         CreateMap<CommentRequest, Comment>()
             .ForMember(x => x.Psychologist, s => s.MapFrom((x => (new Psychologist { Id= x.PsychologistId}))))
             .ForMember(x => x.Client, s => s.MapFrom((x => (new Client { Id= x.ClientId}))));
+        CreateMap<Comment, CommentResponse>();
+
+        CreateMap<OrderCreateRequest, Order>();
+
+        CreateMap<OrderCreateRequest, Client>()
+
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
+
+        CreateMap<OrderCreateRequest, Psychologist>()
+
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
+
     }
 }
