@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BBSK_Psycho.DataLayer.Migrations
 {
-    public partial class FixingMigration : Migration
+    public partial class fixBugInMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTime>(
                 name: "RegistrationDate",
                 table: "Client",
-                type: "datetime2",
+                type: "date",
                 nullable: false,
                 defaultValueSql: "getdate()");
 
@@ -28,7 +28,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     PsychologistGender = table.Column<int>(type: "int", nullable: false),
                     CostMin = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
                     CostMax = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<DateTime>(type: "date", nullable: false),
                     Time = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -40,7 +40,22 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         column: x => x.ClientId,
                         principalTable: "Client",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Manager",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Manager", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -53,6 +68,9 @@ namespace BBSK_Psycho.DataLayer.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ApplicationForPsychologistSearch");
+
+            migrationBuilder.DropTable(
+                name: "Manager");
 
             migrationBuilder.DropColumn(
                 name: "RegistrationDate",

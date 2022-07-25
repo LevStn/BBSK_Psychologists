@@ -42,7 +42,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("decimal(7,2)");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -81,7 +81,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -111,7 +111,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.Property<DateTime>("RegistrationDate")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("date")
+                        .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
@@ -131,7 +131,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -235,7 +235,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("OrderDate")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("OrderPaymentStatus")
                         .HasColumnType("int");
@@ -244,13 +244,13 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PayDate")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("PsychologistId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("SessionDate")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -291,7 +291,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("BirthDate")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("CheckStatus")
                         .HasColumnType("int");
@@ -358,7 +358,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -367,7 +367,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Time")
-                        .HasColumnType("time");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
