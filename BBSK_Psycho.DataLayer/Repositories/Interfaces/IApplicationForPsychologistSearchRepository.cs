@@ -4,9 +4,9 @@ namespace BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 public interface IApplicationForPsychologistSearchRepository
 {
-    int AddApplicationForPsychologist(ApplicationForPsychologistSearch application, int clientId);
-    void DeleteApplicationForPsychologist(int id);
+    int AddApplicationForPsychologist(ApplicationForPsychologistSearch application, Client client);
+    void DeleteApplicationForPsychologist(ApplicationForPsychologistSearch application);
     List<ApplicationForPsychologistSearch> GetAllApplicationsForPsychologist();
     ApplicationForPsychologistSearch? GetApplicationForPsychologistById(int id);
-    void UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel, int id);
+    void UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel);
 }

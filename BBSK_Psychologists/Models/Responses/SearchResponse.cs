@@ -2,7 +2,7 @@
 
 namespace BBSK_Psycho.Models.Responses;
 
-public class ApplicationForPsychologistSearchResponse
+public class SearchResponse
 {
     public int Id { get; set; }
     public string Name { get; set; }

@@ -13,24 +13,22 @@ public class MapperConfigStorage: Profile
 		CreateMap<ClientRegisterRequest, Client>();
 		CreateMap<Client, ClientResponse>();
 		CreateMap<Comment, CommentResponse>();
+		CreateMap<Order, OrderResponse>();
 
-		CreateMap<ApplicationForPsychologistSearchRequest, ApplicationForPsychologistSearch>();
-		CreateMap<ApplicationForPsychologistSearch, ApplicationForPsychologistSearchResponse>();
-
-		CreateMap<ApplicationForPsychologistSearchUpdateRequest, ApplicationForPsychologistSearch>();
-		CreateMap<ApplicationForPsychologistSearch, ApplicationForPsychologistSearchUpdateRequest>();
+		CreateMap<ApplicationForPsychologistSearch, SearchResponse >();
+		CreateMap<SearchRequest, ApplicationForPsychologistSearch>();
 
 
+		CreateMap<OrderCreateRequest, Order>();
 
 
+        CreateMap<OrderCreateRequest, Client>()
 
-		CreateMap<Comment, CommentResponse>();
-
-        CreateMap<OrderCreateRequest, Order>();
-
-        CreateMap<OrderCreateRequest, Client>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
-        CreateMap<OrderCreateRequest, Psychologist>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
+
+        CreateMap<OrderCreateRequest, Psychologist>()
+
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
+
     }
 }

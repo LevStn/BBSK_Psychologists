@@ -12,15 +12,16 @@ public class ApplicationForPsychologistSearchServicesTests
 {
     private ApplicationForPsychologistSearchServices _sut;
     private Mock<IApplicationForPsychologistSearchRepository> _applicationForPsychologistSearchRepositoryMock;
+    private Mock<IClientsRepository> _clientsRepository;
 
     private ClaimModel _claims;
 
     [SetUp]
     public void Setup()
     {
-
         _applicationForPsychologistSearchRepositoryMock = new Mock<IApplicationForPsychologistSearchRepository>();
-        _sut = new ApplicationForPsychologistSearchServices(_applicationForPsychologistSearchRepositoryMock.Object);
+        _clientsRepository = new Mock<IClientsRepository>();
+        _sut = new ApplicationForPsychologistSearchServices(_applicationForPsychologistSearchRepositoryMock.Object, _clientsRepository.Object);
     }
 
 
@@ -28,14 +29,18 @@ public class ApplicationForPsychologistSearchServicesTests
     public void AddApplicationForPsychologist_ValidRequestPassed_AddAplicationAndIdReturned()
     {
         //given
-        _applicationForPsychologistSearchRepositoryMock.Setup(a => a.AddApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>(), It.IsAny<int>()))
-            .Returns(1);
+        var client = new Client()
+        {
+            Id = 1,
+            Name = "Ad",
+            Email = "ad@gmail.com",
+            PhoneNumber = "89119802514",
+            Password = "ada23qdq"
+        };
 
-        var expectedId = 1;
-        var testEmail = "a@mail.ru";
-        var testId = 1;
         var application = new ApplicationForPsychologistSearch()
         {
+            Id=1,
             Name = "Alla",
             PhoneNumber = "89119856375",
             Description = "give me a help",
@@ -43,16 +48,25 @@ public class ApplicationForPsychologistSearchServicesTests
             CostMin = 100,
             CostMax = 200,
             Date = new DateTime(2022, 02, 02),
-            Time = TimeOfDay.Day
+            Time = TimeOfDay.Day,
+           
+            
         };
 
-        _claims = new() { Email = testEmail, Role = Role.Client.ToString(), Id = testId };
+
+        _applicationForPsychologistSearchRepositoryMock.Setup(a => a.AddApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>(), It.IsAny<Client>()))
+            .Returns(1);
+
+        _clientsRepository.Setup(c => c.GetClientById(client.Id)).Returns(client);
+
+        _claims = new() { Email = client.Email, Role = Role.Client, Id = client.Id };
+
         //when
         var actual = _sut.AddApplicationForPsychologist(application, _claims);
 
         //then
-        Assert.True(actual == expectedId);
-        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.AddApplicationForPsychologist(application, It.IsAny<int>()), Times.Once);
+        Assert.AreEqual(actual, application.Id);
+        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.AddApplicationForPsychologist(application, client), Times.Once);
     }
 
     [Test]
@@ -98,7 +112,7 @@ public class ApplicationForPsychologistSearchServicesTests
         //then
 
         Assert.NotNull(actual);
-        Assert.True(actual.GetType() == typeof(List<ApplicationForPsychologistSearch>));
+        Assert.AreEqual(actual.GetType(), typeof(List<ApplicationForPsychologistSearch>));
         Assert.True(actual[0].IsDeleted);
         Assert.False(actual[1].IsDeleted);
         _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetAllApplicationsForPsychologist(), Times.Once());
@@ -108,9 +122,11 @@ public class ApplicationForPsychologistSearchServicesTests
 
     [TestCase("Client")]
     [TestCase("Manager")]
-    public void GetApplicationForPsychologistById_ValidRequestPassed_ApplicationsReceived(string role)
+    public void GetApplicationForPsychologistById_ValidRequestPassed_ApplicationsReceived(string roleString)
     {
-        //givet
+        //given
+        Role role = Enum.Parse<Role>(roleString);
+
         var applicationInDb = new ApplicationForPsychologistSearch()
         {
             Id = 2,
@@ -133,7 +149,7 @@ public class ApplicationForPsychologistSearchServicesTests
             }
         };
 
-        if (role == Role.Manager.ToString())
+        if (role == Role.Manager)
         {
             applicationInDb.Client.Email = null;
         }
@@ -148,18 +164,18 @@ public class ApplicationForPsychologistSearchServicesTests
 
         //then
 
-        Assert.True(actual.Id == applicationInDb.Id);
-        Assert.True(actual.Client.Id == applicationInDb.Client.Id);
-        Assert.True(actual.IsDeleted == false);
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(It.IsAny<int>()), Times.Once);
+        Assert.AreEqual(actual.Id, applicationInDb.Id);
+        Assert.AreEqual(actual.Client.Id, applicationInDb.Client.Id);
+        Assert.False(actual.IsDeleted);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(applicationInDb.Id), Times.Once);
 
     }
 
     [Test]
-    public void GetApplicationForPsychologistById_EmptyRequest_ThrowEntityNotFoundException()
+    public void GetApplicationForPsychologistById_BadIdRequest_ThrowEntityNotFoundException()
     {
         //given
-        var testId = 2;
+        var badId = 2;
         var applicationInDb = new ApplicationForPsychologistSearch()
         {
             Id = 1,
@@ -176,22 +192,23 @@ public class ApplicationForPsychologistSearchServicesTests
             }
 
         };
-        _claims = new() { Email = applicationInDb.Client.Email, Role = Role.Client.ToString() };
+        _claims = new() { Email = applicationInDb.Client.Email, Role = Role.Client};
 
         _applicationForPsychologistSearchRepositoryMock.Setup(a => a.GetApplicationForPsychologistById(applicationInDb.Id)).Returns(applicationInDb);
 
 
         //when, then
-        Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetApplicationForPsychologistById(testId, _claims));
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(It.IsAny<int>()), Times.Once);
+        Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetApplicationForPsychologistById(badId, _claims));
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(badId), Times.Once);
     }
 
 
     [TestCase("Client")]
     [TestCase("Psychologist")]
-    public void GetApplicationForPsychologistById_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(string role)
+    public void GetApplicationForPsychologistById_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
     {
         //given
+        Role role = Enum.Parse<Role>(roleString);
         var testEmail = "pp@mail.com";
 
         var applicationInDb = new ApplicationForPsychologistSearch()
@@ -210,7 +227,7 @@ public class ApplicationForPsychologistSearchServicesTests
             }
         };
 
-        if (role == Role.Psychologist.ToString())
+        if (role == Role.Psychologist)
         {
             testEmail = applicationInDb.Client.Email;
         }
@@ -220,18 +237,16 @@ public class ApplicationForPsychologistSearchServicesTests
 
         //when, then
         Assert.Throws<Exceptions.AccessException>(() => _sut.GetApplicationForPsychologistById(applicationInDb.Id, _claims));
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(It.IsAny<int>()), Times.Once);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(applicationInDb.Id), Times.Once);
     }
-
-
-   
 
 
     [TestCase("Client")]
     [TestCase("Manager")]
-    public void UpdateUpdateApplicationForPsychologist_ValidRequestPassed_ChangesProperties(string role)
+    public void UpdateApplicationForPsychologist_ValidRequestPassed_ChangesProperties(string roleString)
     {
         //given
+        Role role = Enum.Parse<Role>(roleString);
 
         var applicationInDb = new ApplicationForPsychologistSearch()
         {
@@ -255,7 +270,6 @@ public class ApplicationForPsychologistSearchServicesTests
 
         var newModel = new ApplicationForPsychologistSearch()
         {
-            Id = 5,
             Name = "Zara",
             PhoneNumber = "89119850000",
             Description = "Net",
@@ -266,7 +280,7 @@ public class ApplicationForPsychologistSearchServicesTests
             Time = TimeOfDay.Morning,
         };
 
-        if (role == Role.Manager.ToString())
+        if (role == Role.Manager)
         {
             applicationInDb.Client.Email = null;
         }
@@ -283,21 +297,21 @@ public class ApplicationForPsychologistSearchServicesTests
 
         var actual = _sut.GetApplicationForPsychologistById(applicationInDb.Id, _claims);
 
-        Assert.True(newModel.Id != applicationInDb.Id);
-        Assert.True(newModel.Name == applicationInDb.Name);
-        Assert.True(newModel.PhoneNumber == applicationInDb.PhoneNumber);
-        Assert.True(newModel.Description == applicationInDb.Description);
-        Assert.True(newModel.Date == applicationInDb.Date);
-        Assert.True(newModel.Time == applicationInDb.Time);
-        Assert.True(newModel.PsychologistGender == applicationInDb.PsychologistGender);
-        Assert.True(newModel.CostMax == applicationInDb.CostMax);
-        Assert.True(newModel.CostMin == applicationInDb.CostMin);
-        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.GetApplicationForPsychologistById(It.IsAny<int>()), Times.Exactly(2));
-        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.UpdateApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>(), It.IsAny<int>()), Times.Once);
+        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.GetApplicationForPsychologistById(applicationInDb.Id), Times.Exactly(2));
+        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.UpdateApplicationForPsychologist(It.Is<ApplicationForPsychologistSearch>(a=>
+        a.Name == newModel.Name &&
+        a.PhoneNumber == newModel.PhoneNumber &&
+        a.Description == newModel.Description &&
+        a.PsychologistGender == newModel.PsychologistGender &&
+        a.CostMin == newModel.CostMin && 
+        a.CostMax == newModel.CostMax &&
+        a.Date == newModel.Date &&
+        a.Time == newModel.Time &&
+        !a.IsDeleted)), Times.Once);
     }
 
     [Test]
-    public void UpdateUpdateApplicationForPsychologist_EmptyRequest_ThrowEntityNotFoundException()
+    public void UpdateApplicationForPsychologist_EntityNotFound_ThrowEntityNotFoundException()
     {
         //given
         var applicationInDb = new ApplicationForPsychologistSearch()
@@ -308,8 +322,6 @@ public class ApplicationForPsychologistSearchServicesTests
             }
         };
 
-
-
         var newModel = new ApplicationForPsychologistSearch()
         {
             Id = 5,
@@ -318,21 +330,21 @@ public class ApplicationForPsychologistSearchServicesTests
             Description = "Net",
         };
 
-        _claims = new() { Email = applicationInDb.Client.Email, Role = Role.Client.ToString() };
-
-        _applicationForPsychologistSearchRepositoryMock.Setup(o => o.UpdateApplicationForPsychologist(newModel, applicationInDb.Id));
+        _claims = new() { Email = applicationInDb.Client.Email, Role = Role.Client };
 
         //when, then
 
         Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.UpdateApplicationForPsychologist(newModel, applicationInDb.Id, _claims));
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.UpdateApplicationForPsychologist(newModel, applicationInDb.Id), Times.Never);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.UpdateApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>()), Times.Never);
     }
 
     [TestCase("Client")]
     [TestCase("Psychologist")]
-    public void UpdateUpdateApplicationForPsychologist_ClientGetSomeoneElsesProfileAndRolePsychologist_ThrowAccessException(string role)
+    public void UpdateApplicationForPsychologist_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
     {
         //given
+        Role role = Enum.Parse<Role>(roleString);
+
         var testEmail = "bnb@gamil.ru";
 
         var applicationInDb = new ApplicationForPsychologistSearch()
@@ -354,7 +366,7 @@ public class ApplicationForPsychologistSearchServicesTests
             PhoneNumber = "89119850000",
         };
 
-        if (role == Role.Psychologist.ToString())
+        if (role == Role.Psychologist)
         {
             testEmail = applicationInDb.Client.Email;
         }
@@ -365,15 +377,17 @@ public class ApplicationForPsychologistSearchServicesTests
         //when, then
 
         Assert.Throws<Exceptions.AccessException>(() => _sut.UpdateApplicationForPsychologist(newModel, applicationInDb.Id, _claims));
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.UpdateApplicationForPsychologist(newModel, applicationInDb.Id), Times.Never);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.UpdateApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>()), Times.Never);
     }
 
 
     [TestCase("Client")]
     [TestCase("Manager")]
-    public void DeleteApplicationForPsychologist_ValidRequestPassed_DeleteClient(string role)
+    public void DeleteApplicationForPsychologist_ValidRequestPassed_DeleteClient(string roleString)
     {
         //given
+        Role role = Enum.Parse<Role>(roleString);
+
         var applicationInDb = new ApplicationForPsychologistSearch()
         {
             Id = 1,
@@ -387,14 +401,14 @@ public class ApplicationForPsychologistSearchServicesTests
             }
         };
 
-        if (role == Role.Manager.ToString())
+        if (role == Role.Manager)
         {
             applicationInDb.Client.Email = null;
         }
         _claims = new() { Email = applicationInDb.Client.Email, Role = role };
 
         _applicationForPsychologistSearchRepositoryMock.Setup(o => o.GetApplicationForPsychologistById(applicationInDb.Id)).Returns(applicationInDb);
-        _applicationForPsychologistSearchRepositoryMock.Setup(o => o.DeleteApplicationForPsychologist(applicationInDb.Id));
+
 
         //when
         _sut.DeleteApplicationForPsychologist(applicationInDb.Id, _claims);
@@ -402,30 +416,29 @@ public class ApplicationForPsychologistSearchServicesTests
         //then
         var applications = _sut.GetAllApplicationsForPsychologist();
         Assert.Null(applications);
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.DeleteApplicationForPsychologist(It.IsAny<int>()), Times.Once);
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(It.IsAny<int>()), Times.Once);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.DeleteApplicationForPsychologist(applicationInDb), Times.Once);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.GetApplicationForPsychologistById(applicationInDb.Id), Times.Once);
     }
 
     [Test]
-    public void DeleteApplicationForPsychologist_EmptyRequest_ThrowEntityNotFoundException()
+    public void DeleteApplicationForPsychologist_RequestForNonexistentObject_ThrowEntityNotFoundException()
     {
         //given
         var testId = 1;
         _claims = new();
-        _applicationForPsychologistSearchRepositoryMock.Setup(a => a.DeleteApplicationForPsychologist(testId));
 
         //when, then
         Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.DeleteApplicationForPsychologist(testId, _claims));
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.DeleteApplicationForPsychologist(It.IsAny<int>()), Times.Never);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.DeleteApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>()), Times.Never);
 
     }
 
     [TestCase("Client")]
     [TestCase("Psychologist")]
-    public void DeleteApplicationForPsychologist_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(string role)
+    public void DeleteApplicationForPsychologist_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
     {
         //given
-
+        Role role = Enum.Parse<Role>(roleString);
         var applicationFirst = new ApplicationForPsychologistSearch()
         {
             Id = 1,
@@ -450,7 +463,7 @@ public class ApplicationForPsychologistSearchServicesTests
             }
         };
 
-        if (role == Role.Psychologist.ToString())
+        if (role == Role.Psychologist)
         {
             applicationFirst.Client.Email = applicationSecond.Client.Email;
         }
@@ -459,9 +472,7 @@ public class ApplicationForPsychologistSearchServicesTests
         _applicationForPsychologistSearchRepositoryMock.Setup(o => o.GetApplicationForPsychologistById(applicationSecond.Id)).Returns(applicationSecond);
 
         //when, then
-
-        //when, then
         Assert.Throws<Exceptions.AccessException>(() => _sut.DeleteApplicationForPsychologist(applicationSecond.Id, _claims));
-        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.DeleteApplicationForPsychologist(It.IsAny<int>()), Times.Never);
+        _applicationForPsychologistSearchRepositoryMock.Verify(c => c.DeleteApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>()), Times.Never);
     }
 }

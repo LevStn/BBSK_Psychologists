@@ -37,21 +37,14 @@ public class ClientsRepository : IClientsRepository
         return client.Id;
     }
 
-    public void UpdateClient(Client newModel, int id)
+    public void UpdateClient(Client newModel)
     {
-        var client = GetClientById(id);
-
-        client.Name = newModel.Name;
-        client.LastName = newModel.LastName;
-        client.BirthDate = newModel.BirthDate;
-
-        _context.Clients.Update(client);
+        _context.Clients.Update(newModel);
         _context.SaveChanges();
     }
 
-    public void DeleteClient(int id)
+    public void DeleteClient(Client client)
     {
-        var client=GetClientById(id);
         client.IsDeleted = true;
         _context.SaveChanges();
     }

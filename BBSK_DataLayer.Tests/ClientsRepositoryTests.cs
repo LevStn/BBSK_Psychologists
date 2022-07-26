@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 
-namespace BBSK_Psychologists.Tests;
+namespace BBSK_DataLayer.Tests;
 public class ClientsRepositoryTests
 {
-    private  DbContextOptions<BBSK_PsychoContext> _dbContextOptions;
+    private DbContextOptions<BBSK_PsychoContext> _dbContextOptions;
 
     private ClientsRepository _sut;
     private BBSK_PsychoContext context;
@@ -19,16 +19,16 @@ public class ClientsRepositoryTests
         _dbContextOptions = new DbContextOptionsBuilder<BBSK_PsychoContext>()
             .UseInMemoryDatabase(databaseName: "TestDb")
             .Options;
-      
+
     }
 
     [SetUp]
     public void Setup()
     {
-        
+
         if (context is not null)
-             context.Database.EnsureDeleted();
-        
+            context.Database.EnsureDeleted();
+
 
         context = new BBSK_PsychoContext(_dbContextOptions);
 
@@ -48,15 +48,15 @@ public class ClientsRepositoryTests
             Email = "Va@gmail.com",
             Password = "12345678dad",
             PhoneNumber = "89119856375",
-         };
+        };
 
         //when
-        var actualId=_sut.AddClient(client);
+        var actualId = _sut.AddClient(client);
         context.SaveChanges();
 
         //then
         Assert.NotNull(client.RegistrationDate);
-        Assert.True(client.RegistrationDate< DateTime.Now);
+        Assert.True(client.RegistrationDate < DateTime.Now);
         Assert.False(client.IsDeleted);
         Assert.True(actualId == client.Id);
 
@@ -124,7 +124,7 @@ public class ClientsRepositoryTests
                     Id = 2, Text="222",Rating=3,Date=DateTime.Now
                 }
             },
-           
+
         };
         var clientSecond = new Client()
         {
@@ -177,13 +177,13 @@ public class ClientsRepositoryTests
         //then
 
         Assert.NotNull(actualCLient);
-        Assert.True (actualCLient.GetType() == typeof (List<Client>));
+        Assert.True(actualCLient.GetType() == typeof(List<Client>));
         Assert.True(actualCLient.Count == expectedCount);
         Assert.AreEqual(actualCLient[0].Comments, null);
         Assert.AreEqual(actualCLient[1].Orders, null);
         Assert.True(actualCLient[0].IsDeleted == false);
         Assert.True(actualCLient[1].IsDeleted == false);
-        Assert.NotNull( actualCLient.Find(x => x.Name == "Petya"));
+        Assert.NotNull(actualCLient.Find(x => x.Name == "Petya"));
         Assert.NotNull(actualCLient.Find(x => x.Name == "John"));
         Assert.Null(actualCLient.Find(x => x.Name == "Vasya"));
 
@@ -194,20 +194,9 @@ public class ClientsRepositoryTests
     public void UpdateClient_WhenCorrectDate_ThenChangePoperties()
     {
         //given
-
-        var expectedId = 1;
-
-        Client dataForUpdate = new Client()
-        {
-            Id = 10,
-            Name = "Alex",
-            LastName = "Alen",
-            Email = "AAAAA@gmail.com",
-            Password = "000000000",
-            PhoneNumber = "0000",
-            BirthDate = null,
-        };
-
+        var newName = "Petya";
+        var newLastName = "Petrov";
+        var newBirthDate = new DateTime(1995,05,06);
 
 
         var client = new Client()
@@ -220,25 +209,25 @@ public class ClientsRepositoryTests
             PhoneNumber = "89119856375",
 
         };
-       
 
         context.Clients.Add(client);
         context.SaveChanges();
 
+        client.Name = newName;
+        client.LastName = newLastName;
+        client.BirthDate = newBirthDate;
+
         //when
-        _sut.UpdateClient(dataForUpdate, client.Id);
+        _sut.UpdateClient(client);
 
         //then
-        client= _sut.GetClientById(client.Id);
+        client = _sut.GetClientById(client.Id);
 
-        Assert.True(dataForUpdate.Id != client.Id);
-        Assert.True(client.Name == dataForUpdate.Name);
-        Assert.True(client.LastName == dataForUpdate.LastName);
-        Assert.True(client.BirthDate == dataForUpdate.BirthDate);
-        Assert.True(client.Email != dataForUpdate.Email);
-        Assert.True(client.Password != dataForUpdate.Password);
-        Assert.True(client.PhoneNumber != dataForUpdate.PhoneNumber);
- 
+        Assert.NotNull(client.Id);
+        Assert.False(client.IsDeleted);
+        Assert.AreEqual(client.LastName, newLastName);
+        Assert.AreEqual(client.BirthDate, newBirthDate);
+        Assert.AreEqual(client.Name, newName);
     }
 
     public void DeleteClient_WhenCorrecId_ThenSoftDelete()
@@ -261,7 +250,7 @@ public class ClientsRepositoryTests
         context.SaveChanges();
 
         //when
-        _sut.DeleteClient(client.Id);
+        _sut.DeleteClient(client);
 
         //then
         client = _sut.GetClientById(client.Id);
@@ -288,11 +277,11 @@ public class ClientsRepositoryTests
             Email = "Va@gmail.com",
             Password = "12345678dad",
             PhoneNumber = "89119856375",
-            Comments = new() 
+            Comments = new()
             {
-                new() 
-                { 
-                    Id = 1, Text="ApAp",Rating=1,Date=DateTime.Now 
+                new()
+                {
+                    Id = 1, Text="ApAp",Rating=1,Date=DateTime.Now
                 },
                 new()
                 {
@@ -311,10 +300,10 @@ public class ClientsRepositoryTests
         context.SaveChanges();
 
         //when
-       var actualComents= _sut.GetCommentsByClientId(expectedClient.Id);
+        var actualComents = _sut.GetCommentsByClientId(expectedClient.Id);
 
         //then
-        Assert.True(expectedClient.Comments.Count-1 == actualComents.Count);
+        Assert.True(expectedClient.Comments.Count - 1 == actualComents.Count);
         Assert.True(actualComents[0].Text == "ApAp");
         Assert.True(actualComents[1].Text == "222");
         Assert.True(actualComents[0].Rating == 1);
@@ -369,7 +358,7 @@ public class ClientsRepositoryTests
         var actualOrders = _sut.GetOrdersByClientId(expectedClient.Id);
 
         //then
-        Assert.True(expectedClient.Orders.Count-1 == actualOrders.Count);
+        Assert.True(expectedClient.Orders.Count - 1 == actualOrders.Count);
         Assert.True(actualOrders[0].Message == "ApAp");
         Assert.True(actualOrders[1].Message == "222");
         Assert.True(actualOrders[0].Cost == 1);
@@ -422,6 +411,6 @@ public class ClientsRepositoryTests
         Assert.True(actualClient.Name == expectedClientSecond.Name);
     }
 
-    
+
 }
 

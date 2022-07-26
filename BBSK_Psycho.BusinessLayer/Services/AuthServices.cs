@@ -35,7 +35,7 @@ public class AuthServices : IAuthServices
             PasswordHash.ValidatePassword(password, manager.Password) && !manager.IsDeleted)
         {
             claimModel.Email = email;
-            claimModel.Role = Role.Manager.ToString();
+            claimModel.Role = Role.Manager;
 
         }
         else
@@ -64,7 +64,7 @@ public class AuthServices : IAuthServices
                 else
                 {
                     claimModel.Email = user.Email;
-                    claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
+                    claimModel.Role = client != null ? Role.Client : Role.Psychologist;
 
                 
                 claimModel.Id = user.Id;
@@ -82,13 +82,13 @@ public class AuthServices : IAuthServices
 
     public string GetToken(ClaimModel model)
     {
-        if(model is null|| model.Email is null || model.Role is null)
+        if(model is null|| model.Email is null )
         {
             throw new DataException("Object or part of it is empty");
         }
 
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Email), 
-            { new Claim(ClaimTypes.Role, model.Role) }, 
+            { new Claim(ClaimTypes.Role, model.Role.ToString()) }, 
             { new Claim(ClaimTypes.NameIdentifier, model.Id.ToString()) } };
 
         var jwt = new JwtSecurityToken(

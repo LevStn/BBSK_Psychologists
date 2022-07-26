@@ -13,9 +13,8 @@ public class ApplicationForPsychologistSearchRepository : IApplicationForPsychol
         _context = context;
     }
 
-    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch request, int clientId)
+    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch request, Client client)
     {
-        var client = _context.Clients.FirstOrDefault(c=>c.Id == clientId);
         request.Client = client;
         _context.ApplicationForPsychologistSearches.Add(request);
         
@@ -35,32 +34,16 @@ public class ApplicationForPsychologistSearchRepository : IApplicationForPsychol
         .FirstOrDefault(c => c.Id == id);
 
 
-    
-
-
-    public void DeleteApplicationForPsychologist(int id)
+    public void DeleteApplicationForPsychologist(ApplicationForPsychologistSearch application)
     {
-        var application = GetApplicationForPsychologistById(id);
         application.IsDeleted = true;
         _context.SaveChanges();
     }
 
-    public void UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel, int id)
+    public void UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel)
     {
 
-        var application = GetApplicationForPsychologistById(id);
-
-        application.Name = newModel.Name;
-        application.PhoneNumber = newModel.PhoneNumber;
-        application.Description = newModel.Description;
-        application.PsychologistGender = newModel.PsychologistGender;
-        application.CostMin = newModel.CostMin;
-        application.CostMax = newModel.CostMax;
-        application.Date = newModel.Date;
-        application.Time = newModel.Time;
-
-
-        _context.ApplicationForPsychologistSearches.Update(application);
+        _context.ApplicationForPsychologistSearches.Update(newModel);
         _context.SaveChanges();
     }
 }

@@ -24,9 +24,7 @@ public class ClientsService : IClientsServices
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+        if (CheckAccess(claims, client))
         {
             throw new AccessException($"Access denied");
         }
@@ -53,9 +51,7 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+        if (CheckAccess(claims, client))
         {
             throw new AccessException($"Access denied");
         }
@@ -73,9 +69,7 @@ public class ClientsService : IClientsServices
         {
             throw new EntityNotFoundException($"Orders by client {id} not found");
         }
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+        if (CheckAccess(claims, client))
         {
             throw new AccessException($"Access denied");
         }
@@ -112,9 +106,7 @@ public class ClientsService : IClientsServices
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+        if (CheckAccess(claims, client))
         {
             throw new AccessException($"Access denied");
         }
@@ -124,7 +116,7 @@ public class ClientsService : IClientsServices
             client.LastName = newClientModel.LastName;
             client.BirthDate = newClientModel.BirthDate;
 
-            _clientsRepository.UpdateClient(newClientModel, id);
+            _clientsRepository.UpdateClient(newClientModel);
         }
     }
 
@@ -138,18 +130,16 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        if (!(((claims.Email == (string)client.Email
-             || claims.Role == Role.Manager.ToString())
-             && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+        if (CheckAccess(claims, client))
         {
             throw new AccessException($"Access denied");
         }
         else
-            _clientsRepository.DeleteClient(id);
+            _clientsRepository.DeleteClient(client);
 
     }
 
-    public List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id, ClaimModel claim)
+    public List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id, ClaimModel claims)
     {
         var client = _clientsRepository.GetClientById(id);
 
@@ -157,9 +147,7 @@ public class ClientsService : IClientsServices
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
-        if (!(((claim.Email == client.Email
-           || claim.Role == Role.Manager.ToString())
-           && claim.Role != Role.Psychologist.ToString()) && claim is not null))
+        if (CheckAccess(claims, client))
         {
             throw new AccessException($"Access denied");
         }
@@ -168,6 +156,13 @@ public class ClientsService : IClientsServices
             return client.ApplicationForPsychologistSearch.ToList();
     }
 
+
+    private bool CheckAccess(ClaimModel claims, Client client)
+    {
+        return (!(((claims.Email == client.Email
+            || claims.Role == Role.Manager)
+            && claims.Role != Role.Psychologist) && claims is not null));
+    }
 
     private bool CheckEmailForUniqueness(string email) => _clientsRepository.GetClientByEmail(email) == null;
 

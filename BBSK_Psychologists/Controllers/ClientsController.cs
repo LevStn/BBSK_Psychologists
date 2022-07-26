@@ -144,18 +144,18 @@ namespace BBSK_Psycho.Controllers
         }
 
         [AuthorizeByRole(Role.Client)]
-        [HttpGet("{id}/applications-for-psychologist-search")]
+        [HttpGet("{id}/search-request")]
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<List<ApplicationForPsychologistSearchResponse>> GetApplicationsForPsychologistByClientId([FromRoute] int id)
+        public ActionResult<List<SearchResponse>> GetApplicationsForPsychologistByClientId([FromRoute] int id)
         {
             var claims = this.GetClaims();
 
             var clientRequests = _clientsServices.GetApplicationsForPsychologistByClientId(id, claims);
 
-            return Ok(_mapper.Map<List<ApplicationForPsychologistSearchResponse>>(clientRequests));
+            return Ok(_mapper.Map<List<SearchResponse>>(clientRequests));
         }
 
     }

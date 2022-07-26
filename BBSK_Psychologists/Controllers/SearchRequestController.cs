@@ -5,7 +5,6 @@ using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
-using BBSK_Psycho.Models.Requests;
 using BBSK_Psycho.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,14 +15,14 @@ namespace BBSK_Psycho.Controllers;
 [Authorize]
 [Produces("application/json")]
 [Route("[controller]")]
-public class ApplicationForPsychologistSearchController : ControllerBase
+public class SearchRequestController : ControllerBase
 {
     private readonly IApplicationForPsychologistSearchServices _applicationForPsychologistSearchServices;
     private readonly IMapper _mapper;
 
     public ClaimModel Claims;
 
-    public ApplicationForPsychologistSearchController(IApplicationForPsychologistSearchServices applicationForPsychologistSearchServices, IMapper mapper)
+    public SearchRequestController(IApplicationForPsychologistSearchServices applicationForPsychologistSearchServices, IMapper mapper)
     {
         _applicationForPsychologistSearchServices = applicationForPsychologistSearchServices;
         _mapper = mapper;
@@ -31,11 +30,11 @@ public class ApplicationForPsychologistSearchController : ControllerBase
     }
 
 
-    [AuthorizeByRole(Role.Client)]
+    [Authorize(Roles = nameof(Role.Client))]
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public ActionResult<int> AddApplicationForPsychologist([FromBody] ApplicationForPsychologistSearchRequest request)
+    public ActionResult<int> AddApplicationForPsychologist([FromBody] SearchRequest request)
     {
         var claims = this.GetClaims();
         var id = _applicationForPsychologistSearchServices.AddApplicationForPsychologist(_mapper.Map<ApplicationForPsychologistSearch>(request), claims);
@@ -45,20 +44,20 @@ public class ApplicationForPsychologistSearchController : ControllerBase
 
     [AuthorizeByRole(Role.Client)]
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ApplicationForPsychologistSearchResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SearchResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public ActionResult<ApplicationForPsychologistSearchResponse> GetApplicationForPsychologistById([FromRoute] int id)
+    public ActionResult<SearchResponse> GetApplicationForPsychologistById([FromRoute] int id)
     {
         var claims = this.GetClaims();
 
-        var rquest = _applicationForPsychologistSearchServices.GetApplicationForPsychologistById(id, claims);
-        return Ok(_mapper.Map<ApplicationForPsychologistSearchResponse>(rquest));
+        var request = _applicationForPsychologistSearchServices.GetApplicationForPsychologistById(id, claims);
+        return Ok(_mapper.Map<SearchResponse>(request));
     }
 
 
-    [Authorize(Roles = nameof(Role.Manager))]
+    [AuthorizeByRole]
     [HttpGet]
     [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -66,16 +65,11 @@ public class ApplicationForPsychologistSearchController : ControllerBase
     public ActionResult<List<ClientResponse>> GetAllApplicationsForPsychologist()
     {
         var request = _applicationForPsychologistSearchServices.GetAllApplicationsForPsychologist();
-        return Ok(_mapper.Map<List<ApplicationForPsychologistSearchResponse>>(request));
-
+        return Ok(_mapper.Map<List<SearchResponse>>(request));
 
     }
 
     
-
-
-    
-
     [AuthorizeByRole(Role.Client)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -98,7 +92,7 @@ public class ApplicationForPsychologistSearchController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public ActionResult UpdateClientById([FromBody] ApplicationForPsychologistSearchUpdateRequest newModel, [FromRoute] int id)
+    public ActionResult UpdateClientById([FromBody] SearchRequest newModel, [FromRoute] int id)
     {
         var claims = this.GetClaims();
 
