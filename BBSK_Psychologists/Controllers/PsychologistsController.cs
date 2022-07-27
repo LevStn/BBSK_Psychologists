@@ -158,7 +158,7 @@ namespace BBSK_Psycho.Controllers
         {
             var claims = this.GetClaims();
             var result = _psychologistServices.AddCommentToPsyhologist(_mapper.Map<Comment>(commentRequest), psychologistId, claims);
-            return Created("", result.Id);
+            return Created("", result);
         }
     }
 }

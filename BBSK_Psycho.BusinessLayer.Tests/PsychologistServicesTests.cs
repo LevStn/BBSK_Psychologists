@@ -33,7 +33,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void AddCommentToPsychologist_ValidRequestPassed_ReturnComment()
+        public void AddCommentToPsychologist_WhenPsychologistIsNotNull_ReturnComment()
         {
             //given
             var comment = new Comment();
@@ -64,11 +64,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var actual = _sut.AddCommentToPsyhologist(commentActual, commentActual.Id, _claims);
 
             //then
-            Assert.AreEqual(expectedComment.Id, actual.Id);
+            Assert.AreEqual(expectedComment.Id, actual);
+            _psychologistsRepositoryMock.Verify(c => c.AddCommentToPsyhologist(commentActual, commentActual.Id), Times.Once);
         }
 
         [Test]
-        public void AddCommentToPsychologist_InValidPsyhologistIdOrClientId_ReturnException()
+        public void AddCommentToPsychologist_InValidClientId_ReturnEntityNotFoundException()
         {
             //given
             var comment = new Comment()
@@ -87,6 +88,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //then
             Assert.Throws<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(comment, psychologistId, _claims));
         }
+
 
         [Test]
         public void AddCommentToPsychologist_InvalidRequestPassed_ReturnEntityNotFoundException()

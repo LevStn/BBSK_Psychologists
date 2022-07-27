@@ -11,7 +11,7 @@ namespace BBSK_Psycho.BusinessLayer.Services.Interfaces
     {
         Psychologist? GetPsychologist(int id, ClaimModel claim);
         List<Psychologist> GetAllPsychologists(ClaimModel claim);
-        public Comment AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim);
+        public int AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim);
         List<Comment> GetCommentsByPsychologistId(int id, ClaimModel claim);
         List <Order> GetOrdersByPsychologistId(int id, ClaimModel claim);
         int AddPsychologist(Psychologist psychologist);

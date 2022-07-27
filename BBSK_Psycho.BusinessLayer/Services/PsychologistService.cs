@@ -20,7 +20,7 @@ namespace BBSK_Psycho.BusinessLayer
             _clientsRepository = clientsRepository;
         }
 
-        public Comment AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
+        public int AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
         {
             var commonOrder = _ordersRepository.GetOrderByPsychIdAndClientId(psychologistId, comment.Client.Id);
             if (commonOrder == null)
@@ -38,7 +38,7 @@ namespace BBSK_Psycho.BusinessLayer
             }
 
             var result = _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);
-            return result;
+            return result.Id;
         }
 
         public int AddPsychologist(Psychologist psychologist)
