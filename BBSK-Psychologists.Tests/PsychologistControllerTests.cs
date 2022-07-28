@@ -16,22 +16,23 @@ using BBSK_Psycho.DataLayer.Entities;
 using AutoMapper;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.BusinessLayer;
+using BBSK_Psycho;
 
 namespace BBSK_Psychologists.Tests
 {
     public class PsychologistControllerTests
 {       private PsychologistsController _sut;
 
-        private Mock<IMapper> _mapper;
+        private IMapper _mapper;
         private Mock <IPsychologistServices> _services;
         private ClaimModel _claims;
 
         [SetUp]
         public void Setup()
         {
-            _mapper = new Mock<IMapper>();
+            _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<MapperConfigStorage>()));
             _services = new Mock<IPsychologistServices>();
-            _sut = new PsychologistsController( _services.Object, _mapper.Object);
+            _sut = new PsychologistsController( _services.Object, _mapper);
             _claims = new ClaimModel();
         }
         

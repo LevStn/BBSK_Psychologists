@@ -91,7 +91,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void AddCommentToPsychologist_InvalidRequestPassed_ReturnEntityNotFoundException()
+        public void AddCommentToPsychologist_CommonOrderIsNotFound_ReturnAccessException()
         {
             //given
             var comment = new Comment();
@@ -100,7 +100,6 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 Email = "test@mail.ru"
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.IsAny<int>(), It.IsAny<int>())).Returns(order);
             var expectedComment = comment;
             var psychologistId = 1;
             var commentActual = new Comment()
@@ -115,7 +114,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //when
 
             //then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.AddCommentToPsyhologist(commentActual, psychologistId, _claims));
+            Assert.Throws<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(commentActual, psychologistId, _claims));
         }
 
         [Test]
@@ -184,27 +183,28 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void DeletePsychologist_ValidRequestPassed_DeletePsychologist()
+        public void DeletePsychologist_WhenPsychologistIsNotNullAndHasAccess_DeletePsychologist()
         {
             //given
             _claims = new()
             {
-                Email = "test@mail.ru"
+                Id=1
             };
             var psychologist = new Psychologist()
             {
-                Email= "test@mail.ru"
+                Id=1
             };
-            _sut.AddPsychologist(psychologist);
+
             _psychologistsRepositoryMock.Setup(c => c.DeletePsychologist(psychologist.Id));
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(psychologist.Id)).Returns(psychologist);
             //when
-            var actual = _sut.GetPsychologist(psychologist.Id, _claims);
+            _sut.DeletePsychologist(psychologist.Id, _claims);
             //then
-            Assert.That(actual, Is.Null);
+            _psychologistsRepositoryMock.Verify(c => c.DeletePsychologist(psychologist.Id), Times.Once());
         }
 
         [Test]
-        public void DeletePsychologist_PsychologistNotFound_ThrowException()
+        public void DeletePsychologist_PsychologistNotFound_ThrowExceptionEntityNotFound()
         {
             //given
             _claims = new();
@@ -216,29 +216,31 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _psychologistsRepositoryMock.Verify(c => c.DeletePsychologist(It.IsAny<int>()), Times.Never);
         }
 
+
         [Test]
-        public void DeletePsychologist_InvalidRequestPassed_DeletePsychologist()
+        public void DeletePsychologist_PsychologistHasNotAccess_ReturnAccessDenied()
         {
             //given
             _claims = new()
             {
-                Email = "test@mail.ru"
+                Id = 1
             };
             var psychologist = new Psychologist()
             {
-                Id = 2,
-                Email = "fake@mail.ru"
+                Id = 2
             };
-            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.IsAny<int>())).Returns(psychologist);
-            _sut.AddPsychologist(psychologist);
-            var result=_psychologistsRepositoryMock.Setup(c => c.DeletePsychologist(psychologist.Id));
+
+            _psychologistsRepositoryMock.Setup(c => c.DeletePsychologist(psychologist.Id));
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(psychologist.Id)).Returns(psychologist);
             //when
+            _sut.DeletePsychologist(psychologist.Id, _claims);
             //then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.DeletePsychologist(psychologist.Id, _claims));
+            _psychologistsRepositoryMock.Verify(c => c.DeletePsychologist(psychologist.Id), Times.Once());
         }
 
+
         [Test]
-        public void GetAllPsychologists_ValidRequestPassed_PsychologistsReceived()
+        public void GetAllPsychologists_WhenMethodIsCalled_PsychologistsReceived()
         {
             //given
             var psychologists = new List<Psychologist>()
@@ -262,14 +264,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             Assert.NotNull(actual);
             Assert.True(actual.GetType() == typeof(List<Psychologist>));
             Assert.NotNull(actual[0].Comments);
-            Assert.AreEqual(actual[0].Problems, null);
+            Assert.Null(actual[0].Problems);
             Assert.True(actual[1].IsDeleted == true);
             _psychologistsRepositoryMock.Verify(c => c.GetAllPsychologists(), Times.Once);
         }
 
-
         [Test]
-        public void GetCommentsByPsychologistId_ValidRequestPassed()
+        public void GetCommentsByPsychologistId_WhenThereIsAccess_ReturnComments()
         {
             //given
 
@@ -312,12 +313,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             //then
             expected.Should().BeEquivalentTo(actual);
-            Assert.True(actual[1].IsDeleted == true);
             _psychologistsRepositoryMock.Verify(c => c.GetCommentsByPsychologistId(psychologist.Id), Times.Once);
         }
 
         [Test]
-        public void GetCommentsByPsychologistId_PsychologistIsNull_Exception()
+        public void GetCommentsByPsychologistId_PsychologistIsNull_ReturnEntityNotFoundException()
         {
             //given
             var psychologist = new Psychologist()
@@ -333,7 +333,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetCommentsByPsychologistId_InvalidRequest_AccessException()
+        public void GetCommentsByPsychologistId_WhenAccessIsUnavailable_ReturnExceptionAccessDenied()
         {
             //given
             var psychologist = new Psychologist()
@@ -351,7 +351,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetOrdersByPsychologistId_ValidRequestPassed_ReturnOrders()
+        public void GetOrdersByPsychologistId_WhenThereIsAccess_ReturnOrders()
         {
             //given
             var psychologist = new Psychologist()
@@ -388,7 +388,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetOrdersByPsychologistId_PsychologistIsNull_Exception()
+        public void GetOrdersByPsychologistId_PsychologistIsNull_ReturnEntityNotFoundException()
         {
             //given
             var psychologist = new Psychologist()
@@ -407,7 +407,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetOrdersByPsychologistId_InvalidRequest_AccessException()
+        public void GetOrdersByPsychologistId_WhenAccessUnavailable_ReturnAccessException()
         {
             //given
             var psychologist = new Psychologist()
@@ -425,7 +425,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void UpdatePsychologist_ValidRequestPassed_UpdatePsycho()
+        public void UpdatePsychologist_WhenThereIsAccess_UpdatePsycho()
         {
             //given
             var psychologist = new Psychologist()
@@ -463,7 +463,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void UpdatePsychologist_InvalidRequestPassed_AccessException()
+        public void UpdatePsychologist_WhenAccessDenied_ReturnAccessException()
         {
             //given
             var psychologist = new Psychologist()

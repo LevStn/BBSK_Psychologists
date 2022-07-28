@@ -61,9 +61,9 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new EntityNotFoundException($"Psychologist {id} not found");
             }
 
-            if (claim.Email != psychologist.Email
-            || claim.Role != Role.Manager.ToString())
 
+            if (claim.Role == Role.Psychologist.ToString()
+                && claim.Id != id)
             {
                 throw new AccessException($"Access denied");
             }
