@@ -4,6 +4,7 @@ using BBSK_Psycho.DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BBSK_Psycho.DataLayer.Migrations
 {
     [DbContext(typeof(BBSK_PsychoContext))]
-    partial class BBSK_PsychoContextModelSnapshot : ModelSnapshot
+    [Migration("20220723191433_fixBug")]
+    partial class fixBug
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,32 +185,6 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasIndex("PsychologistId");
 
                     b.ToTable("Education", (string)null);
-                });
-
-            modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Manager", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Manager", (string)null);
                 });
 
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.Order", b =>
@@ -412,7 +388,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.HasIndex("PsychologistsId");
 
-                    b.ToTable("ProblemPsychologist", (string)null);
+                    b.ToTable("ProblemPsychologist");
                 });
 
             modelBuilder.Entity("PsychologistTherapyMethod", b =>
@@ -427,7 +403,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
 
                     b.HasIndex("TherapyMethodsId");
 
-                    b.ToTable("PsychologistTherapyMethod", (string)null);
+                    b.ToTable("PsychologistTherapyMethod");
                 });
 
             modelBuilder.Entity("BBSK_Psycho.DataLayer.Entities.ApplicationForPsychologistSearch", b =>
@@ -435,7 +411,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Client", "Client")
                         .WithMany("ApplicationForPsychologistSearch")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -446,13 +422,13 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Client", "Client")
                         .WithMany("Comments")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", "Psychologist")
                         .WithMany("Comments")
                         .HasForeignKey("PsychologistId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -465,7 +441,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", "Psychologist")
                         .WithMany("Educations")
                         .HasForeignKey("PsychologistId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Psychologist");
@@ -476,13 +452,13 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", "Psychologist")
                         .WithMany("Orders")
                         .HasForeignKey("PsychologistId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -495,7 +471,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", "Psychologist")
                         .WithMany("Schedules")
                         .HasForeignKey("PsychologistId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Psychologist");
@@ -506,13 +482,13 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Problem", null)
                         .WithMany()
                         .HasForeignKey("ProblemsId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", null)
                         .WithMany()
                         .HasForeignKey("PsychologistsId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -521,13 +497,13 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.Psychologist", null)
                         .WithMany()
                         .HasForeignKey("PsychologistsId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BBSK_Psycho.DataLayer.Entities.TherapyMethod", null)
                         .WithMany()
                         .HasForeignKey("TherapyMethodsId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
