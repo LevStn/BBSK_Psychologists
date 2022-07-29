@@ -14,15 +14,15 @@ namespace BBSK_Psycho.Controllers;
 [ApiController]
 [Authorize]
 [Produces("application/json")]
-[Route("search-reques")]
-public class SearchRequestController : ControllerBase
+[Route("search-requests")]
+public class SearchRequestsController : ControllerBase
 {
     private readonly IApplicationForPsychologistSearchServices _applicationForPsychologistSearchServices;
     private readonly IMapper _mapper;
 
     public ClaimModel Claims;
 
-    public SearchRequestController(IApplicationForPsychologistSearchServices applicationForPsychologistSearchServices, IMapper mapper)
+    public SearchRequestsController(IApplicationForPsychologistSearchServices applicationForPsychologistSearchServices, IMapper mapper)
     {
         _applicationForPsychologistSearchServices = applicationForPsychologistSearchServices;
         _mapper = mapper;

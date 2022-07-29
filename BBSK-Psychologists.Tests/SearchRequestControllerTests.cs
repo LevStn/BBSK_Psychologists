@@ -17,7 +17,7 @@ namespace BBSK_Psychologists.Tests;
 public class SearchRequestControllerTests
 {
 
-    private SearchRequestController _sut;
+    private SearchRequestsController _sut;
 
     private Mock<IApplicationForPsychologistSearchServices> _applicationForPsychologistSearchMock;
 
@@ -31,7 +31,7 @@ public class SearchRequestControllerTests
         _claim = new();
         _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<MapperConfigStorage>()));
         _applicationForPsychologistSearchMock = new Mock<IApplicationForPsychologistSearchServices>();
-        _sut = new SearchRequestController(_applicationForPsychologistSearchMock.Object, _mapper);
+        _sut = new SearchRequestsController(_applicationForPsychologistSearchMock.Object, _mapper);
     }
 
     [Test]
