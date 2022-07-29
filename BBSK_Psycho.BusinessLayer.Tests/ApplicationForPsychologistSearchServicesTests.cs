@@ -54,7 +54,7 @@ public class ApplicationForPsychologistSearchServicesTests
         };
 
 
-        _applicationForPsychologistSearchRepositoryMock.Setup(a => a.AddApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>(), It.IsAny<Client>()))
+        _applicationForPsychologistSearchRepositoryMock.Setup(a => a.AddApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>()))
             .Returns(1);
 
         _clientsRepository.Setup(c => c.GetClientById(client.Id)).Returns(client);
@@ -66,7 +66,7 @@ public class ApplicationForPsychologistSearchServicesTests
 
         //then
         Assert.AreEqual(actual, application.Id);
-        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.AddApplicationForPsychologist(application, client), Times.Once);
+        _applicationForPsychologistSearchRepositoryMock.Verify(a => a.AddApplicationForPsychologist(application), Times.Once);
     }
 
     [Test]

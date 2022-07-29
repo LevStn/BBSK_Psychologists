@@ -14,7 +14,7 @@ using NUnit.Framework;
 
 namespace BBSK_Psychologists.Tests;
 
-public class ApplicationForPsychologistSearchControllerTests
+public class SearchRequestControllerTests
 {
 
     private SearchRequestController _sut;

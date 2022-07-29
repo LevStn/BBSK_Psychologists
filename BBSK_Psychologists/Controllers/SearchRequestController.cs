@@ -14,7 +14,7 @@ namespace BBSK_Psycho.Controllers;
 [ApiController]
 [Authorize]
 [Produces("application/json")]
-[Route("[controller]")]
+[Route("search-reques")]
 public class SearchRequestController : ControllerBase
 {
     private readonly IApplicationForPsychologistSearchServices _applicationForPsychologistSearchServices;

@@ -11,6 +11,7 @@ using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
+using BBSK_Psycho.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,7 +119,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

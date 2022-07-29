@@ -32,33 +32,31 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
 
         if (client == null)
         {
-            throw new EntityNotFoundException($"Client {client.Id} not found");
+            throw new EntityNotFoundException($"Client {claim.Id} not found");
         }
-        
-        return _applicationForPsychologistSearchRepository.AddApplicationForPsychologist(application, client);
+
+        application.Client = client;
+
+        return _applicationForPsychologistSearchRepository.AddApplicationForPsychologist(application);
     }
+
 
     public List<ApplicationForPsychologistSearch> GetAllApplicationsForPsychologist() =>
         _applicationForPsychologistSearchRepository.GetAllApplicationsForPsychologist();
-
-
 
 
     public ApplicationForPsychologistSearch? GetApplicationForPsychologistById(int id, ClaimModel claim)
     {
         var application = _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
 
-        if (application == null)
+        if (application is null)
         {
             throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        if (CheckAccess(claim, application))
-        {
-            throw new AccessException($"Access denied");
-        }
-        else
-            return application;
+        CheckAccess(claim, application);
+
+        return application;
     }
 
 
@@ -67,17 +65,14 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
     {
         var application = _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
 
-        if (application == null)
+        if (application is null)
         {
-            throw new EntityNotFoundException($"Client {id} not found");
+            throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        if (CheckAccess(claim, application))
-        {
-            throw new AccessException($"Access denied");
-        }
-        else
-            _applicationForPsychologistSearchRepository.DeleteApplicationForPsychologist(application);
+        CheckAccess(claim, application);
+
+        _applicationForPsychologistSearchRepository.DeleteApplicationForPsychologist(application);
     }
 
 
@@ -85,35 +80,31 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
     {
         var application = _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
 
-        if (application == null)
+        if (application is null)
         {
-            throw new EntityNotFoundException($"Application {claim.Id} not found");
+            throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        if (CheckAccess(claim, application))
-        {
-            throw new AccessException($"Access denied");
-        }
-        else
-        {
-            application.Name = newModel.Name;
-            application.PhoneNumber = newModel.PhoneNumber;
-            application.Description = newModel.Description;
-            application.PsychologistGender = newModel.PsychologistGender;
-            application.CostMin = newModel.CostMin;
-            application.CostMax = newModel.CostMax;
-            application.Date = newModel.Date;
-            application.Time = newModel.Time;
-            _applicationForPsychologistSearchRepository.UpdateApplicationForPsychologist(application);
-        }
+        CheckAccess(claim, application);
 
+        application.Name = newModel.Name;
+        application.PhoneNumber = newModel.PhoneNumber;
+        application.Description = newModel.Description;
+        application.PsychologistGender = newModel.PsychologistGender;
+        application.CostMin = newModel.CostMin;
+        application.CostMax = newModel.CostMax;
+        application.Date = newModel.Date;
+        application.Time = newModel.Time;
+        _applicationForPsychologistSearchRepository.UpdateApplicationForPsychologist(application);
     }
 
 
-    private bool CheckAccess(ClaimModel claim, ApplicationForPsychologistSearch application)
+    private void CheckAccess(ClaimModel claim, ApplicationForPsychologistSearch application)
     {
-        return (!(((claim.Email == application.Client.Email
+         if(!(((claim.Email == application.Client.Email
             || claim.Role == Role.Manager)
-            && claim.Role != Role.Psychologist) && claim is not null));
+            && claim.Role != Role.Psychologist) && 
+            claim is not null))
+            throw new AccessException($"Access denied");
     }
 }

@@ -13,11 +13,10 @@ public class ApplicationForPsychologistSearchRepository : IApplicationForPsychol
         _context = context;
     }
 
-    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch request, Client client)
+    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch request)
     {
-        request.Client = client;
-        _context.ApplicationForPsychologistSearches.Add(request);
         
+        _context.ApplicationForPsychologistSearches.Add(request);
         _context.SaveChanges();
 
         return request.Id;

@@ -144,7 +144,7 @@ namespace BBSK_Psycho.Controllers
         }
 
         [AuthorizeByRole(Role.Client)]
-        [HttpGet("{id}/search-request")]
+        [HttpGet("{id}/search-requests")]
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
