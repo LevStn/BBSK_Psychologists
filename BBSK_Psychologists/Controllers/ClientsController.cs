@@ -1,11 +1,13 @@
 using AutoMapper;
 using BBSK_Psycho.BusinessLayer;
 using BBSK_Psycho.BusinessLayer.Services;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
+using BBSK_Psycho.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -139,9 +141,6 @@ namespace BBSK_Psycho.Controllers
         {
             var clients = _clientsServices.GetClients();
             return Ok(_mapper.Map<List<ClientResponse>>(clients));
-
-
         }
-
     }
 }
