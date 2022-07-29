@@ -13,7 +13,10 @@ public class ClientsRepository : IClientsRepository
         _context = context;
     }
 
-    public Client? GetClientById(int id) => _context.Clients.FirstOrDefault(c => c.Id == id);
+    public Client? GetClientById(int id) => _context.Clients
+        .Include(c => c.ApplicationForPsychologistSearch.Where(a=>a.IsDeleted == false))
+        .FirstOrDefault(c => c.Id == id);
+
 
     public List<Client> GetClients() => _context.Clients
         .Where(c => c.IsDeleted== false)
@@ -35,21 +38,14 @@ public class ClientsRepository : IClientsRepository
         return client.Id;
     }
 
-    public void UpdateClient(Client newProperty, int id)
+    public void UpdateClient(Client newModel)
     {
-        var client=GetClientById(id);
-
-        client.Name = newProperty.Name;
-        client.LastName = newProperty.LastName;
-        client.BirthDate = newProperty.BirthDate;
-
-        _context.Clients.Update(client);
+        _context.Clients.Update(newModel);
         _context.SaveChanges();
     }
 
-    public void DeleteClient(int id)
+    public void DeleteClient(Client client)
     {
-        var client=GetClientById(id);
         client.IsDeleted = true;
         _context.SaveChanges();
     }

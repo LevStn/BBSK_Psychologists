@@ -11,7 +11,7 @@ using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using BBSK_Psycho.Extensions;
-
+using BBSK_Psycho.Controllers;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -58,9 +58,8 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    //o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
-    string connString = builder.Configuration.GetValue<string>("CON_STRING");
-    o.UseSqlServer(connString);
+    o.UseSqlServer(@"Server=80.78.240.16;Database=BBSK_PsychoDb4;User Id=Student;Password=qwe!23");
+
 });
 
 
@@ -68,10 +67,12 @@ builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
-
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IClientsServices, ClientsService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
+
+builder.Services.AddScoped<IApplicationForPsychologistSearchRepository, ApplicationForPsychologistSearchRepository>();
+builder.Services.AddScoped<IApplicationForPsychologistSearchServices, ApplicationForPsychologistSearchServices>();
 
 builder.Services.AddAuthorization();
 
@@ -114,7 +115,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

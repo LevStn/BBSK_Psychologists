@@ -132,18 +132,7 @@ namespace BBSK_Psycho.Controllers
                 return Ok(result);
         }
 
-        // Этот метод будет перенесен в клиента!!!!
-        [AuthorizeByRole(Role.Client)]
-        [HttpPost("request-psyhologist-search")]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult <int> AddRequestPsyhologistSearch([FromBody] Models.ApplicationForPsychologistSearch requestPsyhologistSearch)
-        {
-            int id = 2;
-            return Created($"{this.GetRequestPath()}/{id}", id);
-        }
+       
 
         [Authorize(Roles = nameof(Role.Client))]
         [HttpPost("{psychologistId}/comments")]

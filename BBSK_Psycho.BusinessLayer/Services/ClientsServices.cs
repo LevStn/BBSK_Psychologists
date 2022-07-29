@@ -20,19 +20,14 @@ public class ClientsService : IClientsServices
     {
         var client = _clientsRepository.GetClientById(id);
 
-        if (client == null)
+        if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager)
-            && claims.Role != Role.Psychologist) && claims is not null))
-        {
-            throw new AccessException($"Access denied");
-        }
-        else
-            return client;
+        CheckAccess(claims, client);
+
+        return client;
     }
 
 
@@ -48,21 +43,14 @@ public class ClientsService : IClientsServices
     {
         var client = _clientsRepository.GetClientById(id);
 
-
-        if (client == null)
+        if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager)
-            && claims.Role != Role.Psychologist) && claims is not null))
-        {
-            throw new AccessException($"Access denied");
-        }
+        CheckAccess(claims, client);
 
-        else
-            return _clientsRepository.GetCommentsByClientId(id);
+        return _clientsRepository.GetCommentsByClientId(id);
     }
 
 
@@ -70,78 +58,89 @@ public class ClientsService : IClientsServices
     {
         var client = _clientsRepository.GetClientById(id);
 
-        if (client == null)
+        if (client is null)
         {
-            throw new EntityNotFoundException($"Orders by client {id} not found");
-        }
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager)
-            && claims.Role != Role.Psychologist) && claims is not null))
-        {
-            throw new AccessException($"Access denied");
+            throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        else
-            return _clientsRepository.GetOrdersByClientId(id);
+        CheckAccess(claims, client);
+
+        return _clientsRepository.GetOrdersByClientId(id);
     }
 
     public int AddClient(Client client)
     {
 
-        var isChecked = CheckEmailForUniqueness(client.Email);
+        CheckEmailForUniqueness(client.Email);
 
-
-        if (!isChecked)
-        {
-            throw new UniquenessException($"That email is registred");
-        }
-
-        else
-
-            client.Password = PasswordHash.HashPassword(client.Password);
-
-            return _clientsRepository.AddClient(client);
+        client.Password = PasswordHash.HashPassword(client.Password);
+        return _clientsRepository.AddClient(client);
     }
 
     public void UpdateClient(Client newClientModel, int id, ClaimModel claims)
     {
         var client = _clientsRepository.GetClientById(id);
 
-
-        if (client == null)
+        if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
-        if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager)
-            && claims.Role != Role.Psychologist) && claims is not null))
-        {
-            throw new AccessException($"Access denied");
-        }
-        else
-            _clientsRepository.UpdateClient(newClientModel, id);
+
+        CheckAccess(claims, client);
+
+        client.Name = newClientModel.Name;
+        client.LastName = newClientModel.LastName;
+        client.BirthDate = newClientModel.BirthDate;
+
+        _clientsRepository.UpdateClient(newClientModel);
     }
 
     public void DeleteClient(int id, ClaimModel claims)
     {
         var client = _clientsRepository.GetClientById(id);
 
-
-        if (client == null)
+        if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        if (!(((claims.Email == (string)client.Email
-             || claims.Role == Role.Manager)
-             && claims.Role != Role.Psychologist) && claims is not null))
+        CheckAccess(claims, client);
+
+        _clientsRepository.DeleteClient(client);
+    }
+
+    public List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id, ClaimModel claims)
+    {
+        var client = _clientsRepository.GetClientById(id);
+
+        if (client is null)
         {
-            throw new AccessException($"Access denied");
+            throw new EntityNotFoundException($"Client {id} not found");
         }
-        else
-            _clientsRepository.DeleteClient(id);
+
+        CheckAccess(claims, client);
+
+        return client.ApplicationForPsychologistSearch.ToList();
     }
 
 
-    private bool CheckEmailForUniqueness(string email) => _clientsRepository.GetClientByEmail(email) == null;
+
+
+    private void CheckAccess(ClaimModel claims, Client client)
+    {
+        if ((!(((claims.Email == client.Email
+         || claims.Role == Role.Manager)
+         && claims.Role != Role.Psychologist) &&
+         claims is not null)))
+            throw new AccessException($"Access denied");
+    }
+
+
+    private void CheckEmailForUniqueness(string email) 
+    {
+        if( _clientsRepository.GetClientByEmail(email) != null)
+        {
+            throw new UniquenessException($"That email is registred");
+        }
+    }
 }

@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BBSK_Psycho.DataLayer.Migrations
 {
-    public partial class FixingMigration : Migration
+    public partial class fixBug : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTime>(
                 name: "RegistrationDate",
                 table: "Client",
-                type: "datetime2",
+                type: "date",
                 nullable: false,
                 defaultValueSql: "getdate()");
 
@@ -28,8 +28,9 @@ namespace BBSK_Psycho.DataLayer.Migrations
                     PsychologistGender = table.Column<int>(type: "int", nullable: false),
                     CostMin = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
                     CostMax = table.Column<decimal>(type: "decimal(7,2)", precision: 7, scale: 2, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<DateTime>(type: "date", nullable: false),
                     Time = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -40,7 +41,7 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         column: x => x.ClientId,
                         principalTable: "Client",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

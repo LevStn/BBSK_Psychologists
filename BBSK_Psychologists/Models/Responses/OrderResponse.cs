@@ -25,6 +25,6 @@ namespace BBSK_Psycho.Models.Responses
 
         public OrderStatus OrderStatus { get; set; }
 
-        public OrderStatus OrderPaymentStatus { get; set; }
+        public OrderPaymentStatus OrderPaymentStatus { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.Models;
+using BBSK_Psycho.Models.Requests;
 using BBSK_Psycho.Models.Responses;
-
 namespace BBSK_Psycho;
 
 public class MapperConfigStorage: Profile
@@ -25,5 +25,8 @@ public class MapperConfigStorage: Profile
         CreateMap<OrderCreateRequest, Order>();
 
         CreateMap<Order, AllOrdersResponse>();
+
+        CreateMap<ApplicationForPsychologistSearch, SearchResponse>();
+        CreateMap<SearchRequest, ApplicationForPsychologistSearch>();
     }
 }

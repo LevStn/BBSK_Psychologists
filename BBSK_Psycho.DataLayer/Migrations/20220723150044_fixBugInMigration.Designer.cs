@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BBSK_Psycho.DataLayer.Migrations
 {
     [DbContext(typeof(BBSK_PsychoContext))]
-    [Migration("20220721203250_AddManager")]
-    partial class AddManager
+    [Migration("20220723150044_fixBugInMigration")]
+    partial class fixBugInMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

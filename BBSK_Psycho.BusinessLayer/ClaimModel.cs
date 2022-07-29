@@ -1,6 +1,5 @@
 ﻿
 using BBSK_Psycho.DataLayer.Enums;
-
 namespace BBSK_Psycho.BusinessLayer
 {
     public class ClaimModel

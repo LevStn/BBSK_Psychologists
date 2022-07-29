@@ -1,7 +1,4 @@
-﻿
-
-using BBSK_Psycho.BusinessLayer.Services;
-using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+﻿using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
@@ -212,6 +209,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         }
 
+        
         [Test]
         public void GetToken_PropertysEmpty_ThrowDataException()
         {
