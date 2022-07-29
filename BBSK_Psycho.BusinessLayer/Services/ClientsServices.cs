@@ -1,8 +1,9 @@
 ﻿using BBSK_Psycho.BusinessLayer.Exceptions;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
-
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 namespace BBSK_Psycho.BusinessLayer.Services;
 
@@ -17,16 +18,16 @@ public class ClientsService : IClientsServices
 
     public Client? GetClientById(int id, ClaimModel claims)
     {
-
         var client = _clientsRepository.GetClientById(id);
 
         if (client == null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
+
         if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+            || claims.Role == Role.Manager)
+            && claims.Role != Role.Psychologist) && claims is not null))
         {
             throw new AccessException($"Access denied");
         }
@@ -54,8 +55,8 @@ public class ClientsService : IClientsServices
         }
 
         if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+            || claims.Role == Role.Manager)
+            && claims.Role != Role.Psychologist) && claims is not null))
         {
             throw new AccessException($"Access denied");
         }
@@ -74,8 +75,8 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Orders by client {id} not found");
         }
         if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+            || claims.Role == Role.Manager)
+            && claims.Role != Role.Psychologist) && claims is not null))
         {
             throw new AccessException($"Access denied");
         }
@@ -100,7 +101,6 @@ public class ClientsService : IClientsServices
             client.Password = PasswordHash.HashPassword(client.Password);
 
             return _clientsRepository.AddClient(client);
-
     }
 
     public void UpdateClient(Client newClientModel, int id, ClaimModel claims)
@@ -113,14 +113,13 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
         if (!(((claims.Email == (string)client.Email
-            || claims.Role == Role.Manager.ToString())
-            && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+            || claims.Role == Role.Manager)
+            && claims.Role != Role.Psychologist) && claims is not null))
         {
             throw new AccessException($"Access denied");
         }
         else
             _clientsRepository.UpdateClient(newClientModel, id);
-
     }
 
     public void DeleteClient(int id, ClaimModel claims)
@@ -134,18 +133,15 @@ public class ClientsService : IClientsServices
         }
 
         if (!(((claims.Email == (string)client.Email
-             || claims.Role == Role.Manager.ToString())
-             && claims.Role != Role.Psychologist.ToString()) && claims is not null))
+             || claims.Role == Role.Manager)
+             && claims.Role != Role.Psychologist) && claims is not null))
         {
             throw new AccessException($"Access denied");
         }
         else
             _clientsRepository.DeleteClient(id);
-
     }
 
 
     private bool CheckEmailForUniqueness(string email) => _clientsRepository.GetClientByEmail(email) == null;
-
-
 }

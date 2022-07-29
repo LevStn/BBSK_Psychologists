@@ -1,7 +1,9 @@
 ﻿using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Tests.ModelControllerSource;
 using BBSK_Psycho.DataLayer.Entities;
+using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using Moq;
 
 
@@ -167,9 +169,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
 
-        [TestCase("Client")]
-        [TestCase("Manager")]
-        public void GetClientById_ValidRequestPassed_ClientReceived(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Manager)]
+        public void GetClientById_ValidRequestPassed_ClientReceived(Role role)
         {
 
             //given
@@ -184,7 +186,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            if (role == "Manager")
+            if (role == Role.Manager)
             {
                 clientInDb.Email = null;
             }
@@ -231,7 +233,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
 
-            _claims = new() { Email = clientInDb.Email, Role = "Client" };
+            _claims = new() { Email = clientInDb.Email, Role = Role.Client };
 
 
             _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
@@ -246,9 +248,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Psychologist")]
-        public void GetClientById_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Client)]
+        public void GetClientById_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(Role role)
         {
 
             //given
@@ -265,7 +267,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist)
             {
                 testEmail = clientInDb.Email;
             }
@@ -285,9 +287,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Manager")]
-        public void GetCommentsByClientId_ValidRequestPassed_CommentsReceived(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Manager)]
+        public void GetCommentsByClientId_ValidRequestPassed_CommentsReceived(Role role)
         {
             //given
             var clientInDb = new Client()
@@ -314,7 +316,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager)
             {
                 clientInDb.Email = null;
             }
@@ -345,7 +347,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             Client? eptyClient = null;
 
 
-            _claims = new() { Email = clientInDb.Email, Role = "Client" };
+            _claims = new() { Email = clientInDb.Email, Role = Role.Client };
 
             _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(eptyClient);
             _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).Returns(clientInDb.Comments);
@@ -358,9 +360,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         }
 
-        [TestCase("Client")]
-        [TestCase("Psychologist")]
-        public void GetCommentsByClientId_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Psychologist)]
+        public void GetCommentsByClientId_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(Role role)
         {
 
             //given
@@ -391,7 +393,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist)
             {
                 testEmail = clientInDb.Email;
             }
@@ -409,9 +411,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Manager")]
-        public void GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Manager)]
+        public void GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived(Role role)
         {
             //given
 
@@ -437,7 +439,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager)
             {
                 clientInDb.Email = null;
             }
@@ -470,7 +472,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             Client? emptyClient = null;
 
 
-            _claims = new() { Email = clientInDb.Email, Role = "Client" };
+            _claims = new() { Email = clientInDb.Email, Role = Role.Client };
 
             _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(emptyClient);
             _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(clientInDb.Id)).Returns(clientInDb.Orders);
@@ -482,9 +484,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Psychologist")]
-        public void GetOrdersByClientId_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Psychologist)]
+        public void GetOrdersByClientId_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(Role role)
         {
 
             //given
@@ -513,7 +515,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 }
 
             };
-            if (role == "Psychologist")
+            if (role == Role.Psychologist)
             {
                 testEmail = clientInDb.Email;
             }
@@ -530,9 +532,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Manager")]
-        public void UpdateClient_ValidRequestPassed_ChangesProperties(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Manager)]
+        public void UpdateClient_ValidRequestPassed_ChangesProperties(Role role)
         {
             //given
 
@@ -555,7 +557,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(1998, 10, 10),
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager)
             {
                 client.Email = null;
             }
@@ -595,7 +597,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(1998, 10, 10),
             };
 
-            _claims = new() { Email = client.Email, Role = "Client" };
+            _claims = new() { Email = client.Email, Role = Role.Client };
 
             _clientsRepositoryMock.Setup(o => o.UpdateClient(newClientModel, client.Id));
 
@@ -608,9 +610,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Psychologist")]
-        public void UpdateClient_ClientGetSomeoneElsesProfileAndRolePsychologist_ThrowAccessException(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Psychologist)]
+        public void UpdateClient_ClientGetSomeoneElsesProfileAndRolePsychologist_ThrowAccessException(Role role)
         {
             //given
             var testEmail = "bnb@gamil.ru";
@@ -634,7 +636,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(1998, 10, 10),
             };
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist)
             {
                 testEmail = client.Email;
             }
@@ -650,9 +652,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Manager")]
-        public void DeleteClient_ValidRequestPassed_DeleteClient(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Manager)]
+        public void DeleteClient_ValidRequestPassed_DeleteClient(Role role)
         {
             //given
             var expectedClient = new Client()
@@ -667,7 +669,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             };
 
-            if (role == "Manager")
+            if (role == Role.Manager)
             {
                 expectedClient.Email = null;
             }
@@ -712,9 +714,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
 
-        [TestCase("Client")]
-        [TestCase("Psychologist")]
-        public void DeleteClient_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(string role)
+        [TestCase(Role.Client)]
+        [TestCase(Role.Psychologist)]
+        public void DeleteClient_ClientGetSomeoneElseProfileAndRolePsychologist_ThrowAccessException(Role role)
         {
             //given
 
@@ -742,7 +744,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            if (role == "Psychologist")
+            if (role == Role.Psychologist)
             {
                 clientFirst.Email = clientSecond.Email;
             }

@@ -46,7 +46,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var claim= _sut.GetUserForLogin(managerExpected.Email, managerPassword);
             //then
 
-            Assert.True(claim.Role == Role.Manager.ToString());
+            Assert.True(claim.Role == Role.Manager);
             Assert.True(claim.Email == managerExpected.Email);
             _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
             _psychologistsRepository.Verify(c => c.GetPsychologistByEmail(It.IsAny<string>()), Times.Never);
@@ -75,7 +75,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var claim = _sut.GetUserForLogin(clientExpected.Email, clientPassword);
 
             //then
-            Assert.True(claim.Role == Role.Client.ToString());
+            Assert.True(claim.Role == Role.Client);
             Assert.True(claim.Email == clientExpected.Email);
             _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Once);
             _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
@@ -103,7 +103,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var claim = _sut.GetUserForLogin(psychologistsExpected.Email, passwordPsychologistsExpected);
 
             //then
-            Assert.True(claim.Role == Role.Psychologist.ToString());
+            Assert.True(claim.Role == Role.Psychologist);
             Assert.True(claim.Email == psychologistsExpected.Email);
             _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Once);
             _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
@@ -185,7 +185,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var model = new ClaimModel()
             {
                 Email = "ada@gmail.com",
-                Role = "Client"
+                Role = Role.Client
             };
 
             //when
@@ -204,22 +204,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var model = new ClaimModel()
             {
                 Email = null,
-                Role = "Client"
-            };
-
-            //when, then
-            Assert.Throws<Exceptions.DataException>(() => _sut.GetToken(model));
-
-        }
-
-        [Test]
-        public void GetToken_RoleEmpty_ThrowDataException()
-        {
-            //given
-            var model = new ClaimModel()
-            {
-                Email = "aa@gmail.com",
-                Role = null
+                Role = Role.Client
             };
 
             //when, then
