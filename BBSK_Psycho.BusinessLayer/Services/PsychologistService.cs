@@ -43,8 +43,8 @@ namespace BBSK_Psycho.BusinessLayer
 
         public int AddPsychologist(Psychologist psychologist)
         {
-            var isChecked = CheckEmailForUniqueness(psychologist.Email);
-            if(!isChecked)
+            var isUnique = CheckEmailForUniqueness(psychologist.Email);
+            if(!isUnique)
             {
                 throw new UniquenessException($"That email is registred");
             }
@@ -70,11 +70,8 @@ namespace BBSK_Psycho.BusinessLayer
             _psychologistsRepository.DeletePsychologist(id);
         }
 
-        public List<Psychologist> GetAllPsychologists(ClaimModel claim)
-        {
-            var result=_psychologistsRepository.GetAllPsychologists();
-            return result;
-        }
+        public List<Psychologist> GetAllPsychologists(ClaimModel claim) => _psychologistsRepository.GetAllPsychologists().ToList();
+
 
         public List<Comment> GetCommentsByPsychologistId(int id, ClaimModel claim)
         {

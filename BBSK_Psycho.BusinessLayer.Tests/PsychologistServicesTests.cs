@@ -458,8 +458,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _sut.UpdatePsychologist(newPsychologist, psychologist.Id, _claims);
 
             //then
-            _psychologistsRepositoryMock.Verify(c => c.GetPsychologist(It.IsAny<int>()), Times.Exactly(1));
-            _psychologistsRepositoryMock.Verify(o => o.UpdatePsychologist(It.IsAny<Psychologist>(), It.IsAny<int>()), Times.Once);
+            _psychologistsRepositoryMock.Verify(o => o.GetPsychologist(It.IsAny<int>()), Times.Exactly(1));
+            _psychologistsRepositoryMock.Verify(o => o.UpdatePsychologist(It.Is<Psychologist>(p => p.Price!= psychologist.Price && p.Id == psychologist.Id 
+            && p.Educations==psychologist.Educations 
+            && p.CheckStatus==psychologist.CheckStatus 
+            && p.PasportData==psychologist.PasportData), It.Is<int>(i => i == psychologist.Id)), Times.Once);
         }
 
         [Test]

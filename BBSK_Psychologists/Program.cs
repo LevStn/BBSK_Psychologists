@@ -60,7 +60,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 {
-    o.UseSqlServer((@"Server=DESKTOP-PMA057A;Database=BBSK_PsychoDb;Trusted_Connection=True"));
+
 });
 
 
