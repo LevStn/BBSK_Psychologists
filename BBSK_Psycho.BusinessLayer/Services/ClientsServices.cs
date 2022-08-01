@@ -91,7 +91,7 @@ public class ClientsService : IClientsServices
         client.LastName = newClientModel.LastName;
         client.BirthDate = newClientModel.BirthDate;
 
-        _clientsRepository.UpdateClient(newClientModel);
+        _clientsRepository.UpdateClient(client);
     }
 
     public void DeleteClient(int id, ClaimModel claims)
