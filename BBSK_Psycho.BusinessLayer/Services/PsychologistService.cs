@@ -131,6 +131,7 @@ namespace BBSK_Psycho.BusinessLayer
             {
                 throw new AccessException($"Access denied");
             }
+
             _psychologistsRepository.UpdatePsychologist(psychologist, id);
         }
 

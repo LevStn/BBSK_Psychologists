@@ -427,13 +427,14 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         [Test]
         public void UpdatePsychologist_WhenThereIsAccess_UpdatePsycho()
         {
-            //given
-            var psychologist = new Psychologist()
+            int id = 2;
+            //give
+            var newPsychologist = new Psychologist()
             {
                 Id = 2,
-                Name = "лял",
-                LastName = "пвфа",
-                Patronymic = "ПВАПВА",
+                Name = "Grigoriy",
+                LastName = "Grigorievich",
+                Patronymic = "Grigoriev",
                 Gender = Gender.Male,
                 Phone = "85884859",
                 Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
@@ -447,22 +448,46 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = DateTime.Parse("1210 - 12 - 12"),
                 Password = "12334534"
             };
-            var newPsychologist = new Psychologist()
+
+            var expectedPsychologist = new Psychologist()
             {
-                Price = 1000
+                Id = 2,
+                Name = "Grigoriy",
+                LastName = "Grigorievich",
+                Patronymic = "Grigoriev",
+                Gender = Gender.Male,
+                Phone = "85884859",
+                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                CheckStatus = CheckStatus.Completed,
+                Email = "ros@fja.com",
+                PasportData = "23146456",
+                Price = 2000,
+                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
+                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
+                WorkExperience = 10,
+                BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                Password = "12334534"
             };
 
-            _psychologistsRepositoryMock.Setup(o => o.UpdatePsychologist(newPsychologist, psychologist.Id));
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(id));
+            _psychologistsRepositoryMock.Setup(o => o.UpdatePsychologist(newPsychologist, id));
             _claims = new() { Id = 2, Role = Role.Psychologist.ToString() };
             //when
-            _sut.UpdatePsychologist(newPsychologist, psychologist.Id, _claims);
+            _sut.UpdatePsychologist(newPsychologist, id, _claims);
 
             //then
             _psychologistsRepositoryMock.Verify(o => o.GetPsychologist(It.IsAny<int>()), Times.Exactly(1));
-            _psychologistsRepositoryMock.Verify(o => o.UpdatePsychologist(It.Is<Psychologist>(p => p.Price!= psychologist.Price && p.Id == psychologist.Id 
-            && p.Educations==psychologist.Educations 
-            && p.CheckStatus==psychologist.CheckStatus 
-            && p.PasportData==psychologist.PasportData), It.Is<int>(i => i == psychologist.Id)), Times.Once);
+            _psychologistsRepositoryMock.Verify(p => p.UpdatePsychologist(It.Is<Psychologist>(p => p.Price == expectedPsychologist.Price
+             && p.Id == expectedPsychologist.Id
+             && p.CheckStatus == expectedPsychologist.CheckStatus
+             && p.PasportData == expectedPsychologist.PasportData
+             && p.Patronymic == expectedPsychologist.Patronymic
+             && p.Email == expectedPsychologist.Email
+             && p.WorkExperience == expectedPsychologist.WorkExperience
+             && p.CheckStatus == expectedPsychologist.CheckStatus
+             && p.Name == expectedPsychologist.Name
+             && p.LastName == expectedPsychologist.LastName
+             && p.Gender == expectedPsychologist.Gender), It.Is<int>(i => i == id)), Times.Once);
         }
 
         [Test]
