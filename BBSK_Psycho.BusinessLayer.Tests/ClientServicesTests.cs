@@ -26,11 +26,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void AddClient_ValidRequestPassed_AddClientAndIdReturned()
+        public async Task AddClient_ValidRequestPassed_AddClientAndIdReturned()
         {
             //given
-            _clientsRepositoryMock.Setup(c => c.AddClient(It.IsAny<Client>()))
-                 .Returns(1);
+             _clientsRepositoryMock.Setup(c => c.AddClient(It.IsAny<Client>()))
+                 .ReturnsAsync(1);
             var expectedId = 1;
 
             var client = new Client()
@@ -44,7 +44,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
             //when
-            var actual = _sut.AddClient(client);
+            var actual = await _sut.AddClient(client);
 
 
             //then
@@ -56,7 +56,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void AddClient_NotUniqueEmail_ThrowUniquenessException()
+        public async Task AddClient_NotUniqueEmail_ThrowUniquenessException()
         {
             //given
             var clients = new List<Client>
@@ -92,7 +92,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
             _clientsRepositoryMock.Setup(c => c.GetClients())
-                 .Returns(clients);
+                 .ReturnsAsync(clients);
 
             var clientNew = new Client()
             {
@@ -103,11 +103,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 PhoneNumber = "89119118696",
                 BirthDate = new DateTime(2020, 05, 05),
             };
-            _clientsRepositoryMock.Setup(c => c.GetClientByEmail("J@gmail.com")).Returns(clients[0]);
+            _clientsRepositoryMock.Setup(c => c.GetClientByEmail("J@gmail.com")).ReturnsAsync(clients[0]);
 
 
             //when,then
-            Assert.Throws<Exceptions.UniquenessException>(() => _sut.AddClient(clientNew));
+            Assert.ThrowsAsync<Exceptions.UniquenessException>(() => _sut.AddClient(clientNew));
 
             _clientsRepositoryMock.Verify(c => c.AddClient(It.IsAny<Client>()), Times.Never);
 
@@ -116,7 +116,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void GetClients_ValidRequestPassed_ClientsReceived()
+        public async Task GetClients_ValidRequestPassed_ClientsReceived()
         {
             //given
             var clients = new List<Client>
@@ -149,10 +149,10 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            _clientsRepositoryMock.Setup(o => o.GetClients()).Returns(clients);
+            _clientsRepositoryMock.Setup(o => o.GetClients()).ReturnsAsync(clients);
 
             //when
-            var actual = _sut.GetClients();
+            var actual = await _sut.GetClients();
 
             //then
             Assert.NotNull(actual);
@@ -170,7 +170,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Manager")]
-        public void GetClientById_ValidRequestPassed_ClientReceived(string roleString)
+        public async Task GetClientById_ValidRequestPassed_ClientReceived(string roleString)
         {
 
             //given
@@ -194,11 +194,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _claims = new() { Email = clientInDb.Email, Role = role };
 
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(clientInDb);
 
 
             //when
-            var actual = _sut.GetClientById(clientInDb.Id, _claims);
+            var actual = await _sut.GetClientById(clientInDb.Id, _claims);
 
             //then
 
@@ -215,7 +215,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void GetClientById_EmptyRequest_ThrowEntityNotFoundException()
+        public async Task GetClientById_EmptyRequest_ThrowEntityNotFoundException()
         {
 
             //given
@@ -236,13 +236,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _claims = new() { Email = clientInDb.Email, Role = Role.Client };
 
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(clientInDb);
 
 
 
             //when, then
 
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetClientById(testId, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetClientById(testId, _claims));
             _clientsRepositoryMock.Verify(c => c.GetClientById(testId), Times.Once);
 
         }
@@ -250,7 +250,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Psychologist")]
-        public void GetClientById_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
+        public async Task GetClientById_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
         {
 
             //given
@@ -276,13 +276,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _claims = new() { Email = testEmail, Role = role };
 
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(clientInDb);
 
 
 
             //when, then
 
-            Assert.Throws<Exceptions.AccessException>(() => _sut.GetClientById(clientInDb.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.GetClientById(clientInDb.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.GetClientById(clientInDb.Id), Times.Once);
 
         }
@@ -290,7 +290,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Manager")]
-        public void GetCommentsByClientId_ValidRequestPassed_CommentsReceived(string roleString)
+        public async Task GetCommentsByClientId_ValidRequestPassed_CommentsReceived(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -324,11 +324,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
             _claims = new() { Email = clientInDb.Email, Role = role };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
-            _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).Returns(clientInDb.Comments);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(clientInDb);
+            _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).ReturnsAsync(clientInDb.Comments);
 
             //when
-            var actual = _sut.GetCommentsByClientId(clientInDb.Id, _claims);
+            var actual = await _sut.GetCommentsByClientId(clientInDb.Id, _claims);
 
             //then
 
@@ -342,7 +342,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetCommentsByClientId_EmptyClientRequest_ThrowEntityNotFoundException()
+        public async Task GetCommentsByClientId_EmptyClientRequest_ThrowEntityNotFoundException()
         {
             //given
             var clientInDb = new Client();
@@ -351,12 +351,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claims = new() { Email = clientInDb.Email, Role = Role.Client };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(eptyClient);
-            _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).Returns(clientInDb.Comments);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(eptyClient);
+            _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).ReturnsAsync(clientInDb.Comments);
 
 
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetCommentsByClientId(clientInDb.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetCommentsByClientId(clientInDb.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Never);
 
 
@@ -364,7 +364,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Psychologist")]
-        public void GetCommentsByClientId_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
+        public async Task GetCommentsByClientId_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
         {
 
             //given
@@ -403,12 +403,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claims = new() { Email = testEmail, Role = role };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
-            _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).Returns(clientInDb.Comments);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(clientInDb);
+            _clientsRepositoryMock.Setup(o => o.GetCommentsByClientId(clientInDb.Id)).ReturnsAsync(clientInDb.Comments);
 
 
             //when, then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.GetCommentsByClientId(clientInDb.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.GetCommentsByClientId(clientInDb.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.GetCommentsByClientId(It.IsAny<int>()), Times.Never);
 
         }
@@ -416,7 +416,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Manager")]
-        public void GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived(string roleString)
+        public async Task GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -449,11 +449,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
             _claims = new() { Email = clientInDb.Email, Role = role };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
-            _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(clientInDb.Id)).Returns(clientInDb.Orders);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(clientInDb);
+            _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(clientInDb.Id)).ReturnsAsync(clientInDb.Orders);
 
             //when
-            var actual = _sut.GetOrdersByClientId(clientInDb.Id, _claims);
+            var actual = await _sut.GetOrdersByClientId(clientInDb.Id, _claims);
 
 
             //then
@@ -469,7 +469,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void GetOrdersByClientId_EmptyClientRequest_ThrowEntityNotFoundException()
+        public async Task GetOrdersByClientId_EmptyClientRequest_ThrowEntityNotFoundException()
         {
             //given
             var clientInDb = new Client();
@@ -478,11 +478,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claims = new() { Email = clientInDb.Email, Role = Role.Client };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(emptyClient);
-            _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(clientInDb.Id)).Returns(clientInDb.Orders);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(emptyClient);
+            _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(clientInDb.Id)).ReturnsAsync(clientInDb.Orders);
 
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetOrdersByClientId(clientInDb.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetOrdersByClientId(clientInDb.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Never);
 
         }
@@ -490,7 +490,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Psychologist")]
-        public void GetOrdersByClientId_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
+        public async Task GetOrdersByClientId_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
         {
 
             //given
@@ -527,12 +527,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
             _claims = new() { Email = testEmail, Role = role };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).Returns(clientInDb);
-            _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(clientInDb.Id)).Returns(clientInDb.Orders);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientInDb.Id)).ReturnsAsync(clientInDb);
+            _clientsRepositoryMock.Setup(o => o.GetOrdersByClientId(clientInDb.Id)).ReturnsAsync(clientInDb.Orders);
 
 
             //when, then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.GetCommentsByClientId(clientInDb.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.GetCommentsByClientId(clientInDb.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.GetOrdersByClientId(It.IsAny<int>()), Times.Never);
 
         }
@@ -540,7 +540,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Manager")]
-        public void UpdateClient_ValidRequestPassed_ChangesProperties(string roleString)
+        public async Task UpdateClient_ValidRequestPassed_ChangesProperties(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -570,14 +570,14 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
             _claims = new() { Email = client.Email, Role = role };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(client.Id)).Returns(client);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(client.Id)).ReturnsAsync(client);
 
 
             //when
-            _sut.UpdateClient(newClientModel, client.Id, _claims);
+            await _sut.UpdateClient(newClientModel, client.Id, _claims);
 
             //then
-            var actual = _sut.GetClientById(client.Id, _claims);
+            var actual = await _sut.GetClientById(client.Id, _claims);
 
 
             Assert.True(client.Name == actual.Name);
@@ -594,7 +594,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void UpdateClient_ReferringToNonExixtenObject_ThrowEntityNotFoundException()
+        public async Task UpdateClient_ReferringToNonExixtenObject_ThrowEntityNotFoundException()
         {
             //given
 
@@ -610,7 +610,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _claims = new() { Email = client.Email, Role = Role.Client };
 
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.UpdateClient(newClientModel, client.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.UpdateClient(newClientModel, client.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>()), Times.Never);
 
         }
@@ -618,7 +618,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Psychologist")]
-        public void UpdateClient_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
+        public async Task UpdateClient_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -649,10 +649,10 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
             _claims = new() { Email = testEmail, Role = role };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(client.Id)).Returns(client);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(client.Id)).ReturnsAsync(client);
 
             //when, then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.UpdateClient(newClientModel, client.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.UpdateClient(newClientModel, client.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.UpdateClient(It.IsAny<Client>()), Times.Never);
 
         }
@@ -660,7 +660,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Manager")]
-        public void DeleteClient_ValidRequestPassed_DeleteClient(string roleString)
+        public async Task DeleteClient_ValidRequestPassed_DeleteClient(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -683,15 +683,15 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claims = new() { Email = expectedClient.Email, Role = role };
 
-            _clientsRepositoryMock.Setup(o => o.GetClientById(expectedClient.Id)).Returns(expectedClient);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(expectedClient.Id)).ReturnsAsync(expectedClient);
 
             //when
-            _sut.DeleteClient(expectedClient.Id, _claims);
+            await _sut.DeleteClient(expectedClient.Id, _claims);
 
 
             //then
 
-            var allClients = _sut.GetClients();
+            var allClients = await _sut.GetClients();
             Assert.True(allClients is null);
             _clientsRepositoryMock.Verify(c => c.DeleteClient(expectedClient), Times.Once);
             _clientsRepositoryMock.Verify(c => c.GetClientById(expectedClient.Id), Times.Once);
@@ -702,16 +702,14 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void DeleteClient_ReferringToNonExixtenObject_ThrowEntityNotFoundException()
+        public async Task DeleteClient_ReferringToNonExixtenObject_ThrowEntityNotFoundException()
         {
             //given
             var testId = 1;
-
             _claims = new();
 
-
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.DeleteClient(testId, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.DeleteClient(testId, _claims));
             _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<Client>()), Times.Never);
 
         }
@@ -719,7 +717,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Psychologist")]
-        public void DeleteClient_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
+        public async Task DeleteClient_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -753,18 +751,18 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
 
             _claims = new() { Email = clientFirst.Email, Role = role };
-            _clientsRepositoryMock.Setup(o => o.GetClientById(clientSecond.Id)).Returns(clientSecond);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(clientSecond.Id)).ReturnsAsync(clientSecond);
 
 
             //when, then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.DeleteClient(clientSecond.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.DeleteClient(clientSecond.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.DeleteClient(It.IsAny<Client>()), Times.Never);
         }
 
 
         [TestCase("Client")]
         [TestCase("Manager")]
-        public void GetApplicationsForPsychologistByClientId_ValidRequestPassed_ApplicationsReceived(string roleString)
+        public async Task GetApplicationsForPsychologistByClientId_ValidRequestPassed_ApplicationsReceived(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -799,10 +797,10 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
             _claims = new() { Email = client.Email, Role = role };
 
-            _clientsRepositoryMock.Setup(c => c.GetClientById(client.Id)).Returns(client);
+            _clientsRepositoryMock.Setup(c => c.GetClientById(client.Id)).ReturnsAsync(client);
 
             //when
-            var actual = _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims);
+            var actual = await _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims);
 
             //then
 
@@ -812,7 +810,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetApplicationsForPsychologistByClientId_ReferringToNonExixtenObject_ThrowEntityNotFoundException()
+        public async Task GetApplicationsForPsychologistByClientId_ReferringToNonExixtenObject_ThrowEntityNotFoundException()
         {
             //given
             var client = new Client()
@@ -825,7 +823,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _claims = new() { Email = client.Email, Role = Role.Client };
 
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.GetClientById(client.Id), Times.Once);
 
         }
@@ -833,7 +831,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
         [TestCase("Client")]
         [TestCase("Psychologist")]
-        public void GetApplicationsForPsychologistByClientId_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
+        public async Task GetApplicationsForPsychologistByClientId_ClientGetAccessToAnotherClientOrRolePsychologist_ThrowAccessException(string roleString)
         {
             //given
             Role role = Enum.Parse<Role>(roleString);
@@ -866,10 +864,10 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             }
 
             _claims = new() { Email = testEmail, Role = role };
-            _clientsRepositoryMock.Setup(o => o.GetClientById(client.Id)).Returns(client);
+            _clientsRepositoryMock.Setup(o => o.GetClientById(client.Id)).ReturnsAsync(client);
 
             //when, then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.GetApplicationsForPsychologistByClientId(client.Id, _claims));
             _clientsRepositoryMock.Verify(c => c.GetClientById(client.Id), Times.Once);
         }
     }

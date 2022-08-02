@@ -12,5 +12,5 @@ public interface IPsychologistsRepository
     void UpdatePsychologist(Psychologist psychologist, int id);
     void DeletePsychologist(int id);
 
-    public Psychologist? GetPsychologistByEmail(string email);
+    public  Task<Psychologist?> GetPsychologistByEmail(string email);
 }

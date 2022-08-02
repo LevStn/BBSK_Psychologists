@@ -5,5 +5,5 @@ namespace BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 public interface IManagerRepository
 {
-    public Manager? GetManagerByEmail(string email);
+    public Task<Manager?> GetManagerByEmail(string email);
 }

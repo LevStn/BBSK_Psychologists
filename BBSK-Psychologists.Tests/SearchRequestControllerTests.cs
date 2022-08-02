@@ -26,7 +26,7 @@ public class SearchRequestControllerTests
     private ClaimModel _claim;
 
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
         _claim = new();
         _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<MapperConfigStorage>()));
@@ -35,11 +35,11 @@ public class SearchRequestControllerTests
     }
 
     [Test]
-    public void AddApplicationForPsychologist_ValidRequestPassed_CreatedResultReceived()
+    public async Task AddApplicationForPsychologist_ValidRequestPassed_CreatedResultReceived()
     {
         //given
         _applicationForPsychologistSearchMock.Setup(c => c.AddApplicationForPsychologist(It.IsAny<ApplicationForPsychologistSearch>(), It.IsAny<ClaimModel>()))
-         .Returns(1);
+         .ReturnsAsync(1);
         var expectedId = 1;
         var request = new SearchRequest()
         {
@@ -56,7 +56,7 @@ public class SearchRequestControllerTests
 
 
         //when
-        var actual = _sut.AddApplicationForPsychologist(request);
+        var actual = await _sut.AddApplicationForPsychologist(request);
 
 
         //then
@@ -78,7 +78,7 @@ public class SearchRequestControllerTests
     }
 
     [Test]
-    public void GetApplicationForPsychologistById_ValidRequestPassed_OkReceived()
+    public async Task GetApplicationForPsychologistById_ValidRequestPassed_OkReceived()
     {
         //given
         var applicationForPsychologist = new ApplicationForPsychologistSearch()
@@ -94,11 +94,11 @@ public class SearchRequestControllerTests
             Time = TimeOfDay.Morning,
         };
 
-        _applicationForPsychologistSearchMock.Setup(a => a.GetApplicationForPsychologistById(applicationForPsychologist.Id, It.IsAny<ClaimModel>())).Returns(applicationForPsychologist);
+        _applicationForPsychologistSearchMock.Setup(a => a.GetApplicationForPsychologistById(applicationForPsychologist.Id, It.IsAny<ClaimModel>())).ReturnsAsync(applicationForPsychologist);
 
 
         //when
-        var actual = _sut.GetApplicationForPsychologistById(applicationForPsychologist.Id);
+        var actual = await _sut.GetApplicationForPsychologistById(applicationForPsychologist.Id);
 
         //then
         var actualResult = actual.Result as ObjectResult;
@@ -122,7 +122,7 @@ public class SearchRequestControllerTests
 
 
     [Test]
-    public void UpdateApplicationForPsychologist_ValidRequestPassed_NoContentReceived()
+    public async Task UpdateApplicationForPsychologist_ValidRequestPassed_NoContentReceived()
     {
         //given
 
@@ -157,7 +157,7 @@ public class SearchRequestControllerTests
 
 
         //when
-        var actual = _sut.UpdateClientById(newModel, applicationForPsychologist.Id);
+        var actual = await _sut.UpdateClientById(newModel, applicationForPsychologist.Id);
 
         //then
         var actualResult = actual as NoContentResult;
@@ -177,7 +177,7 @@ public class SearchRequestControllerTests
     }
 
     [Test]
-    public void DeleteApplicationForPsychologist_ValidRequestPassed_NoContentReceived()
+    public async Task DeleteApplicationForPsychologist_ValidRequestPassed_NoContentReceived()
     {
         //given
         var applicationForPsychologist = new ApplicationForPsychologistSearch()
@@ -193,10 +193,10 @@ public class SearchRequestControllerTests
             Time = TimeOfDay.Morning,
         };
 
-        _applicationForPsychologistSearchMock.Setup(a => a.GetApplicationForPsychologistById(applicationForPsychologist.Id, _claim)).Returns(applicationForPsychologist);
+        _applicationForPsychologistSearchMock.Setup(a => a.GetApplicationForPsychologistById(applicationForPsychologist.Id, _claim)).ReturnsAsync(applicationForPsychologist);
 
         //when
-        var actual = _sut.DeleteApplicationForPsychologist(applicationForPsychologist.Id);
+        var actual = await _sut.DeleteApplicationForPsychologist(applicationForPsychologist.Id);
 
         //then
         var actualResult = actual as NoContentResult;
@@ -207,7 +207,7 @@ public class SearchRequestControllerTests
 
 
     [Test]
-    public void GetAllApplicationsForPsychologist_ValidRequestPassed_RequestedTypeReceived()
+    public async Task GetAllApplicationsForPsychologist_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
         var applicationForPsychologist = new List<ApplicationForPsychologistSearch>
@@ -240,10 +240,10 @@ public class SearchRequestControllerTests
             }
         };
 
-        _applicationForPsychologistSearchMock.Setup(o => o.GetAllApplicationsForPsychologist()).Returns(applicationForPsychologist);
+        _applicationForPsychologistSearchMock.Setup(o => o.GetAllApplicationsForPsychologist()).ReturnsAsync(applicationForPsychologist);
 
         //when
-        var actual = _sut.GetAllApplicationsForPsychologist();
+        var actual = await _sut.GetAllApplicationsForPsychologist();
 
         //then
         var actualResult = actual.Result as ObjectResult;

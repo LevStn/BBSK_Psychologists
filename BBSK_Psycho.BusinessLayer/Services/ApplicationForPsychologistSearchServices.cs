@@ -21,14 +21,14 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
        
     }
 
-    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch application, ClaimModel claim)
+    public async Task <int> AddApplicationForPsychologist(ApplicationForPsychologistSearch application, ClaimModel claim)
     {
         if ( claim is null)
         {
             throw new AccessException($"Access denied");
         }
 
-        var client = _clientsRepository.GetClientById(claim.Id);
+        var client = await _clientsRepository.GetClientById(claim.Id);
 
         if (client == null)
         {
@@ -37,55 +37,55 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
 
         application.Client = client;
 
-        return _applicationForPsychologistSearchRepository.AddApplicationForPsychologist(application);
+        return await _applicationForPsychologistSearchRepository.AddApplicationForPsychologist(application);
     }
 
 
-    public List<ApplicationForPsychologistSearch> GetAllApplicationsForPsychologist() =>
-        _applicationForPsychologistSearchRepository.GetAllApplicationsForPsychologist();
+    public async Task<List<ApplicationForPsychologistSearch>> GetAllApplicationsForPsychologist() => 
+      await _applicationForPsychologistSearchRepository.GetAllApplicationsForPsychologist();
 
 
-    public ApplicationForPsychologistSearch? GetApplicationForPsychologistById(int id, ClaimModel claim)
+    public async Task<ApplicationForPsychologistSearch?> GetApplicationForPsychologistById(int id, ClaimModel claim)
     {
-        var application = _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
+        var application = await _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
 
         if (application is null)
         {
             throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        CheckAccess(claim, application);
+        await CheckAccess(claim, application);
 
         return application;
     }
 
 
    
-    public void DeleteApplicationForPsychologist(int id, ClaimModel claim)
+    public async Task DeleteApplicationForPsychologist(int id, ClaimModel claim)
     {
-        var application = _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
+        var application = await _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
 
         if (application is null)
         {
             throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        CheckAccess(claim, application);
+        await CheckAccess(claim, application);
 
         _applicationForPsychologistSearchRepository.DeleteApplicationForPsychologist(application);
     }
 
 
-    public void UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel, int id, ClaimModel claim)
+    public async Task UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel, int id, ClaimModel claim)
     {
-        var application = _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
+        var application = await _applicationForPsychologistSearchRepository.GetApplicationForPsychologistById(id);
 
         if (application is null)
         {
             throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        CheckAccess(claim, application);
+        await CheckAccess(claim, application);
 
         application.Name = newModel.Name;
         application.PhoneNumber = newModel.PhoneNumber;
@@ -95,11 +95,12 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
         application.CostMax = newModel.CostMax;
         application.Date = newModel.Date;
         application.Time = newModel.Time;
-        _applicationForPsychologistSearchRepository.UpdateApplicationForPsychologist(application);
+
+        await _applicationForPsychologistSearchRepository.UpdateApplicationForPsychologist(application);
     }
 
 
-    private void CheckAccess(ClaimModel claim, ApplicationForPsychologistSearch application)
+    private async Task CheckAccess(ClaimModel claim, ApplicationForPsychologistSearch application)
     {
          if(!(((claim.Email == application.Client.Email
             || claim.Role == Role.Manager)

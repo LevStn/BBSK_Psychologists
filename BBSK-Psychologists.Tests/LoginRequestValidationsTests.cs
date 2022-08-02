@@ -11,7 +11,7 @@ public class LoginRequestValidationsTests
 {
 
     [TestCaseSource(typeof(LoginRequestNegativeTestsSource))]
-    public void LoginRequest_SendingIncorrectData_GetErrorMessage(LoginRequest request, string errorMessage)
+    public async Task LoginRequest_SendingIncorrectData_GetErrorMessage(LoginRequest request, string errorMessage)
     {
         //given
         var validationsResults = new List<ValidationResult>();
@@ -26,7 +26,7 @@ public class LoginRequestValidationsTests
 
 
     [Test]
-    public void LoginRequest_SendingCorrectData_GetAnEmptyStringError()
+    public async Task LoginRequest_SendingCorrectData_GetAnEmptyStringError()
     {
         //given
 
