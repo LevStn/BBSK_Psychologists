@@ -36,9 +36,9 @@ namespace BBSK_Psycho.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<int> AddClient([FromBody] ClientRegisterRequest client)
+        public async Task<ActionResult<int>> AddClient([FromBody] ClientRegisterRequest client)
         {
-            var id = _clientsServices.AddClient(_mapper.Map<Client>(client));
+            var id = await _clientsServices.AddClient(_mapper.Map<Client>(client));
             return Created($"{this.GetRequestPath()}/{id}", id);
         }
 
@@ -49,11 +49,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public ActionResult<ClientResponse> GetClientById([FromRoute] int id)
+        public async Task<ActionResult<ClientResponse>> GetClientById([FromRoute] int id)
         {
             var claims = this.GetClaims();
 
-            var client = _clientsServices.GetClientById(id, claims);
+            var client = await _clientsServices.GetClientById(id, claims);
             return Ok(_mapper.Map<ClientResponse>(client));
         }
 
@@ -65,7 +65,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
+        public async Task<ActionResult> UpdateClientById([FromBody] ClientUpdateRequest request, [FromRoute] int id)
         {
             var claims = this.GetClaims();
 
@@ -77,7 +77,7 @@ namespace BBSK_Psycho.Controllers
             };
 
 
-            _clientsServices.UpdateClient(client, id, claims);
+            await _clientsServices.UpdateClient(client, id, claims);
 
             return NoContent();
         }
@@ -89,11 +89,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<List<CommentResponse>> GetCommentsByClientId([FromRoute] int id)
+        public async Task<ActionResult<List<CommentResponse>>> GetCommentsByClientId([FromRoute] int id)
         {
             var claims = this.GetClaims();
 
-            var clientComents = _clientsServices.GetCommentsByClientId(id, claims);
+            var clientComents = await _clientsServices.GetCommentsByClientId(id, claims);
 
             return Ok(_mapper.Map<List<CommentResponse>>(clientComents));
         }
@@ -105,11 +105,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<List<OrderResponse>> GetOrdersByClientId([FromRoute] int id)
+        public async Task<ActionResult<List<OrderResponse>>> GetOrdersByClientId([FromRoute] int id)
         {
             var claims = this.GetClaims();
 
-            var clientOrders = _clientsServices.GetOrdersByClientId(id, claims);
+            var clientOrders = await _clientsServices.GetOrdersByClientId(id, claims);
 
             return Ok(_mapper.Map<List<OrderResponse>>(clientOrders));
         }
@@ -121,11 +121,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult DeleteClientById([FromRoute] int id)
+        public async Task<ActionResult> DeleteClientById([FromRoute] int id)
         {
             var claimsUser = this.GetClaims();
 
-            _clientsServices.DeleteClient(id, claimsUser);
+            await _clientsServices.DeleteClient(id, claimsUser);
             return NoContent();
         }
 
@@ -135,9 +135,9 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<List<ClientResponse>> GetClients()
+        public async Task<ActionResult<List<ClientResponse>>> GetClients()
         {
-            var clients = _clientsServices.GetClients();
+            var clients = await _clientsServices.GetClients();
             return Ok(_mapper.Map<List<ClientResponse>>(clients));
 
 
@@ -149,11 +149,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<List<SearchResponse>> GetApplicationsForPsychologistByClientId([FromRoute] int id)
+        public async Task<ActionResult<List<SearchResponse>>> GetApplicationsForPsychologistByClientId([FromRoute] int id)
         {
             var claims = this.GetClaims();
 
-            var clientRequests = _clientsServices.GetApplicationsForPsychologistByClientId(id, claims);
+            var clientRequests = await _clientsServices.GetApplicationsForPsychologistByClientId(id, claims);
 
             return Ok(_mapper.Map<List<SearchResponse>>(clientRequests));
         }

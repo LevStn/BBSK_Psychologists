@@ -19,11 +19,11 @@ namespace BBSK_Psycho.Controllers
 
 
         [HttpPost]
-        public string Login([FromBody] LoginRequest request)
+        public async Task<string> Login([FromBody] LoginRequest request)
         {
-            var user = _authService.GetUserForLogin(request.Email, request.Password);
+            var user = await _authService.GetUserForLogin(request.Email, request.Password);
             
-            return  _authService.GetToken(user);
+            return await _authService.GetToken(user);
         }
     }
 }

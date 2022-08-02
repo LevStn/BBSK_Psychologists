@@ -34,10 +34,10 @@ public class SearchRequestsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public ActionResult<int> AddApplicationForPsychologist([FromBody] SearchRequest request)
+    public async Task<ActionResult<int>> AddApplicationForPsychologist([FromBody] SearchRequest request)
     {
         var claims = this.GetClaims();
-        var id = _applicationForPsychologistSearchServices.AddApplicationForPsychologist(_mapper.Map<ApplicationForPsychologistSearch>(request), claims);
+        var id = await _applicationForPsychologistSearchServices.AddApplicationForPsychologist(_mapper.Map<ApplicationForPsychologistSearch>(request), claims);
 
         return Created($"{this.GetRequestPath()}/{id}", id);
     }
@@ -48,11 +48,11 @@ public class SearchRequestsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public ActionResult<SearchResponse> GetApplicationForPsychologistById([FromRoute] int id)
+    public async Task<ActionResult<SearchResponse>> GetApplicationForPsychologistById([FromRoute] int id)
     {
         var claims = this.GetClaims();
 
-        var request = _applicationForPsychologistSearchServices.GetApplicationForPsychologistById(id, claims);
+        var request = await _applicationForPsychologistSearchServices.GetApplicationForPsychologistById(id, claims);
         return Ok(_mapper.Map<SearchResponse>(request));
     }
 
@@ -62,9 +62,9 @@ public class SearchRequestsController : ControllerBase
     [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public ActionResult<List<ClientResponse>> GetAllApplicationsForPsychologist()
+    public async Task<ActionResult<List<ClientResponse>>> GetAllApplicationsForPsychologist()
     {
-        var request = _applicationForPsychologistSearchServices.GetAllApplicationsForPsychologist();
+        var request = await _applicationForPsychologistSearchServices.GetAllApplicationsForPsychologist();
         return Ok(_mapper.Map<List<SearchResponse>>(request));
 
     }
@@ -76,11 +76,11 @@ public class SearchRequestsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public ActionResult DeleteApplicationForPsychologist([FromRoute] int id)
+    public async Task<ActionResult> DeleteApplicationForPsychologist([FromRoute] int id)
     {
         var claimsUser = this.GetClaims();
 
-        _applicationForPsychologistSearchServices.DeleteApplicationForPsychologist(id, claimsUser);
+        await _applicationForPsychologistSearchServices.DeleteApplicationForPsychologist(id, claimsUser);
         return NoContent();
     }
 
@@ -92,13 +92,13 @@ public class SearchRequestsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public ActionResult UpdateClientById([FromBody] SearchRequest newModel, [FromRoute] int id)
+    public async Task<ActionResult> UpdateClientById([FromBody] SearchRequest newModel, [FromRoute] int id)
     {
         var claims = this.GetClaims();
 
        var request = _mapper.Map<ApplicationForPsychologistSearch>(newModel);
 
-        _applicationForPsychologistSearchServices.UpdateApplicationForPsychologist(request, id, claims);
+        await _applicationForPsychologistSearchServices.UpdateApplicationForPsychologist(request, id, claims);
 
         return NoContent();
     }

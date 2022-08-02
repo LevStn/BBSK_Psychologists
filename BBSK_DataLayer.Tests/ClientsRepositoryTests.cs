@@ -28,8 +28,6 @@ public class ClientsRepositoryTests
 
         if (context is not null)
             context.Database.EnsureDeleted();
-
-
         context = new BBSK_PsychoContext(_dbContextOptions);
 
         _sut = new ClientsRepository(context);
@@ -37,7 +35,7 @@ public class ClientsRepositoryTests
     }
 
     [Test]
-    public void AddClient_WhenCorrectData_ThenAddClientInDbAndReturnId()
+    public async Task AddClient_WhenCorrectData_ThenAddClientInDbAndReturnId()
     {
         //given
         var client = new Client()
@@ -51,7 +49,7 @@ public class ClientsRepositoryTests
         };
 
         //when
-        var actualId = _sut.AddClient(client);
+        var actualId = await _sut.AddClient(client);
         context.SaveChanges();
 
         //then
@@ -63,7 +61,7 @@ public class ClientsRepositoryTests
     }
 
     [Test]
-    public void GetClientById_WhenCorrectDataPassed_ThenClientReturned()
+    public async Task GetClientById_WhenCorrectDataPassed_ThenClientReturned()
     {
         //given
 
@@ -82,7 +80,7 @@ public class ClientsRepositoryTests
         context.SaveChanges();
 
         //when
-        var actualCLientFirs = _sut.GetClientById(client.Id);
+        var actualCLientFirs = await _sut.GetClientById(client.Id);
 
 
         //then
@@ -98,7 +96,7 @@ public class ClientsRepositoryTests
     }
 
     [Test]
-    public void GetClients_WhenCorrectDate_ThenReturnClientsList()
+    public async Task GetClients_WhenCorrectDate_ThenReturnClientsList()
     {
         //given
         var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -172,7 +170,7 @@ public class ClientsRepositoryTests
         context.SaveChanges();
 
         //when
-        var actualCLient = _sut.GetClients();
+        var actualCLient = await _sut.GetClients();
 
         //then
 
@@ -191,7 +189,7 @@ public class ClientsRepositoryTests
 
 
     [Test]
-    public void UpdateClient_WhenCorrectDate_ThenChangePoperties()
+    public async Task UpdateClient_WhenCorrectDate_ThenChangePoperties()
     {
         //given
         var newName = "Petya";
@@ -221,7 +219,7 @@ public class ClientsRepositoryTests
         _sut.UpdateClient(client);
 
         //then
-        client = _sut.GetClientById(client.Id);
+        client = await _sut.GetClientById(client.Id);
 
         Assert.NotNull(client.Id);
         Assert.False(client.IsDeleted);
@@ -230,7 +228,7 @@ public class ClientsRepositoryTests
         Assert.AreEqual(client.Name, newName);
     }
 
-    public void DeleteClient_WhenCorrecId_ThenSoftDelete()
+    public async Task DeleteClient_WhenCorrecId_ThenSoftDelete()
     {
         //given
 
@@ -253,7 +251,7 @@ public class ClientsRepositoryTests
         _sut.DeleteClient(client);
 
         //then
-        client = _sut.GetClientById(client.Id);
+        client = await _sut.GetClientById(client.Id);
 
         Assert.True(client.IsDeleted);
         Assert.NotNull(client.Id);
@@ -265,7 +263,7 @@ public class ClientsRepositoryTests
     }
 
     [Test]
-    public void GetCommentsByClientId_WhenCorrecId_ThenReturnCommentsList()
+    public async Task GetCommentsByClientId_WhenCorrecId_ThenReturnCommentsList()
     {
         //given
 
@@ -300,7 +298,7 @@ public class ClientsRepositoryTests
         context.SaveChanges();
 
         //when
-        var actualComents = _sut.GetCommentsByClientId(expectedClient.Id);
+        var actualComents = await _sut.GetCommentsByClientId(expectedClient.Id);
 
         //then
         Assert.True(expectedClient.Comments.Count - 1 == actualComents.Count);
@@ -320,7 +318,7 @@ public class ClientsRepositoryTests
     }
 
     [Test]
-    public void GetOrdersByClientId_WhenCorrecId_ThenReturnOrdersList()
+    public async Task GetOrdersByClientId_WhenCorrecId_ThenReturnOrdersList()
     {
         //given
 
@@ -355,7 +353,7 @@ public class ClientsRepositoryTests
         context.SaveChanges();
 
         //when
-        var actualOrders = _sut.GetOrdersByClientId(expectedClient.Id);
+        var actualOrders = await _sut.GetOrdersByClientId(expectedClient.Id);
 
         //then
         Assert.True(expectedClient.Orders.Count - 1 == actualOrders.Count);
@@ -374,7 +372,7 @@ public class ClientsRepositoryTests
     }
 
     [Test]
-    public void GetClientByEmail_WhenTheCorrectEmail_ThenClientReturned()
+    public async Task GetClientByEmail_WhenTheCorrectEmail_ThenClientReturned()
     {
         //given
         var expectedClientFirst = new Client()
@@ -402,7 +400,7 @@ public class ClientsRepositoryTests
         context.SaveChanges();
 
         //when
-        var actualClient = _sut.GetClientByEmail(expectedClientSecond.Email);
+        var actualClient = await _sut.GetClientByEmail(expectedClientSecond.Email);
 
         //then
 

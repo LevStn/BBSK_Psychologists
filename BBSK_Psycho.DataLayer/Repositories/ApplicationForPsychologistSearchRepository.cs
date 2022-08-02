@@ -13,36 +13,36 @@ public class ApplicationForPsychologistSearchRepository : IApplicationForPsychol
         _context = context;
     }
 
-    public int AddApplicationForPsychologist(ApplicationForPsychologistSearch request)
+    public async Task<int> AddApplicationForPsychologist(ApplicationForPsychologistSearch request)
     {
         
         _context.ApplicationForPsychologistSearches.Add(request);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return request.Id;
     }
 
-    public List<ApplicationForPsychologistSearch> GetAllApplicationsForPsychologist() => _context.ApplicationForPsychologistSearches
+    public async Task<List<ApplicationForPsychologistSearch>> GetAllApplicationsForPsychologist() => await _context.ApplicationForPsychologistSearches
        .Where(a => a.IsDeleted == false)
        .AsNoTracking()
-       .ToList();
+       .ToListAsync();
 
 
-    public ApplicationForPsychologistSearch? GetApplicationForPsychologistById(int id) => _context.ApplicationForPsychologistSearches
+    public async Task<ApplicationForPsychologistSearch?> GetApplicationForPsychologistById(int id) => await _context.ApplicationForPsychologistSearches
         .Include(a => a.Client)
-        .FirstOrDefault(c => c.Id == id);
+        .FirstOrDefaultAsync(c => c.Id == id);
 
 
-    public void DeleteApplicationForPsychologist(ApplicationForPsychologistSearch application)
+    public async Task DeleteApplicationForPsychologist(ApplicationForPsychologistSearch application)
     {
         application.IsDeleted = true;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel)
+    public async Task UpdateApplicationForPsychologist(ApplicationForPsychologistSearch newModel)
     {
 
         _context.ApplicationForPsychologistSearches.Update(newModel);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }
