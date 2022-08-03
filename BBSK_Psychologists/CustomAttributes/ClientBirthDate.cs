@@ -9,12 +9,16 @@ public class ClientBirthDate : ValidationAttribute
     {
         DateTime birthDate = DateTime.Parse(value.ToString());
 
+        var today= DateTime.Today;
+        var age = today.Year - birthDate.Year;
 
-        if (birthDate > DateTime.Now)
+        var maxYoung = 15;
+        var maxOld = 150;
+
+        if (birthDate > DateTime.Now || age< maxYoung || age > maxOld)
         {
             return new ValidationResult(ApiErrorMessage.InvalidDate);
         }
-
 
         return null;
     }
