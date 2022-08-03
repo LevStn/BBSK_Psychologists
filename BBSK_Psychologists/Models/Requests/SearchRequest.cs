@@ -20,12 +20,14 @@ namespace BBSK_Psycho.Models
         public Gender PsychologistGender { get; set; } 
 
         [Required(ErrorMessage = ApiErrorMessage.CostMinIsRequired)]
+        [CheckerNumberMoreZero]
         public decimal CostMin { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.CostMaxIsRequired)]
+        [CheckerNumberMoreZero]
         public decimal CostMax { get; set; }
 
-
+        [SearchRequestBirthDate]
         public DateTime Date { get; set; }
 
         [Range (1,3, ErrorMessage = ApiErrorMessage.RangeIsError)]

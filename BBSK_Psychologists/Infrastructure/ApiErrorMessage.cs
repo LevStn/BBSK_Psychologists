@@ -37,6 +37,7 @@
         public const string ProblemsIsRequired = "Введите проблемы, с которыми вы работаете";
         public const string LengthExceeded = "Превышена допустимая длина";
         public const string RangeIsError = "Выбранное число выходит за рамки диапазона";
+        public const string NumberLessOrEqualZero = "Ошибка стоимости";
         public const string LalaIsRequired = "";
         public const string NoErrorForTest = "";
     }
