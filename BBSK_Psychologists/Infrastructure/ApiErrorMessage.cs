@@ -20,7 +20,7 @@
         public const string DurationIsRequired = "Вы не выбрали промежуток времени";
         public const string MessageIsRequired = "Вы не описали свои проблемы";
         public const string SessionDateIsRequired = "Вы не выбрали дату сессии";
-        public const string InvalidDate = "Не верный формат даты";
+        public const string InvalidDate = "Ошибка в дате рождения";
         public const string InvalidPhoneNumber = "Не верный формат номера телефона";
         public const string OrderDateIsRequired = "Не указана дата заказа";
         public const string OrderStatusIsRequired = "Не выбран статус ордера";
@@ -36,6 +36,7 @@
         public const string TherapyMethodsIsRequired = "Укажите терапевтические методы";
         public const string ProblemsIsRequired = "Введите проблемы, с которыми вы работаете";
         public const string LengthExceeded = "Превышена допустимая длина";
+        public const string RangeIsError = "Выбранное число выходит за рамки диапазона";
         public const string LalaIsRequired = "";
         public const string NoErrorForTest = "";
     }
