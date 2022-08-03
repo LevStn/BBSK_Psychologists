@@ -21,6 +21,7 @@
         public const string MessageIsRequired = "Вы не описали свои проблемы";
         public const string SessionDateIsRequired = "Вы не выбрали дату сессии";
         public const string InvalidDate = "Ошибка в дате рождения";
+        public const string InvalidDateFormat = "Не верный формат даты";
         public const string InvalidPhoneNumber = "Не верный формат номера телефона";
         public const string OrderDateIsRequired = "Не указана дата заказа";
         public const string OrderStatusIsRequired = "Не выбран статус ордера";
