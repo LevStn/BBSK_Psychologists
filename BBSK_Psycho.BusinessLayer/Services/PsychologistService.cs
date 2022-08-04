@@ -7,7 +7,7 @@ using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 namespace BBSK_Psycho.BusinessLayer
 {
-    public class PsychologistService : IPsychologistServices
+    public class PsychologistService : IPsychologistService
     {
         private readonly IPsychologistsRepository _psychologistsRepository;
         private readonly IOrdersRepository _ordersRepository;

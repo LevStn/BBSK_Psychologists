@@ -24,10 +24,10 @@ namespace BBSK_Psycho.Controllers
     {
 
         private readonly IPsychologistsRepository _psychologistsRepository;
-        private readonly IPsychologistServices _psychologistServices;
+        private readonly IPsychologistService _psychologistServices;
         private readonly IMapper _mapper;
         public ClaimModel Claims;
-        public PsychologistsController(IPsychologistServices psychologistServices, IMapper mapper)
+        public PsychologistsController(IPsychologistService psychologistServices, IMapper mapper)
         {
             _psychologistServices = psychologistServices;
             _mapper = mapper;

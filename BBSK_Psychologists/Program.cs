@@ -66,7 +66,7 @@ builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
-builder.Services.AddScoped<IPsychologistServices, PsychologistService>();
+builder.Services.AddScoped<IPsychologistService, PsychologistService>();
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<IClientsServices, ClientsService>();

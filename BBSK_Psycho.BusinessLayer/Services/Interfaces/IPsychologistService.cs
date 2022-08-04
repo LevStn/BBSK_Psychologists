@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BBSK_Psycho.BusinessLayer.Services.Interfaces
 {
-    public interface IPsychologistServices
+    public interface IPsychologistService
     {
         Psychologist? GetPsychologist(int id, ClaimModel claim);
         List<Psychologist> GetAllPsychologists(ClaimModel claim);
