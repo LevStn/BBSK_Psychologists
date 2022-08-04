@@ -61,7 +61,6 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new EntityNotFoundException($"Psychologist {id} not found");
             }
 
-
             if (claim.Role == Role.Psychologist.ToString()
                 && claim.Id != id)
             {
@@ -80,12 +79,7 @@ namespace BBSK_Psycho.BusinessLayer
             {
                 throw new EntityNotFoundException($"Psychologist {id} not found");
             }
-
-            if (claim.Role == Role.Psychologist.ToString()
-                && claim.Id != id)
-            {
-                throw new AccessException($"Access denied");
-            }
+            CheckAccessForPsychologistManagersAndClients(id, claim);
 
             var result= _psychologistsRepository.GetCommentsByPsychologistId(id);
             return result;
@@ -99,12 +93,7 @@ namespace BBSK_Psycho.BusinessLayer
             {
                 throw new EntityNotFoundException($"Orders by psychologist {id} not found");
             }
-
-            if (claim.Role == Role.Psychologist.ToString()
-                && claim.Id != id)
-            {
-                throw new AccessException($"Access denied");
-            }
+            CheckAccessForPsychologistManagersAndClients(id, claim);
 
             return _psychologistsRepository.GetOrdersByPsychologistsId(id);
         }
@@ -112,29 +101,34 @@ namespace BBSK_Psycho.BusinessLayer
         public Psychologist? GetPsychologist(int id, ClaimModel claim)
         {
             var result = _psychologistsRepository.GetPsychologist(id);
-
-            if (claim.Id != id 
-                && claim.Role != Role.Manager.ToString())
-            {
-                throw new AccessException($"Access denied");
-            }
-            
+            CheckAccessOnlyForPsychologistAndManagers(id, claim);
             return result;
         }
 
         public void UpdatePsychologist(Psychologist psychologist, int id, ClaimModel claim)
         {
             var result = _psychologistsRepository.GetPsychologist(id);
+            CheckAccessOnlyForPsychologistAndManagers(id, claim);
+            _psychologistsRepository.UpdatePsychologist(psychologist, id);
+        }
 
+        public void CheckAccessOnlyForPsychologistAndManagers (int id, ClaimModel claim)
+        {
             if (claim.Id != id
                 && claim.Role != Role.Manager.ToString())
             {
                 throw new AccessException($"Access denied");
             }
-
-            _psychologistsRepository.UpdatePsychologist(psychologist, id);
         }
 
+        public void CheckAccessForPsychologistManagersAndClients(int id, ClaimModel claim)
+        {
+            if (claim.Role == Role.Psychologist.ToString()
+                && claim.Id != id)
+            {
+                throw new AccessException($"Access denied");
+            }
+        }
         private bool CheckEmailForUniqueness(string email) => _psychologistsRepository.GetPsychologistByEmail(email) == null;
     }
 }
