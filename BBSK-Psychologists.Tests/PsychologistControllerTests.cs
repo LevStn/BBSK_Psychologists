@@ -96,13 +96,17 @@ namespace BBSK_Psychologists.Tests
               Date= DateTime.Now
             };
             int psId = 2;
+            ClaimModel claimModel = new ClaimModel
+            {
+                Id = 1
+            };
             // when
             var actual = _sut.AddCommentToPsyhologist(request, psId);
 
             // then
             var actualResult = actual.Result as CreatedResult;
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
-            //ВЕРИФАЙ
+            _psychologistService.Verify(c => c.AddCommentToPsyhologist(It.Is<Comment>(c => c.Text == request.Text), It.Is<int>(i => i == psId), It.IsAny<ClaimModel>()));
 
         }
 
@@ -136,7 +140,7 @@ namespace BBSK_Psychologists.Tests
 
             // then
 
-            _psychologistService.Verify(r => r.GetPsychologist(It.IsAny<int>(), It.IsAny<ClaimModel>()), Times.Once);
+            _psychologistService.Verify(r => r.GetPsychologist(It.Is<int>(i=>i==clientId), It.IsAny<ClaimModel>()), Times.Once);
             var actualResult = actual.Result as ObjectResult;
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
 

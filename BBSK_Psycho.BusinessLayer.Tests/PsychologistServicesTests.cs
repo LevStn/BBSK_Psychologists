@@ -36,18 +36,19 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void AddCommentToPsychologist_WhenPsychologistIsNotNull_ReturnComment()
         {
             //given
-            var comment = new Comment();
+            var comment = new Comment()
+            {
+                Text = "very cool",
+                Rating = 5,
+                Date = DateTime.Now,
+                Psychologist = new Psychologist(),
+                Client = new Client()
+            };
             var order= new Order();
             var client = new Client()
             {
                 Email = "test@mail.ru"
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.IsAny<int>(), It.IsAny<int>())).Returns(order);
-            _psychologistsRepositoryMock.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), (It.IsAny<int>())))
-                .Returns(comment);
-            _clientsRepositoryMock.Setup(c => c.GetClientById(It.IsAny<int>())).Returns(client);
-            var expectedComment = comment;
-
             var commentActual = new Comment()
             {
                 Text = "very cool",
@@ -56,6 +57,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i=>i==commentActual.Psychologist.Id), It.Is<int>(i=>i == commentActual.Client.Id))).Returns(order);
+            _psychologistsRepositoryMock.Setup(c => c.AddCommentToPsyhologist(It.Is<Comment>(c=>c.Id == comment.Id && c.Text==comment.Text), (It.Is<int>(i=>i== commentActual.Psychologist.Id))))
+                .Returns(comment);
+            _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i=>i == commentActual.Client.Id))).Returns(client);
+            var expectedComment = comment;
+
+           
             _claims = new()
             {
                 Email = "test@mail.ru"
@@ -83,7 +91,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var psychologistId = 1;
             _claims = new();
 
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.IsAny<int>(), It.IsAny<int>())).Returns((Order?)null);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(p=>p ==comment.Psychologist.Id), It.Is<int>(c=>c == comment.Client.Id))).Returns((Order?)null);
             //when
             //then
             Assert.Throws<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(comment, psychologistId, _claims));
@@ -121,17 +129,19 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void AddCommentToPsychologist_InvalidRolePassed_ReturnAccessdenied()
         {
             //given
-            var comment = new Comment();
+            var comment = new Comment()
+            {
+                Text = "very cool",
+                Rating = 5,
+                Date = DateTime.Now,
+                Psychologist = new Psychologist(),
+                Client = new Client()
+            };
             var order = new Order();
             var client = new Client()
             {
                 Email = "test@mail.ru"
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.IsAny<int>(), It.IsAny<int>())).Returns(order);
-           
-            _clientsRepositoryMock.Setup(c => c.GetClientById(It.IsAny<int>())).Returns(client);
-            var expectedComment = comment;
-
             var commentActual = new Comment()
             {
                 Text = "very cool",
@@ -140,6 +150,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
+           
+            _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).Returns(client);
+            var expectedComment = comment;
+
+            
             var psychologistId = 1;
             _claims = new()
             {
@@ -155,10 +171,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void AddPsychologist_ValidRequestPassed_ReturnId()
         {
             //given
-            _psychologistsRepositoryMock.Setup(c => c.AddPsychologist(It.IsAny<Psychologist>()))
+            var psych = new Psychologist();
+            _psychologistsRepositoryMock.Setup(c => c.AddPsychologist(It.Is<Psychologist>(p=>p.Id == psych.Id)))
                 .Returns(1);
             var expectedId = 1;
-            var psych = new Psychologist();
+           
             //when
             var actual = _sut.AddPsychologist(psych);
             //then
@@ -340,7 +357,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 Id=1
             };
-            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.IsAny<int>())).Returns(psychologist);
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i=>i == psychologist.Id))).Returns(psychologist);
             _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).Returns(psychologist.Comments);
             _claims = new() { Id = 2, Role=Role.Psychologist.ToString()};
             
@@ -414,7 +431,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 Id = 1
             };
-            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.IsAny<int>())).Returns(psychologist);
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i=> i == psychologist.Id))).Returns(psychologist);
             _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
             _claims = new() { Id = 2, Role = Role.Psychologist.ToString() };
 
@@ -476,7 +493,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _sut.UpdatePsychologist(newPsychologist, id, _claims);
 
             //then
-            _psychologistsRepositoryMock.Verify(o => o.GetPsychologist(It.IsAny<int>()), Times.Exactly(1));
+            _psychologistsRepositoryMock.Verify(o => o.GetPsychologist(It.Is<int>(p=> p == id)), Times.Exactly(1));
             _psychologistsRepositoryMock.Verify(p => p.UpdatePsychologist(It.Is<Psychologist>(p => p.Price == expectedPsychologist.Price
              && p.Id == expectedPsychologist.Id
              && p.CheckStatus == expectedPsychologist.CheckStatus
