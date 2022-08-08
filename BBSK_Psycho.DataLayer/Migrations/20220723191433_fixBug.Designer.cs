@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BBSK_Psycho.DataLayer.Migrations
 {
     [DbContext(typeof(BBSK_PsychoContext))]
-    [Migration("20220719212451_FixingMigration")]
-    partial class FixingMigration
+    [Migration("20220723191433_fixBug")]
+    partial class fixBug
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,9 @@ namespace BBSK_Psycho.DataLayer.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()

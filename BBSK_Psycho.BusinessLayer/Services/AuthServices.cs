@@ -25,23 +25,23 @@ public class AuthServices : IAuthServices
 
     
 
-    public ClaimModel GetUserForLogin(string email, string password)
+    public async Task <ClaimModel> GetUserForLogin(string email, string password)
     {
         ClaimModel claimModel = new();
 
-        var manager = _managerRepository.GetManagerByEmail(email);
+        var manager = await _managerRepository.GetManagerByEmail(email);
 
         if (manager is not null && email == manager.Email &&
             PasswordHash.ValidatePassword(password, manager.Password) && !manager.IsDeleted)
         {
             claimModel.Email = email;
-            claimModel.Role = Role.Manager.ToString();
+            claimModel.Role = Role.Manager;
 
         }
         else
         {
-            var client = _clientsRepository.GetClientByEmail(email);
-            var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
+            var client = await _clientsRepository.GetClientByEmail(email);
+            var psychologist = await _psychologistsRepository.GetPsychologistByEmail(email);
             
 
             if (client == null && psychologist == null)
@@ -64,10 +64,11 @@ public class AuthServices : IAuthServices
                 else
                 {
                     claimModel.Email = user.Email;
-                    claimModel.Role = client != null ? Role.Client.ToString() : Role.Psychologist.ToString();
+                    claimModel.Role = client != null ? Role.Client : Role.Psychologist;
 
-                }
                 
+                claimModel.Id = user.Id;
+                }
             }
 
         }
@@ -79,22 +80,17 @@ public class AuthServices : IAuthServices
         return claimModel;
     }
 
-    public string GetToken(ClaimModel model)
+    public async Task<string> GetToken(ClaimModel model)
     {
-        if (model is null || model.Email is null || model.Role is null)
+        if(model is null|| model.Email is null )
         {
             throw new DataException("Object or part of it is empty");
         }
 
-        var claims = new List<Claim>
-        {
-            { new Claim(ClaimTypes.Name, model.Email) },
-            { new Claim(ClaimTypes.Role, model.Role) },
-            { new Claim(ClaimTypes.NameIdentifier, model.Id.ToString()) }
-        };
-            
-            
-    
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, model.Email), 
+            { new Claim(ClaimTypes.Role, model.Role.ToString()) }, 
+            { new Claim(ClaimTypes.NameIdentifier, model.Id.ToString()) } };
+
         var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.Issuer,
                 audience: AuthOptions.Audience,

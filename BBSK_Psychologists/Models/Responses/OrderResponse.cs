@@ -17,7 +17,7 @@ namespace BBSK_Psycho.Models
 
         public int Duration { get; set; }
 
-        public string Message { get; set; } //��������, �������� ��������
+        public string Message { get; set; } 
 
         public DateTime SessionDate { get; set; }
 
@@ -27,6 +27,6 @@ namespace BBSK_Psycho.Models
 
         public OrderStatus OrderStatus { get; set; }
 
-        public OrderStatus OrderPaymentStatus { get; set; }
+        public OrderPaymentStatus OrderPaymentStatus { get; set; }
     }
 }

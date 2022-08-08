@@ -25,6 +25,7 @@ public class ClientRegisterRequest
     [PhoneCheker]
     public string? PhoneNumber { get; set; }
 
+    
     [ClientBirthDate]
     public DateTime? BirthDate { get; set; }
 }

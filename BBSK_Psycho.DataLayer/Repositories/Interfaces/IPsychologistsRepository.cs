@@ -1,6 +1,8 @@
 ﻿using BBSK_Psycho.DataLayer.Entities;
 
-namespace BBSK_Psycho.DataLayer.Repositories
+namespace BBSK_Psycho.DataLayer.Repositories;
+
+public interface IPsychologistsRepository
 {
     public interface IPsychologistsRepository
     {
@@ -13,6 +15,5 @@ namespace BBSK_Psycho.DataLayer.Repositories
         void UpdatePsychologist(Psychologist psychologist, int id);
         void DeletePsychologist(int id);
 
-        public Psychologist? GetPsychologistByEmail(string email);
-    }
+    public  Task<Psychologist?> GetPsychologistByEmail(string email);
 }

@@ -24,11 +24,10 @@ namespace BBSK_Psychologists.Tests
             _dbContextOptions = new DbContextOptionsBuilder<BBSK_PsychoContext>()
                 .UseInMemoryDatabase(databaseName: "TestDb")
                 .Options;
-
         }
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
 
             if (context is not null)
@@ -42,7 +41,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetManagerByEmail_WhenCorrectEmail_ManagerReturned()
+        public async Task GetManagerByEmail_WhenCorrectEmail_ManagerReturned()
         {
             //given
             var expectedManagerFirst = new Manager()
@@ -65,7 +64,7 @@ namespace BBSK_Psychologists.Tests
             context.SaveChanges();
 
             //when
-            var actualClient = _sut.GetManagerByEmail(expectedManagerSecond.Email);
+            var actualClient = await _sut.GetManagerByEmail(expectedManagerSecond.Email);
 
             //then
 

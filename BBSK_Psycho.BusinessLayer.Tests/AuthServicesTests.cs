@@ -1,7 +1,4 @@
-﻿
-
-using BBSK_Psycho.BusinessLayer.Services;
-using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+﻿using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
@@ -29,7 +26,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void Login_ValidManagerEmailAndPassword_ClaimModelReturned()
+        public async Task Login_ValidManagerEmailAndPassword_ClaimModelReturned()
         {
             //given
             var managerPassword = "12345678954";
@@ -40,13 +37,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 IsDeleted = false,
             };
 
-            _managerRepository.Setup(m => m.GetManagerByEmail(managerExpected.Email)).Returns(managerExpected);
+            _managerRepository.Setup(m => m.GetManagerByEmail(managerExpected.Email)).ReturnsAsync(managerExpected);
             //when
 
-            var claim= _sut.GetUserForLogin(managerExpected.Email, managerPassword);
+            var claim= await _sut.GetUserForLogin(managerExpected.Email, managerPassword);
             //then
 
-            Assert.True(claim.Role == Role.Manager.ToString());
+            Assert.True(claim.Role == Role.Manager);
             Assert.True(claim.Email == managerExpected.Email);
             _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
             _psychologistsRepository.Verify(c => c.GetPsychologistByEmail(It.IsAny<string>()), Times.Never);
@@ -54,7 +51,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void Login_ValidClientEmailAndPassword_ClaimModelReturned()
+        public async Task Login_ValidClientEmailAndPassword_ClaimModelReturned()
         {
             //given
             var clientPassword = "12345678";
@@ -68,14 +65,14 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 BirthDate = new DateTime(2020, 05, 05),
             };
 
-            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).Returns(clientExpected);
+            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).ReturnsAsync(clientExpected);
 
 
             //when
-            var claim = _sut.GetUserForLogin(clientExpected.Email, clientPassword);
+            var claim = await _sut.GetUserForLogin(clientExpected.Email, clientPassword);
 
             //then
-            Assert.True(claim.Role == Role.Client.ToString());
+            Assert.True(claim.Role == Role.Client);
             Assert.True(claim.Email == clientExpected.Email);
             _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Once);
             _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
@@ -84,7 +81,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void Login_ValidPsychologistsEmailAndPassword_ClaimModelReturned()
+        public async Task Login_ValidPsychologistsEmailAndPassword_ClaimModelReturned()
         {
             //given
             var passwordPsychologistsExpected = "12334534";
@@ -97,13 +94,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
 
-            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).Returns(psychologistsExpected);
+            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).ReturnsAsync(psychologistsExpected);
 
             //when
-            var claim = _sut.GetUserForLogin(psychologistsExpected.Email, passwordPsychologistsExpected);
+            var claim = await _sut.GetUserForLogin(psychologistsExpected.Email, passwordPsychologistsExpected);
 
             //then
-            Assert.True(claim.Role == Role.Psychologist.ToString());
+            Assert.True(claim.Role == Role.Psychologist);
             Assert.True(claim.Email == psychologistsExpected.Email);
             _clientsRepositoryMock.Verify(c => c.GetClientByEmail(It.IsAny<string>()), Times.Once);
             _managerRepository.Verify(c => c.GetManagerByEmail(It.IsAny<string>()), Times.Once);
@@ -112,7 +109,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void Login_BadPassword_ThrowEntityNotFoundException()
+        public async Task Login_BadPassword_ThrowEntityNotFoundException()
         {
             //given
             var badPassword = "123456789541";
@@ -125,16 +122,16 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Password = PasswordHash.HashPassword("12334534"),
             };
             
-            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).Returns(psychologistsExpected);
+            _psychologistsRepository.Setup(c => c.GetPsychologistByEmail(psychologistsExpected.Email)).ReturnsAsync(psychologistsExpected);
 
 
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(psychologistsExpected.Email, badPassword));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(psychologistsExpected.Email, badPassword));
             
         }
 
         [Test]
-        public void Login_IsDeletedTrue_ThrowEntityNotFoundException()
+        public async Task Login_IsDeletedTrue_ThrowEntityNotFoundException()
         {
             //given
             var password = "12334534";
@@ -147,16 +144,16 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 IsDeleted = true
             };
 
-            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).Returns(clientExpected);
+            _clientsRepositoryMock.Setup(c => c.GetClientByEmail(clientExpected.Email)).ReturnsAsync(clientExpected);
 
 
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(clientExpected.Email, password));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(clientExpected.Email, password));
 
         }
 
         [Test]
-        public void Login_UserNotFound_ThrowEntityNotFoundException()
+        public async Task Login_UserNotFound_ThrowEntityNotFoundException()
         {
             //given
             var badEmail = "ad@mmm.com";
@@ -174,22 +171,22 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
             //when, then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(badEmail, clientExpected.Password));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetUserForLogin(badEmail, clientExpected.Password));
             
         }
 
         [Test]
-        public void GetToken_ValidData_TokenReturned()
+        public async Task GetToken_ValidData_TokenReturned()
         {
             //given
             var model = new ClaimModel()
             {
                 Email = "ada@gmail.com",
-                Role = "Client"
+                Role = Role.Client
             };
 
             //when
-            var actual=_sut.GetToken(model);
+            var actual= await _sut.GetToken(model);
 
             //then
 
@@ -198,44 +195,30 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetToken_EmailEmpty_ThrowDataException()
+        public async Task GetToken_EmailEmpty_ThrowDataException()
         {
             //given
             var model = new ClaimModel()
             {
                 Email = null,
-                Role = "Client"
+                Role =Role.Client
             };
 
             //when, then
-            Assert.Throws<Exceptions.DataException>(() => _sut.GetToken(model));
+            Assert.ThrowsAsync<Exceptions.DataException>(() => _sut.GetToken(model));
 
         }
 
+        
         [Test]
-        public void GetToken_RoleEmpty_ThrowDataException()
-        {
-            //given
-            var model = new ClaimModel()
-            {
-                Email = "aa@gmail.com",
-                Role = null
-            };
-
-            //when, then
-            Assert.Throws<Exceptions.DataException>(() => _sut.GetToken(model));
-
-        }
-
-        [Test]
-        public void GetToken_PropertysEmpty_ThrowDataException()
+        public async Task GetToken_PropertysEmpty_ThrowDataException()
         {
             //given
             var model = new ClaimModel();
             
 
             //when, then
-            Assert.Throws<Exceptions.DataException>(() => _sut.GetToken(model));
+            Assert.ThrowsAsync<Exceptions.DataException>(() => _sut.GetToken(model));
 
         }
     }

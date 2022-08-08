@@ -1,6 +1,6 @@
 ﻿using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace BBSK_Psycho.DataLayer.Repositories;
 
@@ -13,5 +13,5 @@ public class ManagerRepository : IManagerRepository
         _context = context;
     }
 
-    public Manager? GetManagerByEmail(string email) => _context.Managers.FirstOrDefault(manager => manager.Email == email);
+    public async Task<Manager?> GetManagerByEmail(string email) => await _context.Managers.FirstOrDefaultAsync(manager => manager.Email == email);
 }

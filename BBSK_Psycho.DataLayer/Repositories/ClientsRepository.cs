@@ -12,45 +12,41 @@ public class ClientsRepository : IClientsRepository
         _context = context;
     }
 
-    public Client? GetClientById(int id) => _context.Clients.FirstOrDefault(c => c.Id == id);
+    public async Task<Client?> GetClientById(int id) =>await _context.Clients
+        .Include(c => c.ApplicationForPsychologistSearch.Where(a=>a.IsDeleted == false))
+        .FirstOrDefaultAsync(c => c.Id == id);
 
-    public List<Client> GetClients() => _context.Clients
+
+    public async Task<List<Client>> GetClients() => await _context.Clients
         .Where(c => c.IsDeleted== false)
         .AsNoTracking()
-        .ToList();
+        .ToListAsync();
 
 
-    public List<Comment> GetCommentsByClientId(int id) => _context.Comments.Where(c => c.IsDeleted == false && c.Client.Id == id).ToList();
+    public async Task<List<Comment>> GetCommentsByClientId(int id) => await _context.Comments.Where(c => c.IsDeleted == false && c.Client.Id == id).ToListAsync();
 
-    public List<Order> GetOrdersByClientId(int id) => _context.Orders.Where(c => c.IsDeleted == false && c.Client.Id == id).ToList();
+    public async Task<List<Order>> GetOrdersByClientId(int id) => await _context.Orders.Where(c => c.IsDeleted == false && c.Client.Id == id).ToListAsync();
 
-    public Client? GetClientByEmail(string email) => _context.Clients.FirstOrDefault(c => c.Email == email);
+    public async Task<Client?> GetClientByEmail(string email) => await _context.Clients.FirstOrDefaultAsync(c => c.Email == email);
 
-    public int AddClient(Client client)
+    public async Task<int> AddClient(Client client)
     {
         _context.Clients.Add(client);
-        _context.SaveChanges();
+       await _context.SaveChangesAsync();
 
         return client.Id;
     }
 
-    public void UpdateClient(Client newProperty, int id)
+    public async Task UpdateClient(Client newModel)
     {
-        var client=GetClientById(id);
-
-        client.Name = newProperty.Name;
-        client.LastName = newProperty.LastName;
-        client.BirthDate = newProperty.BirthDate;
-
-        _context.Clients.Update(client);
-        _context.SaveChanges();
+        _context.Clients.Update(newModel);
+       await _context.SaveChangesAsync();
     }
 
-    public void DeleteClient(int id)
+    public async Task DeleteClient(Client client)
     {
-        var client=GetClientById(id);
         client.IsDeleted = true;
-        _context.SaveChanges();
+        _context.SaveChangesAsync();
     }
 
 }
