@@ -180,7 +180,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Id = 1,
                 Name = "Roma",
                 LastName = "Petrov",
-                Email = "Va@gmail.com",
+                Email = email!,
                 Password = "12345678dad",
                 PhoneNumber = "89119856375",
             };
