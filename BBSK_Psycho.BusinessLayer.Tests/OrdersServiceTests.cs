@@ -1,6 +1,8 @@
 ﻿using BBSK_DataLayer.Tests.TestCaseSources;
 using BBSK_Psycho.BusinessLayer.Exceptions;
 using BBSK_Psycho.BusinessLayer.Services;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer.Tests.ModelControllerSource;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
@@ -16,6 +18,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
     public class OrdersServiceTest
     {
         private OrdersService _sut;
+        private IOrdersValidator _ordersValidator;
         private Mock<IOrdersRepository> _ordersRepository;
         private Mock<IClientsRepository> _clientsRepository;
         private Mock<IPsychologistsRepository> _psychologistsRepository;
@@ -27,10 +30,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _ordersRepository = new Mock<IOrdersRepository>();
             _clientsRepository = new Mock<IClientsRepository>();
             _psychologistsRepository = new Mock<IPsychologistsRepository>();
+            _ordersValidator = new OrdersValidator();
             _claimModel = new ClaimModel();
             _sut = new OrdersService(_ordersRepository.Object, 
                                      _clientsRepository.Object, 
-                                     _psychologistsRepository.Object);
+                                     _psychologistsRepository.Object,
+                                     _ordersValidator);
         }
 
         [Test]
@@ -254,103 +259,6 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _ordersRepository.Verify(c => c.UpdateOrderStatuses(It.IsAny<int>(), OrderStatus.Completed, OrderPaymentStatus.Paid), Times.Never);
             _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Once);
-        }
-
-        [Test]
-        public void IsOrderValid_ValidOrderPassed_NoExceptionThrown()
-        {
-            //given
-            Order order = OrdersHelper.GetOrder();
-
-            //when-then
-            Assert.DoesNotThrow(() => _sut.IsOrderValid(order));
-        }
-
-        [Test]
-        public void IsOrderValid_InvalidOrderPassed_InvalidDataExceptionThrown()
-        {
-            //given
-            Order orderIsDeletedError = OrdersHelper.GetOrder();
-            orderIsDeletedError.IsDeleted = true;
-
-            Order orderCostError = OrdersHelper.GetOrder();
-            orderCostError.Cost = 300;
-
-            Order orderSessionDateError = OrdersHelper.GetOrder();
-            orderSessionDateError.SessionDate = DateTime.MinValue;
-
-            Order orderSessionDateMoreThanOneMonthFromOrderDateError = OrdersHelper.GetOrder();
-            orderSessionDateMoreThanOneMonthFromOrderDateError.SessionDate = orderSessionDateMoreThanOneMonthFromOrderDateError.OrderDate.AddDays(33);
-
-            Order orderSessionDateIsEarlierThanPayDate = OrdersHelper.GetOrder();
-            orderSessionDateIsEarlierThanPayDate.PayDate = orderSessionDateIsEarlierThanPayDate.SessionDate.AddDays(8);
-
-            Order orderPayDateError = OrdersHelper.GetOrder();
-            orderPayDateError.PayDate = DateTime.MinValue;
-
-            Order orderDurationError = OrdersHelper.GetOrder();
-            orderDurationError.Duration = (SessionDuration)60;
-
-            Order orderMessageError = OrdersHelper.GetOrder();
-            orderMessageError.Message = "  ";
-
-            //when-then
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderDurationError));
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderIsDeletedError));
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderCostError));
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderSessionDateError));
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderSessionDateMoreThanOneMonthFromOrderDateError));
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderSessionDateIsEarlierThanPayDate));
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderPayDateError));
-            Assert.Throws<DataException>(() => _sut.IsOrderValid(orderMessageError));
-        }
-
-        [TestCase(Role.Manager)]
-        [TestCase(Role.Client)]
-        [TestCase(Role.Psychologist)]
-        public void CheckClaimForRoles_ValidRolePassed_NoExceptionThrown(Role role)
-        {
-            //given
-            _claimModel.Role = role;
-
-            //when-then
-            Assert.DoesNotThrow(() => _sut.CheckClaimForRoles(_claimModel, role));
-        }
-
-        [TestCase(Role.Manager)]
-        [TestCase(Role.Client)]
-        [TestCase(Role.Psychologist)]
-        public void CheckClaimForRoles_InvalidRolePassed_AccessDeniedExceptionThrown(Role role)
-        {
-            //given
-            _claimModel.Role = role;
-
-            //when-then
-            if (role == Role.Manager)
-                Assert.Throws<AccessDeniedException>(() => _sut.CheckClaimForRoles(_claimModel, Role.Client));
-            else
-                Assert.Throws<AccessDeniedException>(() => _sut.CheckClaimForRoles(_claimModel, Role.Manager));
-        }
-
-        [TestCase(Role.Manager)]
-        [TestCase(Role.Client)]
-        [TestCase(Role.Psychologist)]
-        public void CheckEmailForClaim_ClaimContainsValidEmail_NoExceptionThrown(Role role)
-        {
-            //given 
-            Order order = OrdersHelper.GetOrder();
-            order.Client = OrdersHelper.GetClient();
-            order.Psychologist = OrdersHelper.GetPsychologist();
-
-            if (role == Role.Client)
-                _claimModel.Email = order.Client.Email;
-            else if (role == Role.Psychologist)
-                _claimModel.Email = order.Psychologist.Email;
-            else if (role == Role.Manager)
-                _claimModel.Role = Role.Manager;
-
-            //when-then
-            Assert.DoesNotThrow(() => _sut.CheckClaimForEmail(_claimModel, order));
         }
     }
 }
