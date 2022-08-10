@@ -23,8 +23,8 @@ public class Order
     {
         if (obj is null
                 || Id != ((Order)obj).Id
-                || Client != ((Order)obj).Client
-                || Psychologist != ((Order)obj).Psychologist
+                || Client.Id != ((Order)obj).Client.Id
+                || Psychologist.Id != ((Order)obj).Psychologist.Id
                 || Cost != ((Order)obj).Cost
                 || Duration != ((Order)obj).Duration
                 || Message != ((Order)obj).Message
