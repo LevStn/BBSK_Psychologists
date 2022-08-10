@@ -16,19 +16,22 @@ namespace BBSK_Psycho.BusinessLayer.Services
         private readonly IOrdersRepository _ordersRepository;
         private readonly IClientsRepository _clientsRepository;
         private readonly IPsychologistsRepository _psychologistsRepository;
+        private readonly IOrdersValidator _ordersValidator;
 
         public OrdersService(IOrdersRepository ordersRepository,
                              IClientsRepository clientsRepository,
-                             IPsychologistsRepository psychologistsRepository)
+                             IPsychologistsRepository psychologistsRepository,
+                             IOrdersValidator ordersValidator)
         {
             _ordersRepository = ordersRepository;
             _clientsRepository = clientsRepository;
             _psychologistsRepository = psychologistsRepository;
+            _ordersValidator = ordersValidator;
         }
 
         public List<Order> GetOrders(ClaimModel claim)
         {
-            CheckClaimForRoles(claim, Role.Manager);
+            _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
 
             return _ordersRepository.GetOrders();
         }
@@ -36,21 +39,20 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
         public Order? GetOrderById(int id, ClaimModel claim)
         {
-            CheckClaimForRoles(claim, Role.Manager, Role.Client, Role.Psychologist);
 
             Order? order = _ordersRepository.GetOrderById(id);
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не найден");
 
-            CheckClaimForEmail(claim, order);
+            _ordersValidator.CheckClaimForEmail(claim, order);
 
             return order;
         }
 
         public int AddOrder(Order order, ClaimModel claim)
         {
-            CheckClaimForRoles(claim, Role.Manager, Role.Client);
+            _ordersValidator.CheckClaimForRoles(claim, Role.Manager, Role.Client);
 
             Psychologist? psychologist = _psychologistsRepository.GetPsychologist(order.Psychologist.Id);
             
@@ -59,7 +61,7 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
             order.Psychologist = psychologist;
 
-            IsOrderValid(order);
+            _ordersValidator.IsOrderValid(order);
 
             Client? client = _clientsRepository.GetClientById(order.Client.Id);
 
@@ -68,14 +70,14 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
             order.Client = client;
 
-            CheckClaimForEmail(claim, order);
+            _ordersValidator.CheckClaimForEmail(claim, order);
 
             return _ordersRepository.AddOrder(order);
         }
 
         public void DeleteOrder(int id, ClaimModel claim)
         {
-            CheckClaimForRoles(claim, Role.Manager);
+            _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
 
             Order? order = _ordersRepository.GetOrderById(id);
 
@@ -87,58 +89,63 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
         public void UpdateOrderStatuses(int id, OrderStatus orderStatus, OrderPaymentStatus orderPaymentStatus, ClaimModel claim)
         {
-            CheckClaimForRoles(claim, Role.Manager);
+            _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
 
             Order? order = _ordersRepository.GetOrderById(id);
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не найден");
 
-            if (!(orderStatus == OrderStatus.Completed && orderPaymentStatus == OrderPaymentStatus.Paid) ||
-                 (orderStatus == OrderStatus.Created && orderPaymentStatus == OrderPaymentStatus.Paid) ||
-                 (orderStatus == OrderStatus.Cancelled && orderPaymentStatus == OrderPaymentStatus.Unpaid) ||
-                 (orderStatus == OrderStatus.Cancelled && orderPaymentStatus == OrderPaymentStatus.MoneyReturned) ||
-                 (orderStatus == OrderStatus.Deleted && orderPaymentStatus == OrderPaymentStatus.MoneyReturned) ||
-                 (orderStatus == OrderStatus.Deleted && orderPaymentStatus == OrderPaymentStatus.Unpaid))
-                throw new DataException($"Статус заказа {orderStatus} и статус оплаты {orderPaymentStatus} не могут быть использованы вместе");
+            _ordersValidator.AreOrderStatusesValid(orderStatus, orderPaymentStatus);
 
-                _ordersRepository.UpdateOrderStatuses(id, orderStatus, orderPaymentStatus);
+            _ordersRepository.UpdateOrderStatuses(id, orderStatus, orderPaymentStatus);
         }
 
 
 
 
-        public void CheckClaimForRoles(ClaimModel claim, params Role[] roles)
-        {
-            if (!roles.Contains(claim.Role))
-                throw new AccessDeniedException("Доступ запрещён");
-        }
-        public void CheckClaimForEmail(ClaimModel claim, Order order)
-        {
-            if (!((order.Client.Email == claim.Email) || 
-                  (order.Psychologist.Email == claim.Email) ||
-                   claim.Role == Role.Manager))
-                throw new AccessDeniedException("Доступ запрещён");
-        }
+        //public void CheckClaimForRoles(ClaimModel claim, params Role[] roles)
+        //{
+        //    if (!roles.Contains(claim.Role))
+        //        throw new AccessDeniedException("Доступ запрещён");
+        //}
+        //public void CheckClaimForEmail(ClaimModel claim, Order order)
+        //{
+        //    if (!((order.Client.Email == claim.Email) || 
+        //          (order.Psychologist.Email == claim.Email) ||
+        //           claim.Role == Role.Manager))
+        //        throw new AccessDeniedException("Доступ запрещён");
+        //}
 
-        public void IsOrderValid(Order order)
-        {
-            if (order.IsDeleted)
-                throw new DataException($"Нельзя добавить удалённый заказ");
-            else if (order.Cost < order.Psychologist.Price)
-                throw new DataException($"Цена не может быть ниже ставки психолога");
-            else if (order.SessionDate < order.OrderDate)
-                throw new DataException($"Дата оказания услуги не может быть раньше даты создания заказа");
-            else if (order.SessionDate > order.OrderDate.AddMonths(1))
-                throw new DataException("Дата оказания услуги не может быть позднее, чем через 1 месяц от даты создания заказа");
-            else if (order.PayDate < order.OrderDate)
-                throw new DataException($"Дата оплаты заказа не может быть раньше даты создания заказа");
-            else if (order.SessionDate < order.PayDate)
-                throw new DataException($"Услуга должна быть оказана после оплаты закака");
-            else if (!Enum.IsDefined(typeof(SessionDuration), order.Duration))
-                throw new DataException($"Неверно указана длительность консультации");
-            else if (order.Message.Trim() == "")
-                throw new DataException($"Неверно указано сообщение для психолога");
-        }
+        //public void IsOrderValid(Order order)
+        //{
+        //    if (order.IsDeleted)
+        //        throw new DataException($"Нельзя добавить удалённый заказ");
+        //    else if (order.Cost < order.Psychologist.Price)
+        //        throw new DataException($"Цена не может быть ниже ставки психолога");
+        //    else if (order.SessionDate < order.OrderDate)
+        //        throw new DataException($"Дата оказания услуги не может быть раньше даты создания заказа");
+        //    else if (order.SessionDate > order.OrderDate.AddMonths(1))
+        //        throw new DataException("Дата оказания услуги не может быть позднее, чем через 1 месяц от даты создания заказа");
+        //    else if (order.PayDate < order.OrderDate)
+        //        throw new DataException($"Дата оплаты заказа не может быть раньше даты создания заказа");
+        //    else if (order.SessionDate < order.PayDate)
+        //        throw new DataException($"Услуга должна быть оказана после оплаты закака");
+        //    else if (!Enum.IsDefined(typeof(SessionDuration), order.Duration))
+        //        throw new DataException($"Неверно указана длительность консультации");
+        //    else if (order.Message.Trim() == "")
+        //        throw new DataException($"Неверно указано сообщение для психолога");
+        //}
+
+        //public void AreOrderStatusesValid(OrderStatus orderStatus, OrderPaymentStatus orderPaymentStatus)
+        //{
+        //    if (!(orderStatus == OrderStatus.Completed && orderPaymentStatus == OrderPaymentStatus.Paid) ||
+        //         (orderStatus == OrderStatus.Created && orderPaymentStatus == OrderPaymentStatus.Paid) ||
+        //         (orderStatus == OrderStatus.Cancelled && orderPaymentStatus == OrderPaymentStatus.Unpaid) ||
+        //         (orderStatus == OrderStatus.Cancelled && orderPaymentStatus == OrderPaymentStatus.MoneyReturned) ||
+        //         (orderStatus == OrderStatus.Deleted && orderPaymentStatus == OrderPaymentStatus.MoneyReturned) ||
+        //         (orderStatus == OrderStatus.Deleted && orderPaymentStatus == OrderPaymentStatus.Unpaid))
+        //        throw new DataException($"Статус заказа {orderStatus} и статус оплаты {orderPaymentStatus} не могут быть использованы вместе");
+        //}
     }
 }
