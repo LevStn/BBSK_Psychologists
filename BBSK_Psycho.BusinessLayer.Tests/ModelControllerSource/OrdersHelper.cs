@@ -4,6 +4,7 @@ using BBSK_Psycho.DataLayer.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using BBSK_Psycho.DataLayer.Enums;
+using BBSK_Psycho.BusinessLayer.Exceptions;
 
 namespace BBSK_DataLayer.Tests.TestCaseSources
 {
@@ -84,5 +85,7 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
 
             return psychologist;
         }
+
+        
     }
 }

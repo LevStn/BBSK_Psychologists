@@ -38,7 +38,7 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
                 Client = GetClient(),
                 Psychologist = GetPsychologist(),
                 Cost = 1200,
-                Duration = (SessionDuration)1,
+                Duration = SessionDuration.OneAcademicHour,
                 Message = "Программирование на C++",
                 SessionDate = DateTime.Now,
                 OrderDate = DateTime.Now,

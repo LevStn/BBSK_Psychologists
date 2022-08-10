@@ -1,9 +1,6 @@
-﻿using BBSK_Psycho.DataLayer;
-using BBSK_Psycho.DataLayer.Entities;
-using BBSK_Psycho.DataLayer.Repositories;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+﻿using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
+using System.Security.Claims;
 
 namespace BBSK_DataLayer.Tests.TestCaseSources
 {
@@ -38,7 +35,7 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
                 Client = GetClient(),
                 Psychologist = GetPsychologist(),
                 Cost = 1200,
-                Duration = (SessionDuration)1,
+                Duration = SessionDuration.OneAcademicHour,
                 Message = "Программирование на C++",
                 SessionDate = DateTime.Now,
                 OrderDate = DateTime.Now,
@@ -82,6 +79,15 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
             };
 
             return psychologist;
+        }
+
+        public static ClaimsPrincipal GetUser(string email, Role role, int id)
+        {
+            return new ClaimsPrincipal(new ClaimsIdentity(
+                                    new Claim[] {
+                                                    new Claim(ClaimTypes.Email, email),
+                                                    new Claim(ClaimTypes.Role, role.ToString()),
+                                                    new Claim(ClaimTypes.Dns, id.ToString()) }));
         }
     }
 }
