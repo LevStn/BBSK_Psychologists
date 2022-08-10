@@ -14,7 +14,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public List<Order> GetOrders() => _context.Orders.AsNoTracking().Where(o => !o.IsDeleted).ToList();
+        public List<Order> GetOrders() => _context.Orders.Where(o => !o.IsDeleted).ToList();
         
 
         public Order? GetOrderById(int orderId) => _context.Orders.Include(o => o.Client).Include(o => o.Psychologist).FirstOrDefault(o => o.Id == orderId);
