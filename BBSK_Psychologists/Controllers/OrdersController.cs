@@ -63,21 +63,17 @@ namespace BBSK_Psycho.Controllers
 
         [AuthorizeByRole(Role.Client)]
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int),  StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
         {
             ClaimModel claim = this.GetClaims();
-
             Order newOrder = _mapper.Map<Order>(request);
-
             newOrder.Client = new() {Id = request.ClientId};
             newOrder.Psychologist = new() {Id = request.PsychologistId};
-
             _ordersService.AddOrder(newOrder, claim);
-
             return Created($"{this.GetRequestPath()}/{newOrder.Id}", newOrder.Id);
         }
 

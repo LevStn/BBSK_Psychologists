@@ -10,12 +10,7 @@ namespace BBSK_Psycho.BusinessLayer
 
         public override bool Equals(object? obj)
         {
-            if(Role == ((ClaimModel)obj).Role)
-            {
-                return true;
-            }
-
-            return false;
+            return Role == ((ClaimModel)obj).Role;
         }
     }
 }

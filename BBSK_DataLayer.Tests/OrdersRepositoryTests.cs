@@ -65,8 +65,8 @@ namespace BBSK_DataLayer.Tests
             Assert.NotNull(expectedOrders);
             Assert.That(expectedOrders, Does.Not.Contains(thirdOrder));
 
-            Assert.That(!expectedOrders[0].IsDeleted);
-            Assert.That(!expectedOrders[1].IsDeleted);
+            Assert.False(expectedOrders[0].IsDeleted);
+            Assert.False(expectedOrders[1].IsDeleted);
         }
 
         [Test]
