@@ -17,13 +17,14 @@ using AutoMapper;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.BusinessLayer;
 using BBSK_Psycho;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 namespace BBSK_Psychologists.Tests
 {
     public class PsychologistControllerTests
 {       
         private Mock<IPsychologistsRepository> _repository;
-{       private PsychologistsController _sut;
+        private PsychologistsController _sut;
 
         private IMapper _mapper;
         private Mock <IPsychologistService> _psychologistService;

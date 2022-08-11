@@ -142,7 +142,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _claimModel = new() { Email = order.Client.Email, Id = order.Client.Id, Role = Role.Client };
 
             _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).Returns(order.Psychologist);
-            _clientsRepository.Setup(c => c.GetClientById(order.Client.Id)).Returns(order.Client);
+            _clientsRepository.Setup(c => c.GetClientById(order.Client.Id).Result).Returns(order.Client);
 
             _ordersRepository.Setup(c => c.AddOrder(order)).Returns(42);
 
