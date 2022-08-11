@@ -10,7 +10,7 @@ public class ClientUpdateRequestValidationsTests
 {
 
     [TestCaseSource(typeof(ClientUpdateRequestNegativeTestsSource))]
-    public void ClientUpdateRequest_SendingIncorrectData_GetErrorMessage(ClientUpdateRequest client, string errorMessage)
+    public async Task ClientUpdateRequest_SendingIncorrectData_GetErrorMessage(ClientUpdateRequest client, string errorMessage)
     {
         //given
         var validationsResults = new List<ValidationResult>();
@@ -25,7 +25,7 @@ public class ClientUpdateRequestValidationsTests
 
 
     [Test]
-    public void ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError()
+    public async Task ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError()
     {
         //given
         var client = new ClientUpdateRequest()

@@ -1,6 +1,7 @@
 using BBSK_Psycho.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using BBSK_Psycho.DataLayer.Enums;
+using BBSK_Psycho.CustomAttributes;
 
 namespace BBSK_Psycho.Models
 {
@@ -9,22 +10,27 @@ namespace BBSK_Psycho.Models
         [Required(ErrorMessage = ApiErrorMessage.NameIsRequired)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = ApiErrorMessage.PhoneNumberIsRequired)]
+        [PhoneCheker]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.DescriptionIsRequired)]
         public string Description { get; set; }
 
+        [Range(1, 3, ErrorMessage = ApiErrorMessage.RangeIsError)]
         public Gender PsychologistGender { get; set; } 
 
         [Required(ErrorMessage = ApiErrorMessage.CostMinIsRequired)]
+        [CheckerNumberMoreZero]
         public decimal CostMin { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.CostMaxIsRequired)]
+        [CheckerNumberMoreZero]
         public decimal CostMax { get; set; }
 
+        [SearchRequestBirthDate]
         public DateTime Date { get; set; }
 
+        [Range (1,3, ErrorMessage = ApiErrorMessage.RangeIsError)]
         public TimeOfDay Time { get; set; } 
 
 

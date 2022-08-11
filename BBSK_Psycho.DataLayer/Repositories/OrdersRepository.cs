@@ -15,7 +15,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
         }
 
         public List<Order> GetOrders() => _context.Orders.Where(o => !o.IsDeleted).ToList();
-        
+        public Order? GetOrderByPsychIdAndClientId(int psychId, int clientId) => _context.Orders.FirstOrDefault(o => o.Psychologist.Id == psychId && o.Client.Id == clientId);
 
         public Order? GetOrderById(int orderId) => _context.Orders.Include(o => o.Client).Include(o => o.Psychologist).FirstOrDefault(o => o.Id == orderId);
         
@@ -47,5 +47,6 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context.Orders.Update(order);
             _context.SaveChanges();
         }
+
     }
 }

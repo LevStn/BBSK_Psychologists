@@ -9,6 +9,7 @@ using BBSK_Psycho;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
+using BBSK_Psycho.BusinessLayer;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Controllers;
@@ -67,6 +68,8 @@ builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
+builder.Services.AddScoped<IPsychologistService, PsychologistService>();
+builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IClientsServices, ClientsService>();

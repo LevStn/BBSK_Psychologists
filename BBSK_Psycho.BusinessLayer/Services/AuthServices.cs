@@ -27,11 +27,11 @@ public class AuthServices : IAuthServices
 
     
 
-    public ClaimModel GetUserForLogin(string email, string password)
+    public async Task <ClaimModel> GetUserForLogin(string email, string password)
     {
         ClaimModel claimModel = new();
 
-        var manager = _managerRepository.GetManagerByEmail(email);
+        var manager = await _managerRepository.GetManagerByEmail(email);
 
         if (manager is not null && email == manager.Email &&
             PasswordHash.ValidatePassword(password, manager.Password) && !manager.IsDeleted)
@@ -41,8 +41,8 @@ public class AuthServices : IAuthServices
         }
         else
         {
-            var client = _clientsRepository.GetClientByEmail(email);
-            var psychologist = _psychologistsRepository.GetPsychologistByEmail(email);
+            var client = await _clientsRepository.GetClientByEmail(email);
+            var psychologist = await _psychologistsRepository.GetPsychologistByEmail(email);
             
 
             if (client == null && psychologist == null)
@@ -79,7 +79,7 @@ public class AuthServices : IAuthServices
         return claimModel;
     }
 
-    public string GetToken(ClaimModel model)
+    public async Task<string> GetToken(ClaimModel model)
     {
         if(model is null || model.Email is null)
         {

@@ -10,7 +10,7 @@ public class ClientRegisterRequestValidationsTests
 {
 
     [TestCaseSource(typeof(ClientRegisterRequestNegativeTestsSource))]
-    public void ClientRegisterRequest_SendingIncorrectData_GetErrorMessage(ClientRegisterRequest client, string errorMessage)
+    public async Task ClientRegisterRequest_SendingIncorrectData_GetErrorMessage(ClientRegisterRequest client, string errorMessage)
     {
         //given
         var validationsResults = new List<ValidationResult>();
@@ -26,7 +26,7 @@ public class ClientRegisterRequestValidationsTests
 
 
     [Test]
-    public void ClientRegisterRequest_SendingCorrectData_GetAnEmptyStringError ()
+    public async Task ClientRegisterRequest_SendingCorrectData_GetAnEmptyStringError ()
     {
         //given
         var client = new ClientRegisterRequest()

@@ -34,11 +34,11 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void AddClient_ValidRequestPassed_CreatedResultReceived()
+    public async Task AddClient_ValidRequestPassed_CreatedResultReceived()
     {
         //given
         _clientsServicesMock.Setup(c => c.AddClient(It.IsAny<Client>()))
-         .Returns(1);
+         .ReturnsAsync(1);
 
         var expectedId = 1;
 
@@ -53,7 +53,7 @@ public class ClientsControllerTests
         };
 
         //when
-        var actual = _sut.AddClient(client);
+        var actual = await _sut.AddClient(client);
         
         //then
         var actualResult = actual.Result as CreatedResult;
@@ -75,7 +75,7 @@ public class ClientsControllerTests
 
 
     [Test]
-    public void GetClientById_ValidRequestPassed_OkReceived()
+    public async Task GetClientById_ValidRequestPassed_OkReceived()
     {
         //given
         var expectedClient = new Client()
@@ -89,11 +89,11 @@ public class ClientsControllerTests
         };
 
 
-        _clientsServicesMock.Setup(o => o.GetClientById(expectedClient.Id, It.IsAny<ClaimModel>())).Returns(expectedClient);
+        _clientsServicesMock.Setup(o => o.GetClientById(expectedClient.Id, It.IsAny<ClaimModel>())).ReturnsAsync(expectedClient);
 
 
         //when
-        var actual = _sut.GetClientById(expectedClient.Id);
+        var actual = await _sut.GetClientById(expectedClient.Id);
 
         //then
         var actualResult = actual.Result as ObjectResult;
@@ -112,7 +112,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void UpdateClientById_ValidRequestPassed_NoContentReceived()
+    public async Task UpdateClientById_ValidRequestPassed_NoContentReceived()
     {
         //given
 
@@ -139,7 +139,7 @@ public class ClientsControllerTests
 
 
         //when
-        var actual = _sut.UpdateClientById(newClientModel, client.Id);
+        var actual = await _sut.UpdateClientById(newClientModel, client.Id);
 
         //then
         var actualResult = actual as NoContentResult;
@@ -155,7 +155,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void GetCommentsByClientId_ValidRequestPassed_RequestedTypeReceived()
+    public async Task GetCommentsByClientId_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
         var expectedClient = new Client()
@@ -181,10 +181,10 @@ public class ClientsControllerTests
         };
 
 
-        _clientsServicesMock.Setup(o => o.GetCommentsByClientId(expectedClient.Id, It.IsAny<ClaimModel>())).Returns(expectedClient.Comments);
+        _clientsServicesMock.Setup(o => o.GetCommentsByClientId(expectedClient.Id, It.IsAny<ClaimModel>())).ReturnsAsync(expectedClient.Comments);
 
         //when
-        var actual = _sut.GetCommentsByClientId(expectedClient.Id);
+        var actual = await _sut.GetCommentsByClientId(expectedClient.Id);
 
         //then
         var actualResult = actual.Result as ObjectResult;
@@ -203,7 +203,7 @@ public class ClientsControllerTests
 
 
     [Test]
-    public void GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived()
+    public async Task GetOrdersByClientId_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
 
@@ -236,10 +236,10 @@ public class ClientsControllerTests
 
         };
 
-        _clientsServicesMock.Setup(o => o.GetOrdersByClientId(expectedClient.Id, It.IsAny<ClaimModel>())).Returns(expectedClient.Orders);
+        _clientsServicesMock.Setup(o => o.GetOrdersByClientId(expectedClient.Id, It.IsAny<ClaimModel>())).ReturnsAsync(expectedClient.Orders);
 
         //when
-        var actual = _sut.GetOrdersByClientId(expectedClient.Id);
+        var actual = await _sut.GetOrdersByClientId(expectedClient.Id);
 
         //then
         var actualResult = actual.Result as ObjectResult;
@@ -262,7 +262,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void DeleteClientById_ValidRequestPassed_NoContentReceived()
+    public async Task DeleteClientById_ValidRequestPassed_NoContentReceived()
     {
         //given
         var expectedClient = new Client()
@@ -277,10 +277,10 @@ public class ClientsControllerTests
 
         };
 
-        _clientsServicesMock.Setup(o => o.GetClientById(expectedClient.Id, It.IsAny<ClaimModel>())).Returns(expectedClient);
+        _clientsServicesMock.Setup(o => o.GetClientById(expectedClient.Id, It.IsAny<ClaimModel>())).ReturnsAsync(expectedClient);
 
         //when
-        var actual = _sut.DeleteClientById(expectedClient.Id);
+        var actual = await _sut.DeleteClientById(expectedClient.Id);
 
         //then
         var actualResult = actual as NoContentResult;
@@ -292,7 +292,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void GetClients_ValidRequestPassed_RequestedTypeReceived()
+    public async Task GetClients_ValidRequestPassed_RequestedTypeReceived()
     {
         //given
         var clients = new List<Client>
@@ -329,10 +329,10 @@ public class ClientsControllerTests
         };
 
 
-        _clientsServicesMock.Setup(o => o.GetClients()).Returns(clients).Verifiable();
+        _clientsServicesMock.Setup(o => o.GetClients()).ReturnsAsync(clients);
 
         //when
-        var actual = _sut.GetClients();
+        var actual = await _sut.GetClients();
 
         //then
         var actualResult = actual.Result as ObjectResult;
@@ -353,7 +353,7 @@ public class ClientsControllerTests
     }
 
     [Test]
-    public void GetApplicationsForPsychologistByClientId_ValidRequestPassed_RequestedTypeReceived()
+    public async Task GetApplicationsForPsychologistByClientId_ValidRequestPassed_RequestedTypeReceived()
     {
         var expectedClient = new Client()
         {
@@ -388,10 +388,10 @@ public class ClientsControllerTests
 
         };
 
-        _clientsServicesMock.Setup(o => o.GetApplicationsForPsychologistByClientId(expectedClient.Id, It.IsAny<ClaimModel>())).Returns(expectedClient.ApplicationForPsychologistSearch);
+        _clientsServicesMock.Setup(o => o.GetApplicationsForPsychologistByClientId(expectedClient.Id, It.IsAny<ClaimModel>())).ReturnsAsync(expectedClient.ApplicationForPsychologistSearch);
 
         //when
-        var actual = _sut.GetApplicationsForPsychologistByClientId(expectedClient.Id);
+        var actual = await _sut.GetApplicationsForPsychologistByClientId(expectedClient.Id);
 
         //then
         var actualResult = actual.Result as ObjectResult;

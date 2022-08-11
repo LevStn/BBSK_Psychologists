@@ -16,117 +16,115 @@ public class ClientsService : IClientsServices
         _clientsRepository = clientsRepository;
     }
 
-    public Client? GetClientById(int id, ClaimModel claims)
+    public async Task<Client?> GetClientById(int id, ClaimModel claims)
     {
-        var client = _clientsRepository.GetClientById(id);
+        var client = await _clientsRepository.GetClientById(id);
 
         if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        CheckAccess(claims, client);
+        await CheckAccess(claims, client);
 
         return client;
     }
 
 
-    public List<Client> GetClients()
+    public async Task<List<Client>> GetClients()
     {
-        var clients = _clientsRepository.GetClients();
+        var clients = await _clientsRepository.GetClients();
 
         return clients;
     }
 
 
-    public List<Comment> GetCommentsByClientId(int id, ClaimModel claims)
+    public async Task<List<Comment>> GetCommentsByClientId(int id, ClaimModel claims)
     {
-        var client = _clientsRepository.GetClientById(id);
+        var client = await _clientsRepository.GetClientById(id);
 
         if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        CheckAccess(claims, client);
+        await CheckAccess(claims, client);
 
-        return _clientsRepository.GetCommentsByClientId(id);
+        return await _clientsRepository.GetCommentsByClientId(id);
     }
 
 
-    public List<Order> GetOrdersByClientId(int id, ClaimModel claims)
+    public async Task<List<Order>> GetOrdersByClientId(int id, ClaimModel claims)
     {
-        var client = _clientsRepository.GetClientById(id);
+        var client = await _clientsRepository.GetClientById(id);
 
         if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        CheckAccess(claims, client);
+        await CheckAccess(claims, client);
 
-        return _clientsRepository.GetOrdersByClientId(id);
+        return await _clientsRepository.GetOrdersByClientId(id);
     }
 
-    public int AddClient(Client client)
+    public async Task<int> AddClient(Client client)
     {
 
-        CheckEmailForUniqueness(client.Email);
+         await CheckEmailForUniqueness(client.Email);
 
         client.Password = PasswordHash.HashPassword(client.Password);
-        return _clientsRepository.AddClient(client);
+        return await _clientsRepository.AddClient(client);
     }
 
-    public void UpdateClient(Client newClientModel, int id, ClaimModel claims)
+    public async Task UpdateClient(Client newClientModel, int id, ClaimModel claims)
     {
-        var client = _clientsRepository.GetClientById(id);
+        var client = await _clientsRepository.GetClientById(id);
 
         if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        CheckAccess(claims, client);
+        await CheckAccess(claims, client);
 
         client.Name = newClientModel.Name;
         client.LastName = newClientModel.LastName;
         client.BirthDate = newClientModel.BirthDate;
 
-        _clientsRepository.UpdateClient(newClientModel);
+        _clientsRepository.UpdateClient(client);
     }
 
-    public void DeleteClient(int id, ClaimModel claims)
+    public async Task DeleteClient(int id, ClaimModel claims)
     {
-        var client = _clientsRepository.GetClientById(id);
+        var client = await _clientsRepository.GetClientById(id);
 
         if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        CheckAccess(claims, client);
+        await CheckAccess(claims, client);
 
-        _clientsRepository.DeleteClient(client);
+        await _clientsRepository.DeleteClient(client);
     }
 
-    public List<ApplicationForPsychologistSearch> GetApplicationsForPsychologistByClientId(int id, ClaimModel claims)
+    public async Task<List<ApplicationForPsychologistSearch>> GetApplicationsForPsychologistByClientId(int id, ClaimModel claims)
     {
-        var client = _clientsRepository.GetClientById(id);
+        var client = await _clientsRepository.GetClientById(id);
 
         if (client is null)
         {
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        CheckAccess(claims, client);
+        await CheckAccess(claims, client);
 
-        return client.ApplicationForPsychologistSearch.ToList();
+        return  client.ApplicationForPsychologistSearch.ToList();
     }
 
 
-
-
-    private void CheckAccess(ClaimModel claims, Client client)
+    private async Task CheckAccess(ClaimModel claims, Client client)
     {
         if ((!(((claims.Email == client.Email
          || claims.Role == Role.Manager)
@@ -136,9 +134,9 @@ public class ClientsService : IClientsServices
     }
 
 
-    private void CheckEmailForUniqueness(string email) 
+    private async Task CheckEmailForUniqueness(string email) 
     {
-        if( _clientsRepository.GetClientByEmail(email) != null)
+        if( await _clientsRepository.GetClientByEmail(email) != null)
         {
             throw new UniquenessException($"That email is registred");
         }

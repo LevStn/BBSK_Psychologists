@@ -291,7 +291,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetPsychologistByEmail_WhenTheCorrectEmail_ThenPsychologistReturned()
+        public async Task GetPsychologistByEmail_WhenTheCorrectEmail_ThenPsychologistReturned()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -346,7 +346,7 @@ namespace BBSK_Psychologists.Tests
             context.SaveChanges();
 
             //when
-            var actual = sut.GetPsychologistByEmail(PsychologistFirst.Email);
+            var actual = await sut.GetPsychologistByEmail(PsychologistFirst.Email);
 
             //then
 

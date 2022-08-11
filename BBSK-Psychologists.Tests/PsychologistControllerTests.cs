@@ -1,6 +1,5 @@
 ﻿using BBSK_Psycho.Controllers;
 using BBSK_Psycho.DataLayer.Enums;
-
 using BBSK_Psycho.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,24 +13,40 @@ using System.Threading.Tasks;
 using BBSK_Psycho.DataLayer.Repositories;
 using Moq;
 using BBSK_Psycho.DataLayer.Entities;
-using BBSK_Psycho.DataLayer.Repositories.Interfaces;
+using AutoMapper;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer;
+using BBSK_Psycho;
 
 namespace BBSK_Psychologists.Tests
 {
     public class PsychologistControllerTests
 {       
         private Mock<IPsychologistsRepository> _repository;
+{       private PsychologistsController _sut;
 
-        private PsychologistsController _sut;
+        private IMapper _mapper;
+        private Mock <IPsychologistService> _psychologistService;
+        private ClaimModel _claims;
+
+        [SetUp]
+        public void Setup()
+        {
+            _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<MapperConfigStorage>()));
+            _psychologistService = new Mock<IPsychologistService>();
+            _sut = new PsychologistsController( _psychologistService.Object, _mapper);
+            _claims = new ClaimModel();
+        }
+        
         private AddPsychologistRequest psychologistDataAdd = new AddPsychologistRequest
         {
             Name = "лял",
             LastName = "пвфа",
             Patronymic = "ПВАПВА",
-            gender = Gender.Male,
+            Gender = Gender.Male,
             Phone = "85884859",
-            Education = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
-            checkStatus = CheckStatus.Completed,
+            Educations = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
+            CheckStatus = CheckStatus.Completed,
             Email = "ros@fja.com",
             PasportData = "23146456",
             Price = 2000,
@@ -49,7 +64,7 @@ namespace BBSK_Psychologists.Tests
             Patronymic = "ПВАПВА",
             Gender = Gender.Male,
             Phone = "85884859",
-            Education = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
+            Educations = new List<string> { "2013 - воврварараар; Dev Education", "sg osgj sopj r" },
             CheckStatus = CheckStatus.Completed,
             Email = "ros@fja.com",
             PasportData = "23146456",
@@ -61,18 +76,19 @@ namespace BBSK_Psychologists.Tests
             Password = "1235345"
         };
 
-        [SetUp]
-        public void Setup()
-        {
-            _repository = new Mock<IPsychologistsRepository>();
-            _sut = new PsychologistsController(_repository.Object);
-        }
+       
 
         [Test]
-        public void AddRequestForPsy_ValidRequestPassed_CreatedResultReceived()
+        public void AddCommentForPsy_ValidRequestPassed_CreatedResultReceived()
         {
             // given
-
+            
+            var comment = new Comment()
+            {
+                Id =121212
+            };
+            _psychologistService.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), It.IsAny<int>(), It.IsAny<ClaimModel>()))
+                .Returns(comment.Id);
             var request = new CommentRequest
             {
               ClientId=1,
@@ -82,15 +98,19 @@ namespace BBSK_Psychologists.Tests
               Date= DateTime.Now
             };
             int psId = 2;
+            ClaimModel claimModel = new ClaimModel
+            {
+                Id = 1
+            };
             // when
             var actual = _sut.AddCommentToPsyhologist(request, psId);
 
             // then
             var actualResult = actual.Result as CreatedResult;
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
+            _psychologistService.Verify(c => c.AddCommentToPsyhologist(It.Is<Comment>(c => c.Text == request.Text), It.Is<int>(i => i == psId), It.IsAny<ClaimModel>()));
 
         }
-
 
         [Test]
         public void UpdatePsychologist_NoContentResult()
@@ -115,15 +135,14 @@ namespace BBSK_Psychologists.Tests
             //_repository.Setup(r => r.GetPsychologist(It.IsAny<int>()))
             //.Returns(new Psychologist());   
             var clientId = 1;
-
-            _repository.Setup(r => r.GetPsychologist(clientId)).Returns(new Psychologist());
+            _psychologistService.Setup(r => r.GetPsychologist(clientId, It.IsAny<ClaimModel>())).Returns(new Psychologist());
             // when
 
             var actual = _sut.GetPsychologist(clientId);
 
             // then
 
-            _repository.Verify(r => r.GetPsychologist(It.IsAny<int>()), Times.Once);
+            _psychologistService.Verify(r => r.GetPsychologist(It.Is<int>(i=>i==clientId), It.IsAny<ClaimModel>()), Times.Once);
             var actualResult = actual.Result as ObjectResult;
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
 

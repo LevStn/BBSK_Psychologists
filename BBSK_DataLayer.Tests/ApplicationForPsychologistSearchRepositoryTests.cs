@@ -23,7 +23,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
     }
 
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
 
         if (context is not null)
@@ -37,7 +37,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
     }
 
     [Test]
-    public void AddApplicationForPsychologist_WhenCorrectData_ThenAddApplicationForPsychologistInDbAndReturnedId()
+    public async Task AddApplicationForPsychologist_WhenCorrectData_ThenAddApplicationForPsychologistInDbAndReturnedId()
     {
         //given
 
@@ -62,11 +62,11 @@ public class ApplicationForPsychologistSearchRepositoryTests
         };
 
         //when
-        var actualId = _sut.AddApplicationForPsychologist(application);
+        var actualId = await _sut.AddApplicationForPsychologist(application);
    
 
         //then
-        var actualApplication = _sut.GetApplicationForPsychologistById(actualId);
+        var actualApplication = await _sut.GetApplicationForPsychologistById(actualId);
 
 
         Assert.AreEqual(actualId, application.Id);
@@ -83,7 +83,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
 
 
     [Test]
-    public void DeleteApplicationForPsychologist_WhenCorrecId_ThenSoftDelete()
+    public async Task DeleteApplicationForPsychologist_WhenCorrecId_ThenSoftDelete()
     {
         //given
         var application = new ApplicationForPsychologistSearch()
@@ -109,17 +109,17 @@ public class ApplicationForPsychologistSearchRepositoryTests
         context.SaveChanges();
 
         //when
-        _sut.DeleteApplicationForPsychologist(application);
+         await _sut.DeleteApplicationForPsychologist(application);
 
         //then
-        var actualApplication = _sut.GetApplicationForPsychologistById(application.Id);
+        var actualApplication = await _sut.GetApplicationForPsychologistById(application.Id);
 
         Assert.True(actualApplication.IsDeleted);
     }
 
 
     [Test]
-    public void GetAllApplicationsForPsychologist_WhenCorrectDate_ThenApplicationsForPsychologistReturned()
+    public async Task GetAllApplicationsForPsychologist_WhenCorrectDate_ThenApplicationsForPsychologistReturned()
     {
         //given
         var expectedCount = 1;
@@ -154,7 +154,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
         context.SaveChanges();
 
         //when
-        var actualApplications = _sut.GetAllApplicationsForPsychologist();
+        var actualApplications = await _sut.GetAllApplicationsForPsychologist();
 
         //then
         Assert.NotNull(actualApplications);
@@ -165,7 +165,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
     }
 
     [Test]
-    public void GetApplicationForPsychologistById_WhenCorrectDataPassed_ThenApplicationReturned()
+    public async Task GetApplicationForPsychologistById_WhenCorrectDataPassed_ThenApplicationReturned()
     {
         //given
 
@@ -197,7 +197,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
 
         //when
 
-        var actualApplication = _sut.GetApplicationForPsychologistById(client.ApplicationForPsychologistSearch[0].Id);
+        var actualApplication = await _sut.GetApplicationForPsychologistById(client.ApplicationForPsychologistSearch[0].Id);
 
 
         //then
@@ -215,7 +215,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
 
 
     [Test]
-    public void UpdateApplicationsForPsychologist_WhenCorrectDate_ThenChangePoperties()
+    public async Task UpdateApplicationsForPsychologist_WhenCorrectDate_ThenChangePoperties()
     {
         //given
         var newName = "Oleg";
@@ -253,7 +253,7 @@ public class ApplicationForPsychologistSearchRepositoryTests
         _sut.UpdateApplicationForPsychologist(application);
 
         //then
-        var actualApplication = _sut.GetApplicationForPsychologistById(application.Id);
+        var actualApplication = await _sut.GetApplicationForPsychologistById(application.Id);
 
         Assert.AreEqual(actualApplication.Name, newName);
         Assert.AreEqual(actualApplication.PsychologistGender, newGender);
