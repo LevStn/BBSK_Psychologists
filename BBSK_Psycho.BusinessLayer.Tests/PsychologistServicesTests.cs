@@ -197,7 +197,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Email = "lala@o.ru",
                 Password = Guid.NewGuid().ToString()
             };
-            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@.ru")).ReturnsAsync(psychologist);
+            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@.ru")).ReturnsAsync(newPsych);
             //when
             //then
             Assert.Throws<Exceptions.UniquenessException>(() => _sut.AddPsychologist(newPsych));

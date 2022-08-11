@@ -36,7 +36,7 @@ public class ClientRegisterRequestValidationsTests
             Password = "1232345678",
             Email = "p@petrov.com",
             PhoneNumber = "89119118696",
-            BirthDate = DateTime.Now,
+            BirthDate = DateTime.Now.AddYears(-20),
         };
 
         var validationsResults = new List<ValidationResult>();
