@@ -191,13 +191,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void AddPsychologist_EmailIsNotUnique_ThrowUniquenessException()
         {
             //given
-            var psychologist = new Psychologist() { Email = "lala@o.ru", Password=Guid.NewGuid().ToString() };
+            var psychologist = new Psychologist() { Email = "lala@o.ru", Password = "аоы48аыо" };
             var newPsych = new Psychologist()
             {
                 Email = "lala@o.ru",
-                Password = Guid.NewGuid().ToString()
+                Password = "аоы48аыо"
             };
-            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@.ru")).ReturnsAsync(newPsych);
+            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@o.ru")).ReturnsAsync(newPsych);
             //when
             //then
             Assert.Throws<Exceptions.UniquenessException>(() => _sut.AddPsychologist(newPsych));
