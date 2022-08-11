@@ -60,7 +60,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i=>i==commentActual.Psychologist.Id), It.Is<int>(i=>i == commentActual.Client.Id))).Returns(order);
             _psychologistsRepositoryMock.Setup(c => c.AddCommentToPsyhologist(It.Is<Comment>(c=>c.Id == comment.Id && c.Text==comment.Text), (It.Is<int>(i=>i== commentActual.Psychologist.Id))))
                 .Returns(comment);
-            _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i=>i == commentActual.Client.Id))).Returns(client);
+            _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i=>i == commentActual.Client.Id))).ReturnsAsync(client);
             var expectedComment = comment;
 
            
@@ -152,7 +152,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
             _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
            
-            _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).Returns(client);
+            _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(client);
             var expectedComment = comment;
 
             
@@ -192,7 +192,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 Email = "lala@.ru"
             };
-            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@.ru")).Returns(psychologist);
+            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@.ru")).ReturnsAsync(psychologist);
             //when
             //then
             Assert.Throws<Exceptions.UniquenessException>(() => _sut.AddPsychologist(newPsych));
@@ -433,7 +433,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
             _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i=> i == psychologist.Id))).Returns(psychologist);
             _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
-            _claims = new() { Id = 2, Role = Role.Psychologist };
+            _claims = new() { Id = 2, Role = Role.Psychologist};
 
             //when
 
