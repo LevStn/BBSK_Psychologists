@@ -7,12 +7,12 @@ public interface IPsychologistsRepository
     {
         Psychologist? GetPsychologist(int id);
         List<Psychologist> GetAllPsychologists();
-        public Comment AddCommentToPsyhologist(Comment comment, int psychologistId);
+        Comment AddCommentToPsyhologist(Comment comment, int psychologistId);
         List<Comment> GetCommentsByPsychologistId(int id);
         List<Order> GetOrdersByPsychologistsId(int id);
         int AddPsychologist(Psychologist psychologist);
         void UpdatePsychologist(Psychologist psychologist, int id);
         void DeletePsychologist(int id);
 
-        public Task<Psychologist?> GetPsychologistByEmail(string email);
+        Task<Psychologist?> GetPsychologistByEmail(string email);
     }
