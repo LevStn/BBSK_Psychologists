@@ -32,7 +32,7 @@ namespace BBSK_Psycho.BusinessLayer
             {
                 throw new EntityNotFoundException($"Client not found");
             }
-            if (claim.Email != client.Email)
+            if (claim.Email != client.Result.Email)
             {
                 throw new AccessException($"Access denied");
             }
@@ -61,7 +61,7 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new EntityNotFoundException($"Psychologist {id} not found");
             }
 
-            if (claim.Role == Role.Psychologist.ToString()
+            if (claim.Role == Role.Psychologist
                 && claim.Id != id)
             {
                 throw new AccessException($"Access denied");
@@ -115,7 +115,7 @@ namespace BBSK_Psycho.BusinessLayer
         public void CheckAccessOnlyForPsychologistAndManagers (int id, ClaimModel claim)
         {
             if (claim.Id != id
-                && claim.Role != Role.Manager.ToString())
+                && claim.Role != Role.Manager)
             {
                 throw new AccessException($"Access denied");
             }
@@ -123,7 +123,7 @@ namespace BBSK_Psycho.BusinessLayer
 
         public void CheckAccessForPsychologistManagersAndClients(int id, ClaimModel claim)
         {
-            if (claim.Role == Role.Psychologist.ToString()
+            if (claim.Role == Role.Psychologist
                 && claim.Id != id)
             {
                 throw new AccessException($"Access denied");
