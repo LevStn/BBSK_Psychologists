@@ -327,7 +327,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Email= "test@mail.ru"
             };
             _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).Returns(psychologist);
-            //_sut.AddPsychologist(psychologist);
+            
             _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).Returns(psychologist.Comments);
             var expected = psychologist.Comments;
             //when
@@ -398,7 +398,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Id=1
             };
             _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).Returns(psychologist);
-            //_sut.AddPsychologist(psychologist);
+            
             _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
             var expected = psychologist.Orders;
 

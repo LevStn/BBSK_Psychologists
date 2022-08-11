@@ -127,9 +127,9 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new AccessException($"Access denied");
             }
         }
-        private async Task CheckEmailForUniqueness(string email)
+        private void CheckEmailForUniqueness(string email)
         {
-            if (await _clientsRepository.GetClientByEmail(email) != null)
+            if (_psychologistsRepository.GetPsychologistByEmail(email) != null)
             {
                 throw new UniquenessException($"That email is registred");
             }
