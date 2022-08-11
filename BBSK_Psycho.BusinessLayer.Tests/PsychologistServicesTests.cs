@@ -359,7 +359,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
             _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i=>i == psychologist.Id))).Returns(psychologist);
             _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).Returns(psychologist.Comments);
-            _claims = new() { Id = 2, Role=Role.Psychologist.ToString()};
+            _claims = new() { Id = 2, Role=Role.Psychologist};
             
             //when
 
@@ -433,7 +433,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
             _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i=> i == psychologist.Id))).Returns(psychologist);
             _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
-            _claims = new() { Id = 2, Role = Role.Psychologist.ToString() };
+            _claims = new() { Id = 2, Role = Role.Psychologist };
 
             //when
 
@@ -488,7 +488,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(id));
             _psychologistsRepositoryMock.Setup(o => o.UpdatePsychologist(newPsychologist, id));
-            _claims = new() { Id = 2, Role = Role.Psychologist.ToString() };
+            _claims = new() { Id = 2, Role = Role.Psychologist };
             //when
             _sut.UpdatePsychologist(newPsychologist, id, _claims);
 
@@ -535,7 +535,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Price = 1000
             };
 
-            _claims = new() { Id = 2, Role = Role.Psychologist.ToString() };
+            _claims = new() { Id = 2, Role = Role.Psychologist };
             //when
             //then
             Assert.Throws<Exceptions.AccessException>(() => _sut.UpdatePsychologist(newPsychologist, psychologist.Id, _claims));

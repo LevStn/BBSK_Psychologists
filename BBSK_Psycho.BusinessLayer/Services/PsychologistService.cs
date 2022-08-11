@@ -48,6 +48,8 @@ namespace BBSK_Psycho.BusinessLayer
             {
                 throw new UniquenessException($"That email is registred");
             }
+
+            psychologist.Password = PasswordHash.HashPassword(psychologist.Password);
             var result = _psychologistsRepository.AddPsychologist(psychologist);
             return result;
         }
