@@ -43,12 +43,8 @@ namespace BBSK_Psycho.BusinessLayer
 
         public int AddPsychologist(Psychologist psychologist)
         {
-            var isUnique = CheckEmailForUniqueness(psychologist.Email);
-            if(!isUnique)
-            {
-                throw new UniquenessException($"That email is registred");
-            }
-
+            CheckEmailForUniqueness(psychologist.Email);
+            
             psychologist.Password = PasswordHash.HashPassword(psychologist.Password);
             var result = _psychologistsRepository.AddPsychologist(psychologist);
             return result;
@@ -131,6 +127,12 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new AccessException($"Access denied");
             }
         }
-        private bool CheckEmailForUniqueness(string email) => _psychologistsRepository.GetPsychologistByEmail(email) == null;
+        private async Task CheckEmailForUniqueness(string email)
+        {
+            if (await _clientsRepository.GetClientByEmail(email) != null)
+            {
+                throw new UniquenessException($"That email is registred");
+            }
+        }
     }
 }
