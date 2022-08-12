@@ -2,6 +2,7 @@
 
 namespace BBSK_Psycho.DataLayer.Repositories;
 
+
 public interface IPsychologistsRepository
 
     {

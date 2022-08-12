@@ -171,7 +171,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void AddPsychologist_ValidRequestPassed_ReturnId()
         {
             //given
-            var psych = new Psychologist();
+            var psych = new Psychologist()
+            {
+                Email = Guid.NewGuid().ToString(),
+                Password = Guid.NewGuid().ToString()
+            };
             _psychologistsRepositoryMock.Setup(c => c.AddPsychologist(It.Is<Psychologist>(p=>p.Id == psych.Id)))
                 .Returns(1);
             var expectedId = 1;
@@ -187,12 +191,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         public void AddPsychologist_EmailIsNotUnique_ThrowUniquenessException()
         {
             //given
-            var psychologist = new Psychologist() { Email = "lala@.ru" };
+            var psychologist = new Psychologist() { Email = "lala@o.ru", Password = "аоы48аыо" };
             var newPsych = new Psychologist()
             {
-                Email = "lala@.ru"
+                Email = "lala@o.ru",
+                Password = "аоы48аыо"
             };
-            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@.ru")).ReturnsAsync(psychologist);
+            _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@o.ru")).ReturnsAsync(newPsych);
             //when
             //then
             Assert.Throws<Exceptions.UniquenessException>(() => _sut.AddPsychologist(newPsych));
@@ -322,7 +327,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Email= "test@mail.ru"
             };
             _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).Returns(psychologist);
-            _sut.AddPsychologist(psychologist);
+            
             _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).Returns(psychologist.Comments);
             var expected = psychologist.Comments;
             //when
@@ -393,7 +398,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Id=1
             };
             _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).Returns(psychologist);
-            _sut.AddPsychologist(psychologist);
+            
             _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
             var expected = psychologist.Orders;
 
