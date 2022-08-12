@@ -28,10 +28,12 @@ public class ClientUpdateRequestValidationsTests
     public async Task ClientUpdateRequest_SendingCorrectData_GetAnEmptyStringError()
     {
         //given
+        DateTime start = new DateTime(1995, 1, 1);
+        int range = (DateTime.Today - start).Days;
         var client = new ClientUpdateRequest()
         {
             Name = "Petro",
-            BirthDate = DateTime.Today,
+            BirthDate = DateTime.Now.AddYears(-20),
             LastName = ""
         };
 

@@ -11,6 +11,9 @@ public class MapperConfigStorage : Profile
     {
         CreateMap<ClientRegisterRequest, Client>();
         CreateMap<Client, ClientResponse>();
+        CreateMap<ClientRegisterRequest, ClientResponse>();
+        CreateMap<ClientUpdateRequest, Client>();
+
         CreateMap<Comment, CommentResponse>();
         CreateMap<Psychologist, PsychologistResponse>();
         CreateMap<Psychologist, GetAllPsychologistsResponse>();
@@ -27,6 +30,8 @@ public class MapperConfigStorage : Profile
             .ForMember(x => x.Psychologist, s => s.MapFrom((x => (new Psychologist { Id= x.PsychologistId}))))
             .ForMember(x => x.Client, s => s.MapFrom((x => (new Client { Id= x.ClientId}))));
         CreateMap<Comment, CommentResponse>();
+        CreateMap<ApplicationForPsychologistSearch, SearchResponse>();
+        CreateMap<SearchRequest, ApplicationForPsychologistSearch>();
         CreateMap<OrderCreateRequest, Order>()
             .ForMember(dest => dest.Client, opt => opt.Ignore())
             .ForMember(dest => dest.Psychologist, opt => opt.Ignore());
