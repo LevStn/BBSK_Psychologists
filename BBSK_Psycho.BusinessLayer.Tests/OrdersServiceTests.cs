@@ -50,7 +50,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claimModel.Role = Role.Manager;
 
-            _ordersRepository.Setup(o => o.GetOrders()).Returns(orders);
+            _ordersRepository.Setup(o => o.GetOrders().Result).Returns(orders);
 
             //when
             List<Order> actual = _sut.GetOrders(_claimModel);
@@ -90,7 +90,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             else
                 _claimModel.Email = order.Psychologist.Email;
 
-            _ordersRepository.Setup(c => c.GetOrderById(order.Id)).Returns(order);
+            _ordersRepository.Setup(c => c.GetOrderById(order.Id).Result).Returns(order);
 
             //when
             Order actualOrder = _sut.GetOrderById(order.Id, _claimModel);
@@ -108,7 +108,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //given
             _claimModel.Role = role;
 
-            _ordersRepository.Setup(c => c.GetOrderById(It.IsAny<int>())).Returns((Order)null);
+            _ordersRepository.Setup(c => c.GetOrderById(It.IsAny<int>()).Result).Returns((Order)null);
 
             //when-then
             Assert.Throws<EntityNotFoundException>(() => _sut.GetOrderById(It.IsAny<int>(), _claimModel));
@@ -124,7 +124,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claimModel.Email = "eyes722@gmail.com";
 
-            _ordersRepository.Setup(c => c.GetOrderById(order.Id)).Returns(order);
+            _ordersRepository.Setup(c => c.GetOrderById(order.Id).Result).Returns(order);
 
             //when-then
             Assert.Throws<AccessDeniedException>(() => _sut.GetOrderById(order.Id, _claimModel));
@@ -144,7 +144,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).Returns(order.Psychologist);
             _clientsRepository.Setup(c => c.GetClientById(order.Client.Id).Result).Returns(order.Client);
 
-            _ordersRepository.Setup(c => c.AddOrder(order)).Returns(42);
+            _ordersRepository.Setup(c => c.AddOrder(order).Result).Returns(42);
 
             //when
             int returnedId = _sut.AddOrder(order, _claimModel);
@@ -198,7 +198,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claimModel.Role = Role.Manager;
             
-            _ordersRepository.Setup(c => c.GetOrderById(order.Id)).Returns(order);
+            _ordersRepository.Setup(c => c.GetOrderById(order.Id).Result).Returns(order);
             _ordersRepository.Setup(c => c.DeleteOrder(order.Id));
 
             //when
@@ -215,7 +215,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //given
             _claimModel.Role = Role.Manager;
 
-            _ordersRepository.Setup(c => c.GetOrderById(It.IsAny<int>())).Returns((Order)null);
+            _ordersRepository.Setup(c => c.GetOrderById(It.IsAny<int>()).Result).Returns((Order)null);
 
             //when-then
             Assert.Throws<EntityNotFoundException>(() => _sut.GetOrderById(It.IsAny<int>(), _claimModel));
@@ -233,7 +233,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claimModel.Role = Role.Manager;
 
-            _ordersRepository.Setup(c => c.GetOrderById(order.Id)).Returns(order);
+            _ordersRepository.Setup(c => c.GetOrderById(order.Id).Result).Returns(order);
             _ordersRepository.Setup(c => c.UpdateOrderStatuses(order.Id, OrderStatus.Completed, OrderPaymentStatus.Paid));
 
             //when
@@ -252,7 +252,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //given
             _claimModel.Role = Role.Manager;
 
-            _ordersRepository.Setup(c => c.GetOrderById(It.IsAny<int>())).Returns((Order)null);
+            _ordersRepository.Setup(c => c.GetOrderById(It.IsAny<int>()).Result).Returns((Order)null);
 
             //when-then
             Assert.Throws<EntityNotFoundException>(() => _sut.UpdateOrderStatuses(It.IsAny<int>(), It.IsAny<OrderStatus>(), It.IsAny<OrderPaymentStatus>(), _claimModel));

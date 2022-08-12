@@ -57,7 +57,7 @@ namespace BBSK_DataLayer.Tests
             List<Order> actualOrders = new() {firstOrder, secondOrder};
 
             //when
-            List<Order> expectedOrders = _sut.GetOrders();
+            List<Order> expectedOrders = _sut.GetOrders().Result;
 
 
             //then
@@ -79,7 +79,7 @@ namespace BBSK_DataLayer.Tests
             _context.SaveChanges();
 
             //when
-            Order expectedOrder = _sut.GetOrderById(givenOrder.Id);
+            Order expectedOrder = _sut.GetOrderById(givenOrder.Id).Result;
 
             //then
             Assert.AreEqual(givenOrder, expectedOrder);
