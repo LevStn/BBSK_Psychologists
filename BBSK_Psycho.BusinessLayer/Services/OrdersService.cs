@@ -31,16 +31,16 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
         public List<Order> GetOrders(ClaimModel claim)
         {
-            _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
+            _ordersValidator.CheckClaimForRoles(claim, Role.Manager); 
 
-            return _ordersRepository.GetOrders();
+            return _ordersRepository.GetOrders().Result;
         }
 
 
         public Order? GetOrderById(int id, ClaimModel claim)
         {
 
-            Order? order = _ordersRepository.GetOrderById(id);
+            Order? order = _ordersRepository.GetOrderById(id).Result;
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не найден");
@@ -72,14 +72,14 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
             _ordersValidator.CheckClaimForEmail(claim, order);
 
-            return _ordersRepository.AddOrder(order);
+            return _ordersRepository.AddOrder(order).Result;
         }
 
         public void DeleteOrder(int id, ClaimModel claim)
         {
             _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
 
-            Order? order = _ordersRepository.GetOrderById(id);
+            Order? order = _ordersRepository.GetOrderById(id).Result;
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не был найден");
@@ -91,7 +91,7 @@ namespace BBSK_Psycho.BusinessLayer.Services
         {
             _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
 
-            Order? order = _ordersRepository.GetOrderById(id);
+            Order? order = _ordersRepository.GetOrderById(id).Result;
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не найден");
