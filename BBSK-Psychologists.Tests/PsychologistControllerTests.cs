@@ -89,7 +89,7 @@ namespace BBSK_Psychologists.Tests
                 Id =121212
             };
             _psychologistService.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), It.IsAny<int>(), It.IsAny<ClaimModel>()))
-                .Returns(comment.Id);
+                .ReturnsAsync(comment.Id);
             var request = new CommentRequest
             {
               ClientId=1,

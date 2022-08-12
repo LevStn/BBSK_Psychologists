@@ -21,27 +21,20 @@ namespace BBSK_DataLayer.Tests
                 .Options;
         }
 
-
-
-
         [SetUp]
         public void Setup()
         {
             if(_context != null)
-            {
                 _context.Database.EnsureDeleted();
-            }
 
             _context = new BBSK_PsychoContext(_dbContextOptions);
-
             _sut = new OrdersRepository(_context);
         }
 
         [Test]
-        public void GetOrders_WhenCorrectEndpointCalled_ThenOrdersListReturned()
+        public async Task GetOrders_WhenCorrectEndpointCalled_ThenOrdersListReturned()
         {
             //given
-
             Client client = OrdersHelper.GetClient();
             Psychologist psychologist = OrdersHelper.GetPsychologist();
             Order firstOrder = OrdersHelper.GetOrder(client, psychologist);
@@ -57,11 +50,10 @@ namespace BBSK_DataLayer.Tests
             List<Order> actualOrders = new() {firstOrder, secondOrder};
 
             //when
-            List<Order> expectedOrders = _sut.GetOrders().Result;
+            List<Order> expectedOrders = await _sut.GetOrders();
 
 
             //then
-
             Assert.NotNull(expectedOrders);
             Assert.That(expectedOrders, Does.Not.Contains(thirdOrder));
 
@@ -70,7 +62,7 @@ namespace BBSK_DataLayer.Tests
         }
 
         [Test]
-        public void GetOrderById_WhenCorrectIdPassed_ThenOrderReturned()
+        public async Task GetOrderById_WhenCorrectIdPassed_ThenOrderReturned()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
@@ -79,20 +71,20 @@ namespace BBSK_DataLayer.Tests
             _context.SaveChanges();
 
             //when
-            Order expectedOrder = _sut.GetOrderById(givenOrder.Id).Result;
+            Order expectedOrder = await _sut.GetOrderById(givenOrder.Id);
 
             //then
             Assert.AreEqual(givenOrder, expectedOrder);
         }
 
         [Test]
-        public void AddOrder_WhenCorrectDataPassed_ThenOrderAdded()
+        public async Task AddOrder_WhenCorrectDataPassed_ThenOrderAdded()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
 
             //when
-            _sut.AddOrder(givenOrder);
+            await _sut.AddOrder(givenOrder);
 
             Order expectedOrder = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id);
             
@@ -102,7 +94,7 @@ namespace BBSK_DataLayer.Tests
         }
 
         [Test]
-        public void DeleteOrder_WhenCorrectIdPassed_ThenOrderDeleted()
+        public async Task DeleteOrder_WhenCorrectIdPassed_ThenOrderDeleted()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
@@ -111,7 +103,7 @@ namespace BBSK_DataLayer.Tests
             _context.SaveChanges();
 
             //when
-            _sut.DeleteOrder(givenOrder.Id);
+            await _sut.DeleteOrder(givenOrder.Id);
 
             Order expected = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id);
 
@@ -121,7 +113,7 @@ namespace BBSK_DataLayer.Tests
         }
 
         [Test]
-        public void UpdateOrdersStatus_WhenCorrectDataPassed_ThenOrderStatusUpdated()
+        public async Task UpdateOrdersStatus_WhenCorrectDataPassed_ThenOrderStatusUpdated()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
@@ -132,7 +124,7 @@ namespace BBSK_DataLayer.Tests
             _context.SaveChanges();
 
             //when
-            _sut.UpdateOrderStatuses(givenOrder.Id, OrderStatus.Completed, OrderPaymentStatus.Paid);
+            await _sut.UpdateOrderStatuses(givenOrder.Id, OrderStatus.Completed, OrderPaymentStatus.Paid);
 
             Order expectedOrder = _context.Orders.FirstOrDefault(o => o.Id == givenOrder.Id);
 

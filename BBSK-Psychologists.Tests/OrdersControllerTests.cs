@@ -41,7 +41,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetOrders_ValidRolePassed_RequestedTypeReceived()
+        public async Task GetOrders_ValidRolePassed_RequestedTypeReceived()
         {
             //given
             List<Order> allOrders = new List<Order>() { OrdersHelper.GetOrder(), OrdersHelper.GetOrder() };
@@ -50,10 +50,10 @@ namespace BBSK_Psychologists.Tests
 
             _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", Role.Manager, 58);
 
-            _ordersService.Setup(c => c.GetOrders(_claimModel)).Returns(allOrders);
+            _ordersService.Setup(c => c.GetOrders(_claimModel)).ReturnsAsync(allOrders);
 
             //when
-            var actual = _sut.GetOrders();
+            var actual = await _sut.GetOrders();
 
             //then
             var actualResult = actual.Result as ObjectResult;
@@ -81,19 +81,19 @@ namespace BBSK_Psychologists.Tests
         [TestCase(Role.Manager)]
         [TestCase(Role.Client)]
         [TestCase(Role.Psychologist)]
-        public void GetOrderById_ValidIdPassed_OkReceived(Role role)
+        public async Task GetOrderById_ValidIdPassed_OkReceived(Role role)
         {
             //given
             Order expectedOrder = OrdersHelper.GetOrder();
 
             _claimModel.Role = role;
 
-            _ordersService.Setup(c => c.GetOrderById(expectedOrder.Id, _claimModel)).Returns(expectedOrder);
+            _ordersService.Setup(c => c.GetOrderById(expectedOrder.Id, _claimModel)).ReturnsAsync(expectedOrder);
 
             _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", role, 58);
 
             //when
-            var actual = _sut.GetOrderById(expectedOrder.Id);
+            var actual = await _sut.GetOrderById(expectedOrder.Id);
 
             //then
             var actualResult = actual.Result as ObjectResult;
@@ -116,7 +116,7 @@ namespace BBSK_Psychologists.Tests
 
         [TestCase(Role.Manager)]
         [TestCase(Role.Client)]
-        public void AddOrder_ValidRequestPassed_CreatedResultReceived(Role role)
+        public async Task AddOrder_ValidRequestPassed_CreatedResultReceived(Role role)
         {
             //given
             _claimModel.Role = role;
@@ -148,7 +148,7 @@ namespace BBSK_Psychologists.Tests
             _ordersService.Setup(c => c.AddOrder(expectedOrder, _claimModel));
 
             //when
-            var actual = _sut.AddOrder(givenRequest);
+            var actual = await _sut.AddOrder(givenRequest);
 
             //then
             var actualResult = actual.Result as CreatedResult;
@@ -159,7 +159,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void DeleteOrderById_ValidIdPassed_NoContentReceived()
+        public async Task DeleteOrderById_ValidIdPassed_NoContentReceived()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
@@ -167,11 +167,10 @@ namespace BBSK_Psychologists.Tests
             _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", Role.Manager, 58);
             _claimModel.Role = Role.Manager;
 
-
             _ordersService.Setup(c => c.DeleteOrder(givenOrder.Id, _claimModel));
 
             //when
-            var actual = _sut.DeleteOrderById(givenOrder.Id);
+            var actual = await _sut.DeleteOrderById(givenOrder.Id);
 
             //then
             var actualResult = actual as NoContentResult;
@@ -182,7 +181,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void UpdateOrderStatusById_ValidRequestAndIdPassed_NoContentReceived()
+        public async Task UpdateOrderStatusById_ValidRequestAndIdPassed_NoContentReceived()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
@@ -199,7 +198,7 @@ namespace BBSK_Psychologists.Tests
             _ordersService.Setup(c => c.UpdateOrderStatuses(givenOrder.Id, givenRequest.OrderStatus, givenRequest.OrderPaymentStatus, _claimModel));
 
             //when
-            var actual = _sut.UpdateOrderStatusById(givenOrder.Id, givenRequest);
+            var actual = await _sut.UpdateOrderStatusById(givenOrder.Id, givenRequest);
 
             //then
             var actualResult = actual as NoContentResult;
