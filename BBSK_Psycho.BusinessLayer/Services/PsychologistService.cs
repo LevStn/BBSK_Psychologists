@@ -20,19 +20,19 @@ namespace BBSK_Psycho.BusinessLayer
             _clientsRepository = clientsRepository;
         }
 
-        public int AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
+        public async Task<int> AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
         {
-            var commonOrder = _ordersRepository.GetOrderByPsychIdAndClientId(psychologistId, comment.Client.Id);
+            var commonOrder = await _ordersRepository.GetOrderByPsychIdAndClientId(psychologistId, comment.Client.Id);
             if (commonOrder == null)
             {
                 throw new AccessException("$It is impossible to leave a comment to a psychologist with whom there have been no sessions!");
             }
-            var client = _clientsRepository.GetClientById(comment.Client.Id);
+            var client = await _clientsRepository.GetClientById(comment.Client.Id);
             if (client == null)
             {
                 throw new EntityNotFoundException($"Client not found");
             }
-            if (claim.Email != client.Result.Email)
+            if (claim.Email != client.Email)
             {
                 throw new AccessException($"Access denied");
             }
@@ -129,6 +129,6 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new AccessException($"Access denied");
             }
         }
-        private bool CheckEmailForUniqueness(string email) => _psychologistsRepository.GetPsychologistByEmail(email) == null;
+        private bool CheckEmailForUniqueness(string email) => _psychologistsRepository.GetPsychologistByEmail(email).Result == null;
     }
 }
