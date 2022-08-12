@@ -29,18 +29,18 @@ namespace BBSK_Psycho.BusinessLayer.Services
             _ordersValidator = ordersValidator;
         }
 
-        public List<Order> GetOrders(ClaimModel claim)
+        public async Task<List<Order>> GetOrders(ClaimModel claim)
         {
             _ordersValidator.CheckClaimForRoles(claim, Role.Manager); 
 
-            return _ordersRepository.GetOrders().Result;
+            return await _ordersRepository.GetOrders();
         }
 
 
-        public Order? GetOrderById(int id, ClaimModel claim)
+        public async Task<Order?> GetOrderById(int id, ClaimModel claim)
         {
 
-            Order? order = _ordersRepository.GetOrderById(id).Result;
+            Order? order = await _ordersRepository.GetOrderById(id);
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не найден");
@@ -50,7 +50,7 @@ namespace BBSK_Psycho.BusinessLayer.Services
             return order;
         }
 
-        public int AddOrder(Order order, ClaimModel claim)
+        public async Task<int> AddOrder(Order order, ClaimModel claim)
         {
             _ordersValidator.CheckClaimForRoles(claim, Role.Manager, Role.Client);
 
@@ -63,7 +63,7 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
             _ordersValidator.IsOrderValid(order);
 
-            Client? client = _clientsRepository.GetClientById(order.Client.Id).Result;
+            Client? client = await _clientsRepository.GetClientById(order.Client.Id);
 
             if (client == null)
                 throw new EntityNotFoundException($"Клиент c ID {order.Client.Id} не найден");
@@ -72,33 +72,33 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
             _ordersValidator.CheckClaimForEmail(claim, order);
 
-            return _ordersRepository.AddOrder(order).Result;
+            return await _ordersRepository.AddOrder(order);
         }
 
-        public void DeleteOrder(int id, ClaimModel claim)
+        public async Task DeleteOrder(int id, ClaimModel claim)
         {
             _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
 
-            Order? order = _ordersRepository.GetOrderById(id).Result;
+            Order? order = await _ordersRepository.GetOrderById(id);
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не был найден");
 
-            _ordersRepository.DeleteOrder(id);
+            await _ordersRepository.DeleteOrder(id);
         }
 
-        public void UpdateOrderStatuses(int id, OrderStatus orderStatus, OrderPaymentStatus orderPaymentStatus, ClaimModel claim)
+        public async Task UpdateOrderStatuses(int id, OrderStatus orderStatus, OrderPaymentStatus orderPaymentStatus, ClaimModel claim)
         {
             _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
 
-            Order? order = _ordersRepository.GetOrderById(id).Result;
+            Order? order = await _ordersRepository.GetOrderById(id);
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не найден");
 
             _ordersValidator.AreOrderStatusesValid(orderStatus, orderPaymentStatus);
 
-            _ordersRepository.UpdateOrderStatuses(id, orderStatus, orderPaymentStatus);
+            await _ordersRepository.UpdateOrderStatuses(id, orderStatus, orderPaymentStatus);
         }
     }
 }

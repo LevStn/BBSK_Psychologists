@@ -5,10 +5,10 @@ namespace BBSK_Psycho.BusinessLayer.Services.Interfaces
 {
     public interface IOrdersService
     {
-        int AddOrder(Order order, ClaimModel claim);
-        void DeleteOrder(int id, ClaimModel claim);
-        Order? GetOrderById(int id, ClaimModel claim);
-        List<Order> GetOrders(ClaimModel claim);
-        void UpdateOrderStatuses(int id, OrderStatus orderStatus, OrderPaymentStatus orderPaymentStatus, ClaimModel claim);
+        Task<int> AddOrder(Order order, ClaimModel claim);
+        Task DeleteOrder(int id, ClaimModel claim);
+        Task<Order?> GetOrderById(int id, ClaimModel claim);
+        Task<List<Order>> GetOrders(ClaimModel claim);
+        Task UpdateOrderStatuses(int id, OrderStatus orderStatus, OrderPaymentStatus orderPaymentStatus, ClaimModel claim);
     }
 }
