@@ -129,7 +129,7 @@ namespace BBSK_Psycho.BusinessLayer
         }
         private async Task CheckEmailForUniqueness(string email)
         {
-            if (_psychologistsRepository.GetPsychologistByEmail(email) != null)
+            if (await _psychologistsRepository.GetPsychologistByEmail(email) != null)
             {
                 throw new UniquenessException($"That email is registred");
             }
