@@ -17,7 +17,7 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public Psychologist? GetPsychologist(int id) =>
+        public async Task <Psychologist?> GetPsychologist(int id) =>
             _context.Psychologists
             .Include(e => e.Educations)
             .Include(tm => tm.TherapyMethods)
@@ -26,44 +26,39 @@ namespace BBSK_Psycho.DataLayer.Repositories
             .Include(c => c.Comments)
             .FirstOrDefault(p => p.Id == id);
 
-        public List <Psychologist> GetAllPsychologists() => _context.Psychologists.Where(p => p.IsDeleted == false ).ToList();
+        public async Task <List <Psychologist>> GetAllPsychologists() => await _context.Psychologists.Where(p => p.IsDeleted == false ).ToListAsync();
 
         public async Task<Psychologist?> GetPsychologistByEmail(string email) => await _context.Psychologists.FirstOrDefaultAsync(p => p.Email == email);
 
-        public List<Order> GetOrdersByPsychologistsId(int id) => _context.Orders.Where(p => p.Psychologist.Id == id && !p.IsDeleted).ToList();
-        public List<Comment> GetCommentsByPsychologistId(int id) => _context.Comments.Where(с => с.IsDeleted == false).ToList();
+        public async Task <List<Order>> GetOrdersByPsychologistsId(int id) => await _context.Orders.Where(p => p.Psychologist.Id == id && !p.IsDeleted).ToListAsync();
+        public async Task <List<Comment>> GetCommentsByPsychologistId(int id) => await _context.Comments.Where(с => с.IsDeleted == false).ToListAsync();
 
-        public int AddPsychologist (Psychologist psychologist)
+        public async Task <int> AddPsychologist (Psychologist psychologist)
         {
             _context.Psychologists.Add(psychologist);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return psychologist.Id;
         }
 
-        public Comment AddCommentToPsyhologist(Comment comment, int psychologistId)
+        public async Task <Comment> AddCommentToPsyhologist(Comment comment, int psychologistId)
         {
-            var psycho = GetPsychologist(psychologistId);
+            var psycho = await GetPsychologist(psychologistId);
             comment.Psychologist = psycho;
 
-            var client = _context.Clients.FirstOrDefault(c => c.Id == comment.Client.Id);
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.Id == comment.Client.Id);
             comment.Client = client;
 
             _context.Comments.Add(comment);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return comment;
         }
-        // Этот метод будет перенесен в клиента!!!!
-        //public int AddRequestPsyhologistSearch(ApplicationForPsychologistSearch applicationForPsychologist)
-        //{
 
 
-        //}
-
-        public void UpdatePsychologist(Psychologist newProperty, int id)
+        public async Task UpdatePsychologist(Psychologist newProperty, int id)
         {
-            var psychologist = GetPsychologist(id);
+            var psychologist = await GetPsychologist(id);
             psychologist.Gender = newProperty.Gender;
             psychologist.Phone = newProperty.Phone;
             psychologist.TherapyMethods.Clear();
@@ -75,13 +70,13 @@ namespace BBSK_Psycho.DataLayer.Repositories
             psychologist.Educations = newProperty.Educations;
             psychologist.Price = newProperty.Price;
             _context.Psychologists.Update(psychologist);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public void DeletePsychologist (int id)
+        public async Task DeletePsychologist (int id)
         {
-            var psychologist = _context.Psychologists.FirstOrDefault(o => o.Id == id);
+            var psychologist = await _context.Psychologists.FirstOrDefaultAsync(o => o.Id == id);
             psychologist.IsDeleted = true;
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
     }
 }
