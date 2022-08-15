@@ -77,7 +77,7 @@ namespace BBSK_Psychologists.Tests
        
 
         [Test]
-        public void AddCommentForPsy_ValidRequestPassed_CreatedResultReceived()
+        public async Task AddCommentForPsy_ValidRequestPassed_CreatedResultReceived()
         {
             // given
             
@@ -86,7 +86,7 @@ namespace BBSK_Psychologists.Tests
                 Id =121212
             };
             _psychologistService.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), It.IsAny<int>(), It.IsAny<ClaimModel>()))
-                .Returns(comment.Id);
+                .ReturnsAsync(comment.Id);
             var request = new CommentRequest
             {
               ClientId=1,
@@ -101,7 +101,7 @@ namespace BBSK_Psychologists.Tests
                 Id = 1
             };
             // when
-            var actual = _sut.AddCommentToPsyhologist(request, psId);
+            var actual = await _sut.AddCommentToPsyhologist(request, psId);
 
             // then
             var actualResult = actual.Result as CreatedResult;
@@ -111,7 +111,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void UpdatePsychologist_NoContentResult()
+        public async Task UpdatePsychologist_NoContentResult()
         {
             // given
 
@@ -119,7 +119,7 @@ namespace BBSK_Psychologists.Tests
 
             // when
             int id = 2;
-            var actual = _sut.UpdatePsychologist(psychologist, id);
+            var actual = await _sut.UpdatePsychologist(psychologist, id);
 
             // then
             var actualResult = actual as NoContentResult;
@@ -128,15 +128,15 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetPsychologist_ObjectResultPassed()
+        public async Task GetPsychologist_ObjectResultPassed()
         {
             //_repository.Setup(r => r.GetPsychologist(It.IsAny<int>()))
             //.Returns(new Psychologist());   
             var clientId = 1;
-            _psychologistService.Setup(r => r.GetPsychologist(clientId, It.IsAny<ClaimModel>())).Returns(new Psychologist());
+            _psychologistService.Setup(r => r.GetPsychologist(clientId, It.IsAny<ClaimModel>())).ReturnsAsync(new Psychologist());
             // when
 
-            var actual = _sut.GetPsychologist(clientId);
+            var actual = await _sut.GetPsychologist(clientId);
 
             // then
 
@@ -147,11 +147,11 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetAllPsychologist_ObjectResultPassed()
+        public async Task GetAllPsychologist_ObjectResultPassed()
         {
             // when
 
-            var actual = _sut.GetAllPsychologists();
+            var actual = await _sut.GetAllPsychologists();
 
             // then
             var actualResult = actual.Result as ObjectResult;
@@ -160,7 +160,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void DeletePsychologist_NoContentResult()
+        public async Task DeletePsychologist_NoContentResult()
         {
             // given
             int id = 2
@@ -168,7 +168,7 @@ namespace BBSK_Psychologists.Tests
 
             // when
            ;
-            var actual = _sut.DeletePsychologist(id);
+            var actual = await _sut.DeletePsychologist(id);
 
             // then
             var actualResult = actual as NoContentResult;
@@ -177,14 +177,14 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void AddPsychologist_ValidRequestPassed_CreatedResultReceived()
+        public async Task AddPsychologist_ValidRequestPassed_CreatedResultReceived()
         {
             // given
 
             var psychologist = psychologistDataAdd;
 
             // when
-            var actual = _sut.AddPsychologist(psychologist);
+            var actual = await _sut.AddPsychologist(psychologist);
 
             // then
             var actualResult = actual.Result as CreatedResult;

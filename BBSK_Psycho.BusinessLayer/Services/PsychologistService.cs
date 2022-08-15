@@ -20,39 +20,39 @@ namespace BBSK_Psycho.BusinessLayer
             _clientsRepository = clientsRepository;
         }
 
-        public int AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
+        public async Task <int> AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
         {
-            var commonOrder = _ordersRepository.GetOrderByPsychIdAndClientId(psychologistId, comment.Client.Id);
+            var commonOrder = /*await*/ _ordersRepository.GetOrderByPsychIdAndClientId(psychologistId, comment.Client.Id);
             if (commonOrder == null)
             {
                 throw new AccessException("$It is impossible to leave a comment to a psychologist with whom there have been no sessions!");
             }
-            var client = _clientsRepository.GetClientById(comment.Client.Id);
+            var client = await _clientsRepository.GetClientById(comment.Client.Id);
             if (client == null)
             {
                 throw new EntityNotFoundException($"Client not found");
             }
-            if (claim.Email != client.Result.Email)
+            if (claim.Email != client.Email)
             {
                 throw new AccessException($"Access denied");
             }
 
-            var result = _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);
+            var result = await _psychologistsRepository.AddCommentToPsyhologist(comment, psychologistId);
             return result.Id;
         }
 
-        public int AddPsychologist(Psychologist psychologist)
+        public async Task <int> AddPsychologist(Psychologist psychologist)
         {
-            CheckEmailForUniqueness(psychologist.Email);
+            await CheckEmailForUniqueness(psychologist.Email);
             
             psychologist.Password = PasswordHash.HashPassword(psychologist.Password);
-            var result = _psychologistsRepository.AddPsychologist(psychologist);
+            var result = await _psychologistsRepository.AddPsychologist(psychologist);
             return result;
         }
 
-        public void DeletePsychologist(int id, ClaimModel claim)
+        public async Task DeletePsychologist(int id, ClaimModel claim)
         {
-            var psychologist = _psychologistsRepository.GetPsychologist(id);
+            var psychologist = await _psychologistsRepository.GetPsychologist(id);
             if (psychologist == null)
 
             {
@@ -67,50 +67,50 @@ namespace BBSK_Psycho.BusinessLayer
             _psychologistsRepository.DeletePsychologist(id);
         }
 
-        public List<Psychologist> GetAllPsychologists(ClaimModel claim) => _psychologistsRepository.GetAllPsychologists().ToList();
+        public async Task <List<Psychologist>> GetAllPsychologists(ClaimModel claim) => await _psychologistsRepository.GetAllPsychologists();
 
 
-        public List<Comment> GetCommentsByPsychologistId(int id, ClaimModel claim)
+        public async Task <List<Comment>> GetCommentsByPsychologistId(int id, ClaimModel claim)
         {
-            var psychologist = _psychologistsRepository.GetPsychologist(id);
+            var psychologist = await _psychologistsRepository.GetPsychologist(id);
             if (psychologist == null)
             {
                 throw new EntityNotFoundException($"Psychologist {id} not found");
             }
-            CheckAccessForPsychologistManagersAndClients(id, claim);
+            await CheckAccessForPsychologistManagersAndClients(id, claim);
 
-            var result= _psychologistsRepository.GetCommentsByPsychologistId(id);
+            var result= await _psychologistsRepository.GetCommentsByPsychologistId(id);
             return result;
         }
 
-        public List<Order> GetOrdersByPsychologistId(int id, ClaimModel claim)
+        public async Task <List<Order>> GetOrdersByPsychologistId(int id, ClaimModel claim)
         {
 
-            var psycho = _psychologistsRepository.GetPsychologist(id);
+            var psycho = await _psychologistsRepository.GetPsychologist(id);
             if (psycho == null)
             {
                 throw new EntityNotFoundException($"Orders by psychologist {id} not found");
             }
-            CheckAccessForPsychologistManagersAndClients(id, claim);
+            await CheckAccessForPsychologistManagersAndClients(id, claim);
 
-            return _psychologistsRepository.GetOrdersByPsychologistsId(id);
+            return await _psychologistsRepository.GetOrdersByPsychologistsId(id);
         }
 
-        public Psychologist? GetPsychologist(int id, ClaimModel claim)
+        public async Task <Psychologist?> GetPsychologist(int id, ClaimModel claim)
         {
-            var result = _psychologistsRepository.GetPsychologist(id);
-            CheckAccessOnlyForPsychologistAndManagers(id, claim);
+            var result = await _psychologistsRepository.GetPsychologist(id);
+            await CheckAccessOnlyForPsychologistAndManagers(id, claim);
             return result;
         }
 
-        public void UpdatePsychologist(Psychologist psychologist, int id, ClaimModel claim)
+        public async Task UpdatePsychologist(Psychologist psychologist, int id, ClaimModel claim)
         {
-            var result = _psychologistsRepository.GetPsychologist(id);
-            CheckAccessOnlyForPsychologistAndManagers(id, claim);
-            _psychologistsRepository.UpdatePsychologist(psychologist, id);
+            var result = await _psychologistsRepository.GetPsychologist(id);
+            await CheckAccessOnlyForPsychologistAndManagers(id, claim);
+            await _psychologistsRepository.UpdatePsychologist(psychologist, id);
         }
 
-        public void CheckAccessOnlyForPsychologistAndManagers (int id, ClaimModel claim)
+        public async Task CheckAccessOnlyForPsychologistAndManagers (int id, ClaimModel claim)
         {
             if (claim.Id != id
                 && claim.Role != Role.Manager)
@@ -119,7 +119,7 @@ namespace BBSK_Psycho.BusinessLayer
             }
         }
 
-        public void CheckAccessForPsychologistManagersAndClients(int id, ClaimModel claim)
+        public async Task CheckAccessForPsychologistManagersAndClients(int id, ClaimModel claim)
         {
             if (claim.Role == Role.Psychologist
                 && claim.Id != id)
@@ -129,7 +129,7 @@ namespace BBSK_Psycho.BusinessLayer
         }
         private async Task CheckEmailForUniqueness(string email)
         {
-            if (_psychologistsRepository.GetPsychologistByEmail(email) != null)
+            if (await _psychologistsRepository.GetPsychologistByEmail(email) != null)
             {
                 throw new UniquenessException($"That email is registred");
             }

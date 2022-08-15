@@ -9,13 +9,13 @@ namespace BBSK_Psycho.BusinessLayer.Services.Interfaces
 {
     public interface IPsychologistService
     {
-        Psychologist? GetPsychologist(int id, ClaimModel claim);
-        List<Psychologist> GetAllPsychologists(ClaimModel claim);
-        public int AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim);
-        List<Comment> GetCommentsByPsychologistId(int id, ClaimModel claim);
-        List <Order> GetOrdersByPsychologistId(int id, ClaimModel claim);
-        int AddPsychologist(Psychologist psychologist);
-        void UpdatePsychologist(Psychologist psychologist, int id, ClaimModel claim);
-        void DeletePsychologist(int id, ClaimModel claim);
+        Task <Psychologist?> GetPsychologist(int id, ClaimModel claim);
+        Task <List<Psychologist>> GetAllPsychologists(ClaimModel claim);
+        Task <int> AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim);
+        Task <List<Comment>> GetCommentsByPsychologistId(int id, ClaimModel claim);
+        Task <List <Order>> GetOrdersByPsychologistId(int id, ClaimModel claim);
+        Task <int> AddPsychologist(Psychologist psychologist);
+        Task UpdatePsychologist(Psychologist psychologist, int id, ClaimModel claim);
+        Task DeletePsychologist(int id, ClaimModel claim);
     }
 }
