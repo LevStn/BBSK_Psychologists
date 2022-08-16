@@ -140,7 +140,7 @@ namespace BBSK_Psychologists.Tests
             //when
 
             sut.UpdatePsychologist(modelToUpdate, startPsychologist.Id);
-            
+
             var actual = context.Psychologists.Find(startPsychologist.Id);
 
             //then
@@ -153,7 +153,7 @@ namespace BBSK_Psychologists.Tests
 
            );
 
-            expected.Educations.Should().BeEquivalentTo(actual.Educations, options =>  options.Excluding(o => o.Id).Excluding(o=>o.Psychologist));
+            expected.Educations.Should().BeEquivalentTo(actual.Educations, options => options.Excluding(o => o.Id).Excluding(o => o.Psychologist));
             expected.Problems.Should().BeEquivalentTo(actual.Problems, options => options.Excluding(o => o.Id).Excluding(o => o.Psychologists));
             expected.TherapyMethods.Should().BeEquivalentTo(actual.TherapyMethods, options => options.Excluding(o => o.Id).Excluding(o => o.Psychologists));
         }
@@ -185,7 +185,7 @@ namespace BBSK_Psychologists.Tests
                 WorkExperience = 10,
                 BirthDate = DateTime.Parse("1210 - 12 - 12"),
                 Password = "123543",
-                IsDeleted=true
+                IsDeleted = true
             };
             context.Psychologists.Add(psych1);
             context.Psychologists.Add(psych2);
@@ -226,7 +226,7 @@ namespace BBSK_Psychologists.Tests
 
             };
 
-            
+
             context.Clients.Add(client);
             context.Psychologists.Add(psychologist);
             context.SaveChanges();
@@ -282,7 +282,7 @@ namespace BBSK_Psychologists.Tests
             //when
             var actual = await sut.GetCommentsByPsychologistId(psychologist.Id);
             //var expected = context.Psychologists.(psychologist.Id);
-            var expected= new List<Comment> { comment};
+            var expected = new List<Comment> { comment };
             var isContains = actual.Contains(comment2);
             //then
             Assert.AreEqual(expected, actual);
@@ -353,6 +353,53 @@ namespace BBSK_Psychologists.Tests
             Assert.True(actual.Id == PsychologistFirst.Id);
             Assert.True(actual.Email == PsychologistFirst.Email);
             Assert.True(actual.Name == PsychologistFirst.Name);
+        }
+
+        [Test]
+        public async Task GetAllPsychologistsWithFullInformations_WhenPassed_ThenGetAll()
+        {
+            //given
+            var context = new BBSK_PsychoContext(_dbContextOptions);
+            var sut = new PsychologistsRepository(context);
+
+            var psych1 = TestDataPsychologist.GetValidPsychologist();
+            var psych2 = TestDataPsychologist.GetValidPsychologist();
+
+            var psych3 = new Psychologist
+            {
+                Name = "sdfs",
+                LastName = "sjfs",
+                Patronymic = "sgd",
+                Gender = Gender.Male,
+                Phone = "44885884859",
+                Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                CheckStatus = CheckStatus.Completed,
+                Email = "rosj@fja.com",
+                PasportData = "23146456",
+                Price = 2000,
+                Problems = new List<Problem> { new Problem { ProblemName = "ds", IsDeleted = false } },
+                TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "therapy lal", IsDeleted = false } },
+                WorkExperience = 10,
+                BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                Password = "123543",
+                IsDeleted = true
+            };
+            context.Psychologists.Add(psych1);
+            context.Psychologists.Add(psych2);
+            context.Psychologists.Add(psych3);
+            context.SaveChanges();
+
+            //when
+            var actual = await sut.GetAllPsychologistsWithFullInformations();
+
+            //then
+            Assert.IsNotEmpty(actual);
+            Assert.AreEqual(actual[0].Problems, psych1.Problems);
+            Assert.AreEqual(actual[0].TherapyMethods, psych1.TherapyMethods);
+            Assert.AreEqual(actual[1].Problems, psych2.Problems);
+            Assert.AreEqual(actual[1].TherapyMethods, psych2.TherapyMethods);
+            Assert.That(actual, Is.Not.Contains(psych3));
+
         }
     }
 }

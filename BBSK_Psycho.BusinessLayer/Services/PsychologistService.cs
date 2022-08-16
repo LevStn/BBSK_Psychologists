@@ -4,7 +4,6 @@ using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
-using System.Linq;
 
 namespace BBSK_Psycho.BusinessLayer
 {
@@ -13,12 +12,15 @@ namespace BBSK_Psycho.BusinessLayer
         private readonly IPsychologistsRepository _psychologistsRepository;
         private readonly IOrdersRepository _ordersRepository;
         private readonly IClientsRepository _clientsRepository;
+        private readonly ISearchByFilter _searchByFilter;
 
-        public PsychologistService(IPsychologistsRepository psychologistsRepository, IClientsRepository clientsRepository, IOrdersRepository ordersRepository)
+        public PsychologistService(IPsychologistsRepository psychologistsRepository,
+            IClientsRepository clientsRepository, IOrdersRepository ordersRepository, ISearchByFilter searchByFilter)
         {
             _psychologistsRepository = psychologistsRepository;
             _ordersRepository = ordersRepository;
             _clientsRepository = clientsRepository;
+            _searchByFilter = searchByFilter;
         }
 
         public async Task <int> AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
@@ -111,32 +113,10 @@ namespace BBSK_Psycho.BusinessLayer
             await _psychologistsRepository.UpdatePsychologist(psychologist, id);
         }
 
-        public async Task<List<Psychologist>> GetPsychologistsByParametrs(Price price, List<int> problems, Gender? gender)
+        public async Task<List<Psychologist>> GetPsychologistsByFilter(Price price, List<int> problems, Gender? gender)
         {
             var psychologists = await _psychologistsRepository.GetAllPsychologistsWithFullInformations();
-
-            var result = (from psychologist in psychologists
-                          let psychologistProblems = psychologist.Problems
-                          from problem in psychologistProblems
-                          where psychologists.Any(a => problems.Contains(problem.Id))
-                          select psychologist).ToList();
-
-            if (gender is not null)
-            {
-                result = result.Where(p => p.Gender == gender).ToList();
-            }
-            
-            switch (price)
-            {
-                case Price.Ascending:
-                    result.Sort((x,y) => x.Price.CompareTo(y.Price));
-                    break;
-
-                case Price.Descending:
-                    result = result.OrderByDescending(p => p.Price).ToList();
-                    break;
-            }
-            return result;
+            return await _searchByFilter.GetPsychologistsByParametrs(price, problems, gender, psychologists);
         }
 
         public async Task CheckAccessOnlyForPsychologistAndManagers (int id, ClaimModel claim)
@@ -163,5 +143,6 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new UniquenessException($"That email is registred");
             }
         }
+
     }
 }
