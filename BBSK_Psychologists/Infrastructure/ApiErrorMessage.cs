@@ -2,6 +2,7 @@
 {
     public static class ApiErrorMessage
     {
+        public const string NoProblemSelected = "Не выбрана ни одна проблема";
         public const string NameIsRequired = "Вы не ввели свое имя";
         public const string PasswordLengthIsLessThanAllowed = "Длина пароля меньше 8-ми символов";
         public const string PasswordIsRequired = "Вы не ввели пароль";
@@ -35,7 +36,7 @@
         public const string PassportDataIsRequired = "Укажите серию и номер паспорта";
         public const string EducationIsRequired = "Укажите ваше образование";
         public const string TherapyMethodsIsRequired = "Укажите терапевтические методы";
-        public const string ProblemsIsRequired = "Введите проблемы, с которыми вы работаете";
+        public const string ProblemsIsRequired = "Введите проблемы, с которыми вы работаете";        
         public const string LengthExceeded = "Превышена допустимая длина";
         public const string RangeIsError = "Выбранное число выходит за рамки диапазона";
         public const string NumberLessOrEqualZero = "Ошибка стоимости";

@@ -14,10 +14,12 @@ public class MapperConfigStorage : Profile
         CreateMap<Client, ClientResponse>();
         CreateMap<ClientRegisterRequest, ClientResponse>();
         CreateMap<ClientUpdateRequest, Client>();
-
+        CreateMap<Problem, ProblemResponse>();
+        CreateMap<TherapyMethod, TherapyMethodResponse>();
         CreateMap<Comment, CommentResponse>();
         CreateMap<Psychologist, PsychologistResponse>();
         CreateMap<Psychologist, GetAllPsychologistsResponse>();
+
         CreateMap<AddPsychologistRequest, Psychologist>()
             .ForMember(x => x.Educations, s => s.MapFrom(x => x.Educations!.Select(education => new Education() { EducationData = education })))
             .ForMember(x => x.Problems, s => s.MapFrom(x => x.Problems!.Select(problemName => new Problem() { ProblemName = problemName })))
@@ -44,6 +46,5 @@ public class MapperConfigStorage : Profile
         CreateMap<OrderCreateRequest, Psychologist>()
 
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
-
     }
 }

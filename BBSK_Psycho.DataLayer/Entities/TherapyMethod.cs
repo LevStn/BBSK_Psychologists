@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BBSK_Psycho.DataLayer.Entities;
 
 public class TherapyMethod
@@ -14,5 +9,4 @@ public class TherapyMethod
 
 
     public List<Psychologist> Psychologists { get; set; }
-
 }
