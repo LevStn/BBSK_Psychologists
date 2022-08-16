@@ -59,10 +59,10 @@ public class SearchRequestsController : ControllerBase
 
     [AuthorizeByRole]
     [HttpGet]
-    [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SearchResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<List<ClientResponse>>> GetAllApplicationsForPsychologist()
+    public async Task<ActionResult<List<SearchResponse>>> GetAllApplicationsForPsychologist()
     {
         var request = await _applicationForPsychologistSearchServices.GetAllApplicationsForPsychologist();
         return Ok(_mapper.Map<List<SearchResponse>>(request));
