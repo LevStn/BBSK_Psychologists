@@ -17,16 +17,23 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public async Task <Psychologist?> GetPsychologist(int id) =>
-            _context.Psychologists
+        public async Task <Psychologist?> GetPsychologist(int id) => 
+            await _context.Psychologists
             .Include(e => e.Educations)
             .Include(tm => tm.TherapyMethods)
             .Include(p => p.Problems)
             .Include(s => s.Schedules)
             .Include(c => c.Comments)
-            .FirstOrDefault(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         public async Task <List <Psychologist>> GetAllPsychologists() => await _context.Psychologists.Where(p => p.IsDeleted == false ).ToListAsync();
+
+        public async Task<List<Psychologist>> GetAllPsychologistsWithFullInformations() =>
+            await _context.Psychologists
+            .Where(p => p.IsDeleted == false)
+            .Include(tm => tm.TherapyMethods)
+            .Include(p => p.Problems)
+            .ToListAsync();
 
         public async Task<Psychologist?> GetPsychologistByEmail(string email) => await _context.Psychologists.FirstOrDefaultAsync(p => p.Email == email);
 

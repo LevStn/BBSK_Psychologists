@@ -4,6 +4,7 @@ using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
+using System.Linq;
 
 namespace BBSK_Psycho.BusinessLayer
 {
@@ -42,7 +43,7 @@ namespace BBSK_Psycho.BusinessLayer
         }
 
         public async Task <int> AddPsychologist(Psychologist psychologist)
-        {
+        {            
             await CheckEmailForUniqueness(psychologist.Email);
             
             psychologist.Password = PasswordHash.HashPassword(psychologist.Password);
@@ -108,6 +109,34 @@ namespace BBSK_Psycho.BusinessLayer
             var result = await _psychologistsRepository.GetPsychologist(id);
             await CheckAccessOnlyForPsychologistAndManagers(id, claim);
             await _psychologistsRepository.UpdatePsychologist(psychologist, id);
+        }
+
+        public async Task<List<Psychologist>> GetPsychologistsByParametrs(Price price, List<int> problems, Gender? gender)
+        {
+            var psychologists = await _psychologistsRepository.GetAllPsychologistsWithFullInformations();
+
+            var result = (from psychologist in psychologists
+                          let psychologistProblems = psychologist.Problems
+                          from problem in psychologistProblems
+                          where psychologists.Any(a => problems.Contains(problem.Id))
+                          select psychologist).ToList();
+
+            if (gender is not null)
+            {
+                result = result.Where(p => p.Gender == gender).ToList();
+            }
+            
+            switch (price)
+            {
+                case Price.Ascending:
+                    result.Sort((x,y) => x.Price.CompareTo(y.Price));
+                    break;
+
+                case Price.Descending:
+                    result = result.OrderByDescending(p => p.Price).ToList();
+                    break;
+            }
+            return result;
         }
 
         public async Task CheckAccessOnlyForPsychologistAndManagers (int id, ClaimModel claim)

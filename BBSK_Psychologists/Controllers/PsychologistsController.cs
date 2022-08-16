@@ -133,7 +133,6 @@ namespace BBSK_Psycho.Controllers
             return Ok(_mapper.Map<List<OrderResponse>>(result));
         }
 
-
         [AuthorizeByRole(Role.Client)]
         [HttpPost("{psychologistId}/comments")]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
@@ -146,6 +145,17 @@ namespace BBSK_Psycho.Controllers
             var claims = this.GetClaims();
             var result = _psychologistServices.AddCommentToPsyhologist(_mapper.Map<Comment>(commentRequest), psychologistId, claims);
             return Created("", result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("search-by-param")]
+        [ProducesResponseType(typeof(GetAllPsychologistsResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult<List<GetAllPsychologistsResponse>>> GetPsychologistsByParametrs([FromQuery]FilterOptionRequest filterOptionRequest)
+        {
+            var result = await _psychologistServices.GetPsychologistsByParametrs(filterOptionRequest.Price, filterOptionRequest.Problems, filterOptionRequest.Gender);
+
+            return Ok(_mapper.Map<List<GetAllPsychologistsResponse>>(result));
         }
     }
 }

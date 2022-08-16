@@ -1,4 +1,5 @@
 ﻿using BBSK_Psycho.DataLayer.Entities;
+using BBSK_Psycho.DataLayer.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace BBSK_Psycho.BusinessLayer.Services.Interfaces
         Task <int> AddPsychologist(Psychologist psychologist);
         Task UpdatePsychologist(Psychologist psychologist, int id, ClaimModel claim);
         Task DeletePsychologist(int id, ClaimModel claim);
+
+        Task<List<Psychologist>> GetPsychologistsByParametrs(Price price, List<int> problems, Gender? gender);
     }
 }
