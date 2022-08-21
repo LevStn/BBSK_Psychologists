@@ -1,6 +1,7 @@
 ﻿using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BBSK_Psycho.DataLayer.Repositories
 {
@@ -13,38 +14,38 @@ namespace BBSK_Psycho.DataLayer.Repositories
             _context = context;
         }
 
-        public List<Order> GetOrders() => _context.Orders.Where(o => !o.IsDeleted).ToList();
-        public Order? GetOrderByPsychIdAndClientId(int psychId, int clientId) => _context.Orders.FirstOrDefault(o => o.Psychologist.Id == psychId && o.Client.Id == clientId);
+        public async Task<List<Order>> GetOrders() => await _context.Orders.Where(o => !o.IsDeleted).ToListAsync();
+        public async Task<Order?> GetOrderByPsychIdAndClientId(int psychId, int clientId) => await _context.Orders.FirstOrDefaultAsync(o => o.Psychologist.Id == psychId && o.Client.Id == clientId);
 
-        public Order? GetOrderById(int id) => _context.Orders.FirstOrDefault(o => o.Id == id);
+        public async Task<Order?> GetOrderById(int orderId) => await _context.Orders.Include(o => o.Client).Include(o => o.Psychologist).FirstOrDefaultAsync(o => o.Id == orderId);
         
 
-        public int AddOrder(Order order)
+        public async Task<int> AddOrder(Order order)
         {
-            _context.Orders.Add(order);
-            _context.SaveChanges();
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
 
             return order.Id;
         }
 
-        public void DeleteOrder(int id)
+        public async Task DeleteOrder(int orderId)
         {
-            Order order = _context.Orders.FirstOrDefault(o => o.Id == id);
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
 
             order.IsDeleted = true;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateOrderStatus(int orderId, OrderStatus orderStatus, OrderPaymentStatus paymentStatus)
+        public async Task UpdateOrderStatuses(int orderId, OrderStatus orderStatus, OrderPaymentStatus orderPaymentStatus)
         {
-            Order order = GetOrderById(orderId);
-            order.OrderStatus = (OrderStatus)orderStatus;
-            order.OrderPaymentStatus = (OrderPaymentStatus)paymentStatus;
+            Order order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+
+            order.OrderStatus = orderStatus;
+            order.OrderPaymentStatus = orderPaymentStatus;
 
             _context.Orders.Update(order);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-
     }
 }

@@ -77,7 +77,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void AddCommentToPsychologist_InValidClientId_ReturnEntityNotFoundException()
+        public async Task AddCommentToPsychologist_InValidClientId_ReturnEntityNotFoundException()
         {
             //given
             var comment = new Comment()
@@ -379,6 +379,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var psychologist = new Psychologist()
             {
                 Id = 1,
+                Email = "sad@asd.aa",
                 Orders = new List<Order>
                 {
                     new Order
