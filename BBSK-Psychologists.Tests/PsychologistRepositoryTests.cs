@@ -31,7 +31,7 @@ namespace BBSK_Psychologists.Tests
         //        .Options;
         //}
         [Test]
-        public void DeletePsychologist_WhenCorrectIdPassed_ThenSoftDeleteApplied()
+        public async Task DeletePsychologist_WhenCorrectIdPassed_ThenSoftDeleteApplied()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -51,7 +51,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetPsychologist_WhenCorrectIdPassed_ThenGetApplied()
+        public async Task GetPsychologist_WhenCorrectIdPassed_ThenGetApplied()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -62,14 +62,14 @@ namespace BBSK_Psychologists.Tests
             context.SaveChanges();
 
             //when
-            var actual = sut.GetPsychologist(expected.Id);
+            var actual = await sut.GetPsychologist(expected.Id);
 
             //then
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void AddPsychologist_WhenCorrectIdPassed_ThenReturnId()
+        public async Task AddPsychologist_WhenCorrectIdPassed_ThenReturnId()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -79,7 +79,7 @@ namespace BBSK_Psychologists.Tests
 
 
             //when
-            var actualId = sut.AddPsychologist(expected);
+            var actualId = await sut.AddPsychologist(expected);
             var actual = context.Psychologists.Find(actualId);
 
             //then
@@ -159,7 +159,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void GetAllPsychologists_WhenPassed_ThenGetAll()
+        public async Task GetAllPsychologists_WhenPassed_ThenGetAll()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -193,7 +193,7 @@ namespace BBSK_Psychologists.Tests
             context.SaveChanges();
 
             //when
-            var actual = sut.GetAllPsychologists();
+            var actual = await sut.GetAllPsychologists();
 
             //then
             Assert.IsNotEmpty(actual);
@@ -202,7 +202,7 @@ namespace BBSK_Psychologists.Tests
         }
 
         [Test]
-        public void AddCommentToPsyhologist_WhenCorrectIdPassed_ThenAddComment()
+        public async Task AddCommentToPsyhologist_WhenCorrectIdPassed_ThenAddComment()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -230,7 +230,7 @@ namespace BBSK_Psychologists.Tests
             context.Clients.Add(client);
             context.Psychologists.Add(psychologist);
             context.SaveChanges();
-            var actual = sut.AddCommentToPsyhologist(comment, psychologist.Id);
+            var actual = await sut.AddCommentToPsyhologist(comment, psychologist.Id);
             //when
             var expected = context.Comments.Find(actual.Id);
 
@@ -241,7 +241,7 @@ namespace BBSK_Psychologists.Tests
 
         [Test]
 
-        public void GetCommentsByPsychologistId()
+        public async Task GetCommentsByPsychologistId()
         {
             //given
             var context = new BBSK_PsychoContext(_dbContextOptions);
@@ -280,7 +280,7 @@ namespace BBSK_Psychologists.Tests
             context.SaveChanges();
 
             //when
-            var actual = sut.GetCommentsByPsychologistId(psychologist.Id);
+            var actual = await sut.GetCommentsByPsychologistId(psychologist.Id);
             //var expected = context.Psychologists.(psychologist.Id);
             var expected= new List<Comment> { comment};
             var isContains = actual.Contains(comment2);

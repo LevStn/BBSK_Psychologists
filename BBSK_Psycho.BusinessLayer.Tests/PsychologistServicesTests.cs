@@ -17,8 +17,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
     {
         private PsychologistService _sut;
         private Mock<IPsychologistsRepository> _psychologistsRepositoryMock;
-        private Mock <IOrdersRepository> _ordersRepositoryMock;
-        private Mock <IClientsRepository> _clientsRepositoryMock;
+        private Mock<IOrdersRepository> _ordersRepositoryMock;
+        private Mock<IClientsRepository> _clientsRepositoryMock;
         private ClaimModel _claims;
         //given
         //when
@@ -57,9 +57,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(order);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
             _psychologistsRepositoryMock.Setup(c => c.AddCommentToPsyhologist(It.Is<Comment>(c => c.Id == comment.Id && c.Text == comment.Text), (It.Is<int>(i => i == commentActual.Psychologist.Id))))
-                .Returns(comment);
+                .ReturnsAsync(comment);
             _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(client);
             var expectedComment = comment;
 
@@ -69,7 +69,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Email = "test@mail.ru"
             };
             //when
-            var actual = _sut.AddCommentToPsyhologist(commentActual, commentActual.Id, _claims).Result;
+            var actual = await _sut.AddCommentToPsyhologist(commentActual, commentActual.Id, _claims);
 
             //then
             Assert.AreEqual(expectedComment.Id, actual);
@@ -91,7 +91,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var psychologistId = 1;
             _claims = new();
 
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(p=>p ==comment.Psychologist.Id), It.Is<int>(c=>c == comment.Client.Id)).Result).Returns((Order?)null);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(p => p == comment.Psychologist.Id), It.Is<int>(c => c == comment.Client.Id))).Returns((Order?)null);
             //when
             //then
             Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(comment, psychologistId, _claims));
@@ -150,12 +150,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(order);
-           
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
+
             _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(client);
             var expectedComment = comment;
 
-            
+
             var psychologistId = 1;
             _claims = new()
             {
@@ -168,20 +168,20 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void AddPsychologist_ValidRequestPassed_ReturnId()
+        public async Task AddPsychologist_ValidRequestPassed_ReturnId()
         {
             //given
             var psych = new Psychologist()
             {
-                Email = Guid.NewGuid().ToString(),
-                Password = Guid.NewGuid().ToString()
+                Email = "lalrt@o.ru",
+                Password = "аоы48аыо"
             };
-            _psychologistsRepositoryMock.Setup(c => c.AddPsychologist(It.Is<Psychologist>(p=>p.Id == psych.Id)))
-                .Returns(1);
+            _psychologistsRepositoryMock.Setup(c => c.AddPsychologist(It.Is<Psychologist>(p => p.Id == psych.Id)))
+                .ReturnsAsync(1);
             var expectedId = 1;
-           
+
             //when
-            var actual = _sut.AddPsychologist(psych);
+            var actual = await _sut.AddPsychologist(psych);
             //then
             Assert.AreEqual(expectedId, actual);
             _psychologistsRepositoryMock.Verify(c => c.AddPsychologist(psych), Times.Once());
@@ -200,7 +200,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _psychologistsRepositoryMock.Setup(c => c.GetPsychologistByEmail("lala@o.ru")).ReturnsAsync(newPsych);
             //when
             //then
-            Assert.Throws<Exceptions.UniquenessException>(() => _sut.AddPsychologist(newPsych));
+            Assert.ThrowsAsync<Exceptions.UniquenessException>(() => _sut.AddPsychologist(newPsych));
             _psychologistsRepositoryMock.Verify(c => c.AddPsychologist(It.IsAny<Psychologist>()), Times.Never());
         }
 
@@ -210,15 +210,15 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //given
             _claims = new()
             {
-                Id=1
+                Id = 1
             };
             var psychologist = new Psychologist()
             {
-                Id=1
+                Id = 1
             };
 
             _psychologistsRepositoryMock.Setup(c => c.DeletePsychologist(psychologist.Id));
-            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(psychologist.Id)).Returns(psychologist);
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(psychologist.Id)).ReturnsAsync(psychologist);
             //when
             _sut.DeletePsychologist(psychologist.Id, _claims);
             //then
@@ -234,7 +234,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _psychologistsRepositoryMock.Setup(o => o.DeletePsychologist(fakeId));
             //when
             //then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.DeletePsychologist(fakeId, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.DeletePsychologist(fakeId, _claims));
             _psychologistsRepositoryMock.Verify(c => c.DeletePsychologist(It.IsAny<int>()), Times.Never);
         }
 
@@ -253,7 +253,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
 
             _psychologistsRepositoryMock.Setup(c => c.DeletePsychologist(psychologist.Id));
-            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(psychologist.Id)).Returns(psychologist);
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(psychologist.Id)).ReturnsAsync(psychologist);
             //when
             _sut.DeletePsychologist(psychologist.Id, _claims);
             //then
@@ -262,7 +262,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
 
         [Test]
-        public void GetAllPsychologists_WhenMethodIsCalled_PsychologistsReceived()
+        public async Task GetAllPsychologists_WhenMethodIsCalled_PsychologistsReceived()
         {
             //given
             var psychologists = new List<Psychologist>()
@@ -279,9 +279,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                     }
                 };
             _claims = new();
-            _psychologistsRepositoryMock.Setup(o => o.GetAllPsychologists()).Returns(psychologists);
+            _psychologistsRepositoryMock.Setup(o => o.GetAllPsychologists()).ReturnsAsync(psychologists);
             //when
-            var actual = _sut.GetAllPsychologists(_claims);
+            var actual = await _sut.GetAllPsychologists(_claims);
             //then
             Assert.NotNull(actual);
             Assert.True(actual.GetType() == typeof(List<Psychologist>));
@@ -292,13 +292,13 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void GetCommentsByPsychologistId_WhenThereIsAccess_ReturnComments()
+        public async Task GetCommentsByPsychologistId_WhenThereIsAccess_ReturnComments()
         {
             //given
 
             var psychologist = new Psychologist()
             {
-                Email= "test@mail.ru",
+                Email = "test@mail.ru",
                 Comments = new List<Comment>
                 {
                     new Comment
@@ -324,14 +324,14 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
             _claims = new()
             {
-                Email= "test@mail.ru"
+                Email = "test@mail.ru"
             };
-            _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).Returns(psychologist);
-            
-            _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).Returns(psychologist.Comments);
+            _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).ReturnsAsync(psychologist);
+
+            _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).ReturnsAsync(psychologist.Comments);
             var expected = psychologist.Comments;
             //when
-            var actual = _sut.GetCommentsByPsychologistId(psychologist.Id, _claims);
+            var actual = await _sut.GetCommentsByPsychologistId(psychologist.Id, _claims);
 
             //then
             expected.Should().BeEquivalentTo(actual);
@@ -346,12 +346,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 IsDeleted = true
             };
-            _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).Returns(psychologist.Comments);
+            _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).ReturnsAsync(psychologist.Comments);
             _claims = new() { Email = "test@mail.ru" };
             //when
 
             //then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetCommentsByPsychologistId(psychologist.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetCommentsByPsychologistId(psychologist.Id, _claims));
         }
 
         [Test]
@@ -360,20 +360,20 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //given
             var psychologist = new Psychologist()
             {
-                Id=1
+                Id = 1
             };
-            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i=>i == psychologist.Id))).Returns(psychologist);
-            _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).Returns(psychologist.Comments);
-            _claims = new() { Id = 2, Role=Role.Psychologist};
-            
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i => i == psychologist.Id))).ReturnsAsync(psychologist);
+            _psychologistsRepositoryMock.Setup(o => o.GetCommentsByPsychologistId(psychologist.Id)).ReturnsAsync(psychologist.Comments);
+            _claims = new() { Id = 2, Role = Role.Psychologist };
+
             //when
 
             //then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.GetCommentsByPsychologistId(psychologist.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.GetCommentsByPsychologistId(psychologist.Id, _claims));
         }
 
         [Test]
-        public void GetOrdersByPsychologistId_WhenThereIsAccess_ReturnOrders()
+        public async Task GetOrdersByPsychologistId_WhenThereIsAccess_ReturnOrders()
         {
             //given
             var psychologist = new Psychologist()
@@ -396,15 +396,15 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             };
             _claims = new()
             {
-                Id=1
+                Id = 1
             };
-            _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).Returns(psychologist);
-            
-            _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
+            _psychologistsRepositoryMock.Setup(o => o.GetPsychologist(psychologist.Id)).ReturnsAsync(psychologist);
+
+            _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).ReturnsAsync(psychologist.Orders);
             var expected = psychologist.Orders;
 
             //when
-            var actual = _sut.GetOrdersByPsychologistId(psychologist.Id, _claims);
+            var actual = await _sut.GetOrdersByPsychologistId(psychologist.Id, _claims);
 
             //then
             expected.Should().BeEquivalentTo(actual);
@@ -422,11 +422,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 Id = 1
             };
-            _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
+            _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).ReturnsAsync(psychologist.Orders);
             //when
 
             //then
-            Assert.Throws<Exceptions.EntityNotFoundException>(() => _sut.GetOrdersByPsychologistId(psychologist.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.GetOrdersByPsychologistId(psychologist.Id, _claims));
         }
 
         [Test]
@@ -437,14 +437,14 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             {
                 Id = 1
             };
-            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i=> i == psychologist.Id))).Returns(psychologist);
-            _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).Returns(psychologist.Orders);
-            _claims = new() { Id = 2, Role = Role.Psychologist};
+            _psychologistsRepositoryMock.Setup(p => p.GetPsychologist(It.Is<int>(i => i == psychologist.Id))).ReturnsAsync(psychologist);
+            _psychologistsRepositoryMock.Setup(o => o.GetOrdersByPsychologistsId(psychologist.Id)).ReturnsAsync(psychologist.Orders);
+            _claims = new() { Id = 2, Role = Role.Psychologist };
 
             //when
 
             //then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.GetOrdersByPsychologistId(psychologist.Id, _claims));
+            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.GetOrdersByPsychologistId(psychologist.Id, _claims));
         }
 
         [Test]
@@ -499,7 +499,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _sut.UpdatePsychologist(newPsychologist, id, _claims);
 
             //then
-            _psychologistsRepositoryMock.Verify(o => o.GetPsychologist(It.Is<int>(p=> p == id)), Times.Exactly(1));
+            _psychologistsRepositoryMock.Verify(o => o.GetPsychologist(It.Is<int>(p => p == id)), Times.Exactly(1));
             _psychologistsRepositoryMock.Verify(p => p.UpdatePsychologist(It.Is<Psychologist>(p => p.Price == expectedPsychologist.Price
              && p.Id == expectedPsychologist.Id
              && p.CheckStatus == expectedPsychologist.CheckStatus
@@ -544,8 +544,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _claims = new() { Id = 2, Role = Role.Psychologist };
             //when
             //then
-            Assert.Throws<Exceptions.AccessException>(() => _sut.UpdatePsychologist(newPsychologist, psychologist.Id, _claims));
-  
+            Assert.ThrowsAsync<Exceptions.AccessException>(() =>  _sut.UpdatePsychologist(newPsychologist, psychologist.Id, _claims));
+
         }
     }
-    }
+}

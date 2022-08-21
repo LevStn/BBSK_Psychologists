@@ -40,11 +40,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public ActionResult<PsychologistResponse> GetPsychologist(int id)
+        public async Task <ActionResult<PsychologistResponse>> GetPsychologist(int id)
         {
             var claims = this.GetClaims();
 
-            var result = _psychologistServices.GetPsychologist(id, claims);
+            var result = await _psychologistServices.GetPsychologist(id, claims);
             if (result == null)
                 return NotFound();
             else
@@ -56,10 +56,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(GetAllPsychologistsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<List<GetAllPsychologistsResponse>> GetAllPsychologists()
+        public async Task <ActionResult<List<GetAllPsychologistsResponse>>> GetAllPsychologists()
         {
             var claims = this.GetClaims();
-            var result = _psychologistServices.GetAllPsychologists(claims);
+            var result = await _psychologistServices.GetAllPsychologists(claims);
 
             return Ok(_mapper.Map<List<GetAllPsychologistsResponse>>(result));
         }
@@ -69,7 +69,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult<decimal> GetAveragePsychologistPrice()
+        public async Task <ActionResult<decimal>> GetAveragePsychologistPrice()
         {
             return 0.20m;
         }
@@ -80,10 +80,9 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<int> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
+        public async Task <ActionResult<int>> AddPsychologist([FromBody] AddPsychologistRequest psychologistRequest)
         {
-            var tmp = _mapper.Map<Psychologist>(psychologistRequest);
-            var result = _psychologistServices.AddPsychologist(_mapper.Map<Psychologist>(psychologistRequest));
+            var result = await _psychologistServices.AddPsychologist(_mapper.Map<Psychologist>(psychologistRequest));
             return Created("", result);
         }
 
@@ -93,10 +92,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
+        public async Task <ActionResult> UpdatePsychologist([FromBody] UpdatePsychologistRequest psychologistRequest, int id)
         {
             var claims = this.GetClaims();
-            _psychologistServices.UpdatePsychologist(_mapper.Map<Psychologist>(psychologistRequest), id, claims);
+            await _psychologistServices.UpdatePsychologist(_mapper.Map<Psychologist>(psychologistRequest), id, claims);
             return NoContent();
         }
 
@@ -106,10 +105,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult DeletePsychologist(int id)
+        public async Task <ActionResult> DeletePsychologist(int id)
         {
             var claims = this.GetClaims();
-            _psychologistServices.DeletePsychologist(id, claims);
+            await _psychologistServices.DeletePsychologist(id, claims);
             return NoContent();
         }
 
@@ -117,10 +116,10 @@ namespace BBSK_Psycho.Controllers
         [HttpGet("{psychologistId}/comments")]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-        public ActionResult<List<GetCommentsByPsychologistIdResponse>> GetCommentsByPsychologistId(int psychologistId)
+        public async Task <ActionResult<List<GetCommentsByPsychologistIdResponse>>> GetCommentsByPsychologistId(int psychologistId)
         {
             var claims = this.GetClaims();
-            var result = _psychologistServices.GetCommentsByPsychologistId(psychologistId, claims);
+            var result = await _psychologistServices.GetCommentsByPsychologistId(psychologistId, claims);
             return Ok(_mapper.Map<List<GetCommentsByPsychologistIdResponse>>(result));
         }
 
@@ -128,10 +127,10 @@ namespace BBSK_Psycho.Controllers
         [HttpGet("{psychologistId}/orders")]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-        public ActionResult <List<OrderResponse>> GetOrdersByPsychologistId(int id)
+        public async Task <ActionResult <List<OrderResponse>>> GetOrdersByPsychologistId(int id)
         {
             var claims = this.GetClaims();
-            var result = _psychologistServices.GetOrdersByPsychologistId(id, claims);
+            var result = await _psychologistServices.GetOrdersByPsychologistId(id, claims);
             return Ok(_mapper.Map<List<OrderResponse>>(result));
         }
 
@@ -143,7 +142,7 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<int> AddCommentToPsyhologist([FromBody] CommentRequest commentRequest, int psychologistId)
+        public async Task <ActionResult<int>> AddCommentToPsyhologist([FromBody] CommentRequest commentRequest, int psychologistId)
         {
             var claims = this.GetClaims();
             var result = _psychologistServices.AddCommentToPsyhologist(_mapper.Map<Comment>(commentRequest), psychologistId, claims);
