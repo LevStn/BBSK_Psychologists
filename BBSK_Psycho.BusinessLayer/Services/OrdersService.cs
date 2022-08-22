@@ -54,7 +54,7 @@ namespace BBSK_Psycho.BusinessLayer.Services
         {
             _ordersValidator.CheckClaimForRoles(claim, Role.Manager, Role.Client);
 
-            Psychologist? psychologist = _psychologistsRepository.GetPsychologist(order.Psychologist.Id);
+            Psychologist? psychologist = await _psychologistsRepository.GetPsychologist(order.Psychologist.Id);
             
             if (psychologist == null)
                 throw new EntityNotFoundException($"Психолог с ID {order.Psychologist.Id} не найден");
