@@ -8,23 +8,19 @@ public class SearchByFilter : ISearchByFilter
 {
     public async Task<List<Psychologist>> GetPsychologistsByParametrs(Price price, List<int> problems, Gender? gender, List<Psychologist> psychologists)
     {
-        var problemSampling = (from psychologist in psychologists
-                               let psychologistProblems = psychologist.Problems
-                               from problem in psychologistProblems
-                               where psychologists.Any(a => problems.Contains(problem.Id))
-                               select psychologist).ToList();
+        var psychologistsSampling = await GetPsychologistsByProblem(psychologists, problems);
+       
         switch (price)
         {
             case Price.Ascending:
-                problemSampling.Sort((x, y) => x.Price.CompareTo(y.Price));
+                psychologistsSampling.Sort((x, y) => x.Price.CompareTo(y.Price));
                 break;
 
             case Price.Descending:
-                problemSampling = problemSampling.OrderByDescending(p => p.Price).ToList();
+                psychologistsSampling = psychologistsSampling.OrderByDescending(p => p.Price).ToList();
                 break;
         }
-
-        var correctGradation = problemSampling.GroupBy(i => i)
+        var correctGradation = psychologistsSampling.GroupBy(i => i)
             .OrderByDescending(group => group.Count())
             .Select(c => c.Key).ToList();
 
@@ -32,7 +28,25 @@ public class SearchByFilter : ISearchByFilter
         {
             correctGradation = correctGradation.Where(p => p.Gender == gender).ToList();
         }
-
         return correctGradation;
+    }
+
+    public async Task<List<Psychologist>> GetPsychologistsByProblem(List<Psychologist> psychologists, List<int> problems)
+    {
+        var result = new List<Psychologist>();
+
+        foreach(var psychologist in psychologists)
+        {
+            var psychologistProblems = psychologist.Problems;
+
+            foreach(var psychologistProblem in psychologistProblems)
+            {
+                if (psychologists.Any(p => problems.Contains(psychologistProblem.Id)))
+                {
+                    result.Add(psychologist);
+                }
+            }
+        }
+        return result;
     }
 }
