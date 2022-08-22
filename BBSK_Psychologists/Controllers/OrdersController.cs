@@ -1,31 +1,27 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
-using BBSK_Psycho.DataLayer.Repositories.Interfaces;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
+using BBSK_Psycho.BusinessLayer;
+using BBSK_Psycho.Models.Responses;
 namespace BBSK_Psycho.Controllers
 {
-
     [ApiController]
     [Authorize]
     [Produces("application/json")]
     [Route("[controller]")]
-
     public class OrdersController : ControllerBase
     {
-        private readonly IOrdersRepository _ordersRepository;
+        private readonly IOrdersService _ordersService;
         private readonly IMapper _mapper;
-        
-        public OrdersController(IOrdersRepository ordersRepository, IMapper mapper)
+
+        public OrdersController(IOrdersService ordersService, IMapper mapper)
         {
-            _ordersRepository = ordersRepository;
+            _ordersService = ordersService;
             _mapper = mapper;
         }
 
@@ -34,11 +30,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [HttpGet]
-        public ActionResult<OrderResponse> GetAllOrders()
+        public async Task<ActionResult<List<AllOrdersResponse>>> GetOrders()
         {
-            var orders = _ordersRepository.GetOrders();
+            ClaimModel claim = this.GetClaims();
 
-            return Ok(orders);
+            return Ok(_mapper.Map<List<AllOrdersResponse>>(await _ordersService.GetOrders(claim)));
         }
 
 
@@ -47,33 +43,26 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public ActionResult<OrderResponse> GetOrderById([FromRoute] int orderId)
+        public async Task<ActionResult<OrderResponse>> GetOrderById([FromRoute] int orderId)
         {
-            Order order = _ordersRepository.GetOrderById(orderId);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(order);
+            ClaimModel claim = this.GetClaims();
+            return Ok(_mapper.Map<OrderResponse>(await _ordersService.GetOrderById(orderId, claim)));
         }
 
 
         [AuthorizeByRole(Role.Client)]
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int),  StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<int> AddOrder([FromBody] OrderCreateRequest request)
+        public async Task<ActionResult<int>> AddOrder([FromBody] OrderCreateRequest request)
         {
-            Order newOrder = new Order();
-
-            _mapper.Map(request, newOrder);
-            
-            _ordersRepository.AddOrder(newOrder);
-
+            ClaimModel claim = this.GetClaims();
+            Order newOrder = _mapper.Map<Order>(request);
+            newOrder.Client = new() {Id = request.ClientId};
+            newOrder.Psychologist = new() {Id = request.PsychologistId};
+            await _ordersService.AddOrder(newOrder, claim);
             return Created($"{this.GetRequestPath()}/{newOrder.Id}", newOrder.Id);
         }
 
@@ -84,10 +73,10 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-        public ActionResult DeleteOrderById([FromRoute] int orderId)
+        public async Task<ActionResult> DeleteOrderById([FromRoute] int orderId)
         {
-            _ordersRepository.DeleteOrder(orderId);
-
+            ClaimModel claim = this.GetClaims();
+            await _ordersService.DeleteOrder(orderId, claim);
             return NoContent();
         }
 
@@ -98,11 +87,11 @@ namespace BBSK_Psycho.Controllers
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-
-        public ActionResult UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
+        public async Task<ActionResult> UpdateOrderStatusById([FromRoute] int orderId, [FromBody] OrderStatusPatchRequest orderStatusPatch)
         {
-            _ordersRepository.UpdateOrderStatus(orderId, orderStatusPatch.OrderStatus, orderStatusPatch.OrderPaymentStatus);
+            ClaimModel claim = this.GetClaims();
 
+            await _ordersService.UpdateOrderStatuses(orderId, orderStatusPatch.OrderStatus, orderStatusPatch.OrderPaymentStatus, claim);
             return NoContent();
         } 
     }

@@ -8,7 +8,7 @@ namespace BBSK_Psycho.Models.Requests;
 public class FilterOptionRequest
 {
     [Required(ErrorMessage = ApiErrorMessage.PriceIsRequired)]
-    [EnumDataType(typeof(Price), ErrorMessage = ApiErrorMessage.RangeIsError))]
+    [EnumDataType(typeof(Price), ErrorMessage = ApiErrorMessage.RangeIsError)]
     public Price Price{ get; set; }
 
     [Required(ErrorMessage = ApiErrorMessage.NoProblemSelected)]

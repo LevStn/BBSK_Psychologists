@@ -1,7 +1,7 @@
 ﻿
 using BBSK_Psycho.DataLayer.Entities;
 
-namespace BBSK_Psycho.BusinessLayer.Services;
+namespace BBSK_Psycho.BusinessLayer.Services.Interfaces;
 
 public interface IClientsServices
 {

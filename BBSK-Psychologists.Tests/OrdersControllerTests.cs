@@ -9,109 +9,185 @@ using BBSK_Psycho.Models;
 using NUnit.Framework;
 using AutoMapper;
 using Moq;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer;
+using BBSK_Psycho;
+using BBSK_Psycho.Models.Responses;
+using System.Security.Claims;
 
 namespace BBSK_Psychologists.Tests
 {
     public class OrdersControllerTests
     {
         private OrdersController _sut;
-        private Mock<IOrdersRepository> _ordersRepository;
-        private Mock<IMapper> _mapper;
+        private Mock<OrdersController> _ordersController;
+        private Mock<IOrdersService> _ordersService;
+        private ClaimModel _claimModel;
+        private IMapper _mapper;
 
 
         [SetUp]
         public void Setup()
         {
-            _mapper = new Mock<IMapper>();
-            _ordersRepository = new Mock<IOrdersRepository>();
-            _sut = new OrdersController(_ordersRepository.Object, _mapper.Object);
+            _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<MapperConfigStorage>()));
+            _ordersController = new Mock<OrdersController>();
+            _ordersService = new Mock<IOrdersService>();
+            _sut = new OrdersController(_ordersService.Object, _mapper);
+            _claimModel = new ClaimModel();
+
+            ClaimsPrincipal user = new();
+            _sut.ControllerContext = new ControllerContext();
+            _sut.ControllerContext.HttpContext = new DefaultHttpContext() { User = user };
         }
 
         [Test]
-        public void GetOrders_NoValidationRequired_RequestedTypeReceived()
+        public async Task GetOrders_ValidRolePassed_RequestedTypeReceived()
         {
             //given
-            var allOrders = new List<Order>();
-            allOrders.Add(OrdersHelper.GetOrder());
-            allOrders.Add(OrdersHelper.GetOrder());
+            List<Order> allOrders = new List<Order>() { OrdersHelper.GetOrder(), OrdersHelper.GetOrder() };
+            
+            _claimModel.Role = Role.Manager;
 
-            _ordersRepository.Setup(c => c.GetOrders()).Returns(allOrders);
+            _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", Role.Manager, 58);
+
+            _ordersService.Setup(c => c.GetOrders(_claimModel)).ReturnsAsync(allOrders);
 
             //when
-            var actual = _sut.GetAllOrders();
+            var actual = await _sut.GetOrders();
 
             //then
             var actualResult = actual.Result as ObjectResult;
-
+            var actualValues = actualResult.Value as List<AllOrdersResponse>;
 
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
-            Assert.IsNotNull(actualResult);
+            
+            Assert.IsNotNull(actual);
 
-            _ordersRepository.Verify(c => c.GetOrders(), Times.Once);
+            for(int i = 0; i < allOrders.Count; i++)
+            {
+                Assert.AreEqual(actualValues[i].Duration, allOrders[i].Duration);
+                Assert.AreEqual(actualValues[i].IsDeleted, allOrders[i].IsDeleted);
+                Assert.AreEqual(actualValues[i].Message, allOrders[i].Message);
+                Assert.AreEqual(actualValues[i].OrderDate, allOrders[i].OrderDate);
+                Assert.AreEqual(actualValues[i].OrderPaymentStatus, allOrders[i].OrderPaymentStatus);
+                Assert.AreEqual(actualValues[i].OrderStatus, allOrders[i].OrderStatus);
+                Assert.AreEqual(actualValues[i].PayDate, allOrders[i].PayDate);
+                Assert.AreEqual(actualValues[i].SessionDate, allOrders[i].SessionDate);
+            }
+
+            _ordersService.Verify(c => c.GetOrders(_claimModel), Times.Once);
         }
 
-        [Test]
-        public void GetOrderById_ValidIdPassed_OkReceived()
+        [TestCase(Role.Manager)]
+        [TestCase(Role.Client)]
+        [TestCase(Role.Psychologist)]
+        public async Task GetOrderById_ValidIdPassed_OkReceived(Role role)
         {
             //given
-            var expectedOrder = OrdersHelper.GetOrder();
+            Order expectedOrder = OrdersHelper.GetOrder();
 
-            _ordersRepository.Setup(c => c.GetOrderById(expectedOrder.Id)).Returns(expectedOrder);
+            _claimModel.Role = role;
+
+            _ordersService.Setup(c => c.GetOrderById(expectedOrder.Id, _claimModel)).ReturnsAsync(expectedOrder);
+
+            _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", role, 58);
 
             //when
-            var actual = _sut.GetOrderById(expectedOrder.Id);
+            var actual = await _sut.GetOrderById(expectedOrder.Id);
 
             //then
             var actualResult = actual.Result as ObjectResult;
+            var actualValue = actualResult.Value as OrderResponse;
 
 
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
-            Assert.AreEqual(expectedOrder.GetType(), actualResult.Value.GetType());
+            Assert.AreEqual(actualResult.Value.GetType(), typeof(OrderResponse));
 
-            _ordersRepository.Verify(c => c.GetOrderById(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual((SessionDuration)actualValue.Duration, expectedOrder.Duration);
+            Assert.AreEqual(actualValue.Message, expectedOrder.Message);
+            Assert.AreEqual(actualValue.OrderDate, expectedOrder.OrderDate);
+            Assert.AreEqual(actualValue.OrderPaymentStatus, expectedOrder.OrderPaymentStatus);
+            Assert.AreEqual(actualValue.OrderStatus, expectedOrder.OrderStatus);
+            Assert.AreEqual(actualValue.PayDate, expectedOrder.PayDate);
+            Assert.AreEqual(actualValue.SessionDate, expectedOrder.SessionDate);
+
+            _ordersService.Verify(c => c.GetOrderById(expectedOrder.Id, _claimModel), Times.Once);
         }
 
-        [Test]
-        public void AddOrder_ValidRequestPassed_CreatedResultReceived()
+        [TestCase(Role.Manager)]
+        [TestCase(Role.Client)]
+        public async Task AddOrder_ValidRequestPassed_CreatedResultReceived(Role role)
         {
             //given
-            OrderCreateRequest givenRequest = new();
-            _ordersRepository.Setup(c => c.AddOrder(It.IsAny<Order>())).Returns(1);
+            _claimModel.Role = role;
+
+            _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", role, 58);
+
+            Client client = OrdersHelper.GetClient();
+            Psychologist psychologist = OrdersHelper.GetPsychologist();
+
+            OrderCreateRequest givenRequest = new()
+            {
+                ClientId = client.Id,
+                Cost = 1100,
+                Duration = SessionDuration.OneAcademicHour,
+                Message = "",
+                OrderDate = DateTime.Now,
+                OrderPaymentStatus = OrderPaymentStatus.Paid,
+                OrderStatus = OrderStatus.Created,
+                PayDate = DateTime.Now,
+                PsychologistId = psychologist.Id,
+                SessionDate = DateTime.Now
+            };
+
+            Order expectedOrder = _mapper.Map<Order>(givenRequest);
+
+            expectedOrder.Client = client;
+            expectedOrder.Psychologist = psychologist;
+
+            _ordersService.Setup(c => c.AddOrder(expectedOrder, _claimModel));
 
             //when
-            var actual = _sut.AddOrder(givenRequest);
+            var actual = await _sut.AddOrder(givenRequest);
 
             //then
             var actualResult = actual.Result as CreatedResult;
 
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
 
-            _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Once);
+            _ordersService.Verify(c => c.AddOrder(expectedOrder, _claimModel), Times.Once);
         }
 
         [Test]
-        public void DeleteOrderById_ValidIdPassed_NoContentReceived()
+        public async Task DeleteOrderById_ValidIdPassed_NoContentReceived()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
 
+            _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", Role.Manager, 58);
+            _claimModel.Role = Role.Manager;
+
+            _ordersService.Setup(c => c.DeleteOrder(givenOrder.Id, _claimModel));
+
             //when
-            var actual = _sut.DeleteOrderById(givenOrder.Id);
+            var actual = await _sut.DeleteOrderById(givenOrder.Id);
 
             //then
             var actualResult = actual as NoContentResult;
 
             Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
 
-            _ordersRepository.Verify(c => c.DeleteOrder(It.IsAny<int>()), Times.Once);
+            _ordersService.Verify(c => c.DeleteOrder(givenOrder.Id, _claimModel), Times.Once);
         }
 
         [Test]
-        public void UpdateOrderStatusById_ValidRequestAndIdPassed_NoContentReceived()
+        public async Task UpdateOrderStatusById_ValidRequestAndIdPassed_NoContentReceived()
         {
             //given
             Order givenOrder = OrdersHelper.GetOrder();
-            //givenOrder.Id = 42;
+
+            _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", Role.Manager, 58);
+            _claimModel.Role = Role.Manager;
 
             var givenRequest = new OrderStatusPatchRequest() 
             { 
@@ -119,17 +195,17 @@ namespace BBSK_Psychologists.Tests
                 OrderStatus = OrderStatus.Cancelled
             };
 
-            _ordersRepository.Setup(c => c.UpdateOrderStatus(givenOrder.Id, givenRequest.OrderStatus, givenRequest.OrderPaymentStatus));
+            _ordersService.Setup(c => c.UpdateOrderStatuses(givenOrder.Id, givenRequest.OrderStatus, givenRequest.OrderPaymentStatus, _claimModel));
 
             //when
-            var actual = _sut.UpdateOrderStatusById(givenOrder.Id, givenRequest);
+            var actual = await _sut.UpdateOrderStatusById(givenOrder.Id, givenRequest);
 
             //then
             var actualResult = actual as NoContentResult;
 
             Assert.AreEqual(StatusCodes.Status204NoContent, actualResult.StatusCode);
 
-            _ordersRepository.Verify(c => c.UpdateOrderStatus(It.IsAny<int>(), It.IsAny<OrderStatus>(), It.IsAny<OrderPaymentStatus>()), Times.Once);
+            _ordersService.Verify(c => c.UpdateOrderStatuses(givenOrder.Id, givenRequest.OrderStatus, givenRequest.OrderPaymentStatus, _claimModel), Times.Once);
         }
     }
 }

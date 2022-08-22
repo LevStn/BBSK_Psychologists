@@ -3,7 +3,6 @@ using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.Models;
 using BBSK_Psycho.Models.Requests;
 using BBSK_Psycho.Models.Responses;
-
 namespace BBSK_Psycho;
 
 public class MapperConfigStorage : Profile
@@ -35,16 +34,16 @@ public class MapperConfigStorage : Profile
         CreateMap<Comment, CommentResponse>();
         CreateMap<ApplicationForPsychologistSearch, SearchResponse>();
         CreateMap<SearchRequest, ApplicationForPsychologistSearch>();
-        CreateMap<OrderCreateRequest, Order>();
-        CreateMap<OrderResponse, Order>();
-        CreateMap<Order, OrderResponse>();
+        CreateMap<OrderCreateRequest, Order>()
+            .ForMember(dest => dest.Client, opt => opt.Ignore())
+            .ForMember(dest => dest.Psychologist, opt => opt.Ignore());
+        CreateMap<Order, OrderResponse>()
+            .ForMember(dest => dest.psychologistResponse, opt => opt.MapFrom(src => src.Psychologist));
+        CreateMap<Order, AllOrdersResponse>();
 
         CreateMap<OrderCreateRequest, Client>()
-
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
-
         CreateMap<OrderCreateRequest, Psychologist>()
-
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
     }
 }

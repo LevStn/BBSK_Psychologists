@@ -10,6 +10,7 @@ using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using AutoMapper;
 using BBSK_Psycho.BusinessLayer;
+using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 
 namespace BBSK_Psycho.Controllers;
 

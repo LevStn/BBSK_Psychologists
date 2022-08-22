@@ -61,7 +61,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(order);
             _psychologistsRepositoryMock.Setup(c => c.AddCommentToPsyhologist(It.Is<Comment>(c => c.Id == comment.Id && c.Text == comment.Text), (It.Is<int>(i => i == commentActual.Psychologist.Id))))
                 .ReturnsAsync(comment);
             _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(client);
@@ -81,7 +81,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         }
 
         [Test]
-        public void AddCommentToPsychologist_InValidClientId_ReturnEntityNotFoundException()
+        public async Task AddCommentToPsychologist_InValidClientId_ReturnEntityNotFoundException()
         {
             //given
             var comment = new Comment()
@@ -95,15 +95,15 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var psychologistId = 1;
             _claims = new();
 
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(p => p == comment.Psychologist.Id), It.Is<int>(c => c == comment.Client.Id))).Returns((Order?)null);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(p => p == comment.Psychologist.Id), It.Is<int>(c => c == comment.Client.Id))).ReturnsAsync((Order?)null);
             //when
             //then
-            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(comment, psychologistId, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.AddCommentToPsyhologist(comment, psychologistId, _claims));
         }
 
 
         [Test]
-        public void AddCommentToPsychologist_CommonOrderIsNotFound_ReturnAccessException()
+        public async Task AddCommentToPsychologist_CommonOrderIsNotFound_ReturnEntityNotFoundException()
         {
             //given
             var comment = new Comment();
@@ -126,11 +126,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //when
 
             //then
-            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(commentActual, psychologistId, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.AddCommentToPsyhologist(commentActual, psychologistId, _claims));
         }
 
         [Test]
-        public void AddCommentToPsychologist_InvalidRolePassed_ReturnAccessdenied()
+        public async Task AddCommentToPsychologist_InvalidRolePassed_ReturnAccessdenied()
         {
             //given
             var comment = new Comment()
@@ -154,7 +154,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(order);
 
             _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(client);
             var expectedComment = comment;
@@ -383,6 +383,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var psychologist = new Psychologist()
             {
                 Id = 1,
+                Email = "sad@asd.aa",
                 Orders = new List<Order>
                 {
                     new Order

@@ -78,7 +78,7 @@ namespace BBSK_Psychologists.Tests.ModelControllerSource
                     Problems = null,
                     Gender = Gender.Male
                 },
-                ApiErrorMessage.ProblemsIsRequired
+                ApiErrorMessage.NoProblemSelected
             };
         }
     }    
