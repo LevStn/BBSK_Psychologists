@@ -77,12 +77,14 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
         public async Task DeleteOrder(int id, ClaimModel claim)
         {
-            _ordersValidator.CheckClaimForRoles(claim, Role.Manager);
+            _ordersValidator.CheckClaimForRoles(claim, Role.Manager, Role.Client);
 
             Order? order = await _ordersRepository.GetOrderById(id);
 
             if (order == null)
                 throw new EntityNotFoundException($"Заказ с ID {id} не был найден");
+
+            _ordersValidator.CheckClaimForEmail(claim, order);
 
             await _ordersRepository.DeleteOrder(id);
         }

@@ -67,7 +67,7 @@ namespace BBSK_Psycho.Controllers
         }
 
 
-        [Authorize(Roles = nameof(Role.Manager))]
+        [AuthorizeByRole(Role.Client)]
         [HttpDelete("{orderId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
