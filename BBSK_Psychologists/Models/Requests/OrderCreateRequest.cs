@@ -6,7 +6,7 @@ namespace BBSK_Psycho.Models
 {
     public class OrderCreateRequest
     {
-        public int ClientId { get; set; }
+        //public int ClientId { get; set; }
         public int PsychologistId { get; set; }
 
         [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]

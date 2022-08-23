@@ -60,7 +60,7 @@ namespace BBSK_Psycho.Controllers
         {
             ClaimModel claim = this.GetClaims();
             Order newOrder = _mapper.Map<Order>(request);
-            newOrder.Client = new() {Id = request.ClientId};
+            newOrder.Client = new() {Id = claim.Id};
             newOrder.Psychologist = new() {Id = request.PsychologistId};
             await _ordersService.AddOrder(newOrder, claim);
             return Created($"{this.GetRequestPath()}/{newOrder.Id}", newOrder.Id);
