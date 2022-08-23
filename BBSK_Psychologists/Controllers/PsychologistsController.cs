@@ -127,10 +127,10 @@ namespace BBSK_Psycho.Controllers
         [HttpGet("{psychologistId}/orders")]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-        public async Task <ActionResult <List<OrderResponse>>> GetOrdersByPsychologistId(int id)
+        public async Task <ActionResult <List<OrderResponse>>> GetOrdersByPsychologistId(int psychologistId)
         {
             var claims = this.GetClaims();
-            var result = await _psychologistServices.GetOrdersByPsychologistId(id, claims);
+            var result = await _psychologistServices.GetOrdersByPsychologistId(psychologistId, claims);
             return Ok(_mapper.Map<List<OrderResponse>>(result));
         }
 
