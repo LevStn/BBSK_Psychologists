@@ -16,7 +16,7 @@ namespace BBSK_Psychologists.Tests
             OrderCreateRequest order = new() 
             { 
                 //ClientId = 1, 
-                Cost = 1200, 
+                //Cost = 1200, 
                 Duration = SessionDuration.OneAcademicHour, 
                 Message = null, 
                 OrderDate = DateTime.Now, 

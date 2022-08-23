@@ -9,8 +9,8 @@ namespace BBSK_Psycho.Models
         //public int ClientId { get; set; }
         public int PsychologistId { get; set; }
 
-        [Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
-        public decimal Cost { get; set; }
+        //[Required(ErrorMessage = ApiErrorMessage.CostIsRequired)]
+        //public decimal Cost { get; set; }
 
         public SessionDuration Duration { get; set; }
 

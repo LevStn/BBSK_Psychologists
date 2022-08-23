@@ -61,6 +61,8 @@ namespace BBSK_Psycho.BusinessLayer.Services
 
             order.Psychologist = psychologist;
 
+            order.Cost = order.Psychologist.Price * (int)order.Duration;
+
             _ordersValidator.IsOrderValid(order);
 
             Client? client = await _clientsRepository.GetClientById(order.Client.Id);
