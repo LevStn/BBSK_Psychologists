@@ -13,6 +13,7 @@ using BBSK_Psycho.BusinessLayer;
 using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using BBSK_Psycho.Extensions;
 using BBSK_Psycho.Controllers;
+using BBSK_Psycho.BusinessLayer.Services.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +76,11 @@ builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IClientsServices, ClientsService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddScoped<IOrdersValidator, OrdersValidator>();
+builder.Services.AddScoped<IPsychologistsValidator, PsychologistsValidator>();
+builder.Services.AddScoped<IClientsValidator, ClientsValidator>();
+builder.Services.AddScoped<IApplicationsValidator, ApplicationsValidator>();
+
+
 
 builder.Services.AddScoped<IApplicationForPsychologistSearchRepository, ApplicationForPsychologistSearchRepository>();
 builder.Services.AddScoped<IApplicationForPsychologistSearchServices, ApplicationForPsychologistSearchServices>();
