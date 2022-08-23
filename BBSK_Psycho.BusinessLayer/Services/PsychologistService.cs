@@ -18,7 +18,8 @@ namespace BBSK_Psycho.BusinessLayer
         public PsychologistService(IPsychologistsValidator psychologistsValidator,
                                    IPsychologistsRepository psychologistsRepository, 
                                    IClientsRepository clientsRepository, 
-                                   IOrdersRepository ordersRepository)
+                                   IOrdersRepository ordersRepository,
+                                   ISearchByFilter searchByFilter)
         {
             _psychologistsValidator = psychologistsValidator;
             _psychologistsRepository = psychologistsRepository;
@@ -115,6 +116,11 @@ namespace BBSK_Psycho.BusinessLayer
             var result = await _psychologistsRepository.GetPsychologist(id);
             await _psychologistsValidator.CheckAccessOnlyForPsychologistAndManagers(id, claim);
             await _psychologistsRepository.UpdatePsychologist(psychologist, id);
+        }
+        public async Task<List<Psychologist>> GetPsychologistsByFilter(Price price, List<int> problems, Gender? gender)
+        {
+            var psychologists = await _psychologistsRepository.GetAllPsychologistsWithFullInformations();
+            return await _searchByFilter.GetPsychologistsByParametrs(price, problems, gender, psychologists);
         }
     }
 }

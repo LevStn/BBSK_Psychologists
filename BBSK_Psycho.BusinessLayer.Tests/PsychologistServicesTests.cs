@@ -36,12 +36,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _ordersRepositoryMock = new Mock<IOrdersRepository>();
             _clientsRepositoryMock = new Mock<IClientsRepository>();
             _searchByFilter = new SearchByFilter();
-            _sut = new PsychologistService(_psychologistsRepositoryMock.Object, _clientsRepositoryMock.Object, _ordersRepositoryMock.Object, _searchByFilter);
             _psychologistsValidator = new PsychologistsValidator(_psychologistsRepositoryMock.Object);
             _sut = new PsychologistService(_psychologistsValidator,
                                            _psychologistsRepositoryMock.Object, 
                                            _clientsRepositoryMock.Object, 
-                                           _ordersRepositoryMock.Object);
+                                           _ordersRepositoryMock.Object,
+                                           _searchByFilter);
         }
 
         [Test]
