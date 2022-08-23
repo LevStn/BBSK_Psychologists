@@ -1,4 +1,5 @@
 ﻿using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer.Services.Validators;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
@@ -19,6 +20,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         private Mock<IPsychologistsRepository> _psychologistsRepositoryMock;
         private Mock<IOrdersRepository> _ordersRepositoryMock;
         private Mock<IClientsRepository> _clientsRepositoryMock;
+        private IPsychologistsValidator _psychologistsValidator;
+
         private ClaimModel _claims;
         //given
         //when
@@ -29,7 +32,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _psychologistsRepositoryMock = new Mock<IPsychologistsRepository>();
             _ordersRepositoryMock = new Mock<IOrdersRepository>();
             _clientsRepositoryMock = new Mock<IClientsRepository>();
-            _sut = new PsychologistService(_psychologistsRepositoryMock.Object, _clientsRepositoryMock.Object, _ordersRepositoryMock.Object);
+            _psychologistsValidator = new PsychologistsValidator(_psychologistsRepositoryMock.Object);
+            _sut = new PsychologistService(_psychologistsValidator,
+                                           _psychologistsRepositoryMock.Object, 
+                                           _clientsRepositoryMock.Object, 
+                                           _ordersRepositoryMock.Object);
         }
 
         [Test]
