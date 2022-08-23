@@ -27,7 +27,7 @@ namespace BBSK_Psychologists.Tests
         private PsychologistsController _sut;
 
         private IMapper _mapper;
-        private Mock <IPsychologistService> _psychologistService;
+        private Mock<IPsychologistService> _psychologistService;
         private ClaimModel _claims;
 
         [SetUp]
@@ -35,10 +35,10 @@ namespace BBSK_Psychologists.Tests
         {
             _mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<MapperConfigStorage>()));
             _psychologistService = new Mock<IPsychologistService>();
-            _sut = new PsychologistsController( _psychologistService.Object, _mapper);
+            _sut = new PsychologistsController(_psychologistService.Object, _mapper);
             _claims = new ClaimModel();
         }
-        
+
         private AddPsychologistRequest psychologistDataAdd = new AddPsychologistRequest
         {
             Name = "лял",
@@ -77,26 +77,26 @@ namespace BBSK_Psychologists.Tests
             Password = "1235345"
         };
 
-       
+
 
         [Test]
         public async Task AddCommentForPsy_ValidRequestPassed_CreatedResultReceived()
         {
             // given
-            
+
             var comment = new Comment()
             {
-                Id =121212
+                Id = 121212
             };
             _psychologistService.Setup(c => c.AddCommentToPsyhologist(It.IsAny<Comment>(), It.IsAny<int>(), It.IsAny<ClaimModel>()))
                 .ReturnsAsync(comment.Id);
             var request = new CommentRequest
             {
-              ClientId=1,
-              PsychologistId= 1,
-              Text = "kdffk",
-              Rating= 1,
-              Date= DateTime.Now
+                ClientId = 1,
+                PsychologistId = 1,
+                Text = "kdffk",
+                Rating = 1,
+                Date = DateTime.Now
             };
             int psId = 2;
             ClaimModel claimModel = new ClaimModel
@@ -143,7 +143,7 @@ namespace BBSK_Psychologists.Tests
 
             // then
 
-            _psychologistService.Verify(r => r.GetPsychologist(It.Is<int>(i=>i==clientId), It.IsAny<ClaimModel>()), Times.Once);
+            _psychologistService.Verify(r => r.GetPsychologist(It.Is<int>(i => i == clientId), It.IsAny<ClaimModel>()), Times.Once);
             var actualResult = actual.Result as ObjectResult;
             Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
 
@@ -193,6 +193,24 @@ namespace BBSK_Psychologists.Tests
             var actualResult = actual.Result as CreatedResult;
             Assert.AreEqual(StatusCodes.Status201Created, actualResult.StatusCode);
 
+        }
+
+        [Test]
+        public async Task GetPsychologistsByParametrs_ObjectResultPassed()
+        {
+            //given
+            var parametrs = new FilterOptionRequest()
+            {
+                Price = Price.Ascending,
+                Problems = new List<int>(1),
+                Gender = Gender.Male
+            };
+
+            // when
+            var actual = await _sut.GetPsychologistsByParametrs(parametrs);
+            // then
+            var actualResult = actual.Result as ObjectResult;
+            Assert.AreEqual(StatusCodes.Status200OK, actualResult.StatusCode);
         }
     }
 }

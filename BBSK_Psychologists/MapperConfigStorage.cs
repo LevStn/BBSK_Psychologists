@@ -13,10 +13,12 @@ public class MapperConfigStorage : Profile
         CreateMap<Client, ClientResponse>();
         CreateMap<ClientRegisterRequest, ClientResponse>();
         CreateMap<ClientUpdateRequest, Client>();
-
+        CreateMap<Problem, ProblemResponse>();
+        CreateMap<TherapyMethod, TherapyMethodResponse>();
         CreateMap<Comment, CommentResponse>();
         CreateMap<Psychologist, PsychologistResponse>();
         CreateMap<Psychologist, GetAllPsychologistsResponse>();
+
         CreateMap<AddPsychologistRequest, Psychologist>()
             .ForMember(x => x.Educations, s => s.MapFrom(x => x.Educations!.Select(education => new Education() { EducationData = education })))
             .ForMember(x => x.Problems, s => s.MapFrom(x => x.Problems!.Select(problemName => new Problem() { ProblemName = problemName })))
@@ -32,12 +34,12 @@ public class MapperConfigStorage : Profile
         CreateMap<Comment, CommentResponse>();
         CreateMap<ApplicationForPsychologistSearch, SearchResponse>();
         CreateMap<SearchRequest, ApplicationForPsychologistSearch>();
-        CreateMap<OrderCreateRequest, Order>()
-            .ForMember(dest => dest.Client, opt => opt.Ignore())
-            .ForMember(dest => dest.Psychologist, opt => opt.Ignore());
-        CreateMap<Order, OrderResponse>()
-            .ForMember(dest => dest.psychologistResponse, opt => opt.MapFrom(src => src.Psychologist));
-        CreateMap<Order, AllOrdersResponse>();
+        CreateMap<OrderCreateRequest, Order>()
+            .ForMember(dest => dest.Client, opt => opt.Ignore())
+            .ForMember(dest => dest.Psychologist, opt => opt.Ignore());
+        CreateMap<Order, OrderResponse>()
+            .ForMember(dest => dest.psychologistResponse, opt => opt.MapFrom(src => src.Psychologist));
+        CreateMap<Order, AllOrdersResponse>();
 
         CreateMap<OrderCreateRequest, Client>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));

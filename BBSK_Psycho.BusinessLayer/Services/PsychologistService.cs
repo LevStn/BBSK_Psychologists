@@ -13,6 +13,7 @@ namespace BBSK_Psycho.BusinessLayer
         private readonly IPsychologistsRepository _psychologistsRepository;
         private readonly IOrdersRepository _ordersRepository;
         private readonly IClientsRepository _clientsRepository;
+        private readonly ISearchByFilter _searchByFilter;
 
         public PsychologistService(IPsychologistsValidator psychologistsValidator,
                                    IPsychologistsRepository psychologistsRepository, 
@@ -23,6 +24,7 @@ namespace BBSK_Psycho.BusinessLayer
             _psychologistsRepository = psychologistsRepository;
             _ordersRepository = ordersRepository;
             _clientsRepository = clientsRepository;
+            _searchByFilter = searchByFilter;
         }
 
         public async Task <int> AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
