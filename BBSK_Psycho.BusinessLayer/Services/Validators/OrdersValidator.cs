@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BBSK_Psycho.BusinessLayer.Services
+namespace BBSK_Psycho.BusinessLayer.Services.Validators
 {
     public class OrdersValidator : IOrdersValidator
     {
