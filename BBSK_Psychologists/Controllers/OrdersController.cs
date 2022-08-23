@@ -26,7 +26,7 @@ namespace BBSK_Psycho.Controllers
         }
 
         [AuthorizeByRole]
-        [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AllOrdersResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [HttpGet]
