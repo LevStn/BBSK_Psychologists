@@ -1,5 +1,6 @@
 ﻿using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer.Services.Validators;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
@@ -13,6 +14,7 @@ public class ApplicationForPsychologistSearchServicesTests
     private ApplicationForPsychologistSearchServices _sut;
     private Mock<IApplicationForPsychologistSearchRepository> _applicationForPsychologistSearchRepositoryMock;
     private Mock<IClientsRepository> _clientsRepository;
+    private IApplicationsValidator _applicationsValidator;
 
     private ClaimModel _claims;
 
@@ -21,7 +23,8 @@ public class ApplicationForPsychologistSearchServicesTests
     {
         _applicationForPsychologistSearchRepositoryMock = new Mock<IApplicationForPsychologistSearchRepository>();
         _clientsRepository = new Mock<IClientsRepository>();
-        _sut = new ApplicationForPsychologistSearchServices(_applicationForPsychologistSearchRepositoryMock.Object, _clientsRepository.Object);
+        _applicationsValidator = new ApplicationsValidator();
+        _sut = new ApplicationForPsychologistSearchServices(_applicationForPsychologistSearchRepositoryMock.Object, _clientsRepository.Object, _applicationsValidator);
     }
 
 
