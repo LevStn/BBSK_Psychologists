@@ -2,6 +2,7 @@
 using BBSK_Psycho.BusinessLayer.Exceptions;
 using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer.Services.Validators;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
@@ -185,13 +186,17 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _ordersRepository.Verify(c => c.AddOrder(It.IsAny<Order>()), Times.Never);
         }
 
-        [Test]
-        public async Task DeleteOrder_ValidRequestPassed_OrderDeleted()
+        [TestCase(Role.Client)]
+        [TestCase(Role.Manager)]
+        public async Task DeleteOrder_ValidRequestPassed_OrderDeleted(Role role)
         {
             //given
             Order order = OrdersHelper.GetOrder();
+            order.Client.Email = "em@il.com";
+            _claimModel.Email = "em@il.com";
 
-            _claimModel.Role = Role.Manager;
+
+            _claimModel.Role = role;
             
             _ordersRepository.Setup(c => c.GetOrderById(order.Id)).ReturnsAsync(order);
             _ordersRepository.Setup(c => c.DeleteOrder(order.Id));

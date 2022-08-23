@@ -10,10 +10,13 @@ namespace BBSK_Psycho.BusinessLayer.Services;
 public class ClientsService : IClientsServices
 {
     private readonly IClientsRepository _clientsRepository;
+    private readonly IClientsValidator _clientsValidator;
 
-    public ClientsService(IClientsRepository clientsRepository)
+    public ClientsService(IClientsRepository clientsRepository,
+                          IClientsValidator clientsValidator)
     {
         _clientsRepository = clientsRepository;
+        _clientsValidator = clientsValidator;
     }
 
     public async Task<Client?> GetClientById(int id, ClaimModel claims)
@@ -25,7 +28,7 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        await CheckAccess(claims, client);
+        await _clientsValidator.CheckAccess(claims, client);
 
         return client;
     }
@@ -48,7 +51,7 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        await CheckAccess(claims, client);
+        await _clientsValidator.CheckAccess(claims, client);
 
         return await _clientsRepository.GetCommentsByClientId(id);
     }
@@ -63,14 +66,14 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        await CheckAccess(claims, client);
+        await _clientsValidator.CheckAccess(claims, client);
 
         return await _clientsRepository.GetOrdersByClientId(id);
     }
 
     public async Task<int> AddClient(Client client)
     {
-        await CheckEmailForUniqueness(client.Email);
+        await _clientsValidator.CheckEmailForUniqueness(client.Email);
 
         client.Password = PasswordHash.HashPassword(client.Password);
         return await _clientsRepository.AddClient(client);
@@ -85,7 +88,7 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        await CheckAccess(claims, client);
+        await _clientsValidator.CheckAccess(claims, client);
 
         client.Name = newClientModel.Name;
         client.LastName = newClientModel.LastName;
@@ -103,7 +106,7 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        await CheckAccess(claims, client);
+        await _clientsValidator.CheckAccess(claims, client);
 
         await _clientsRepository.DeleteClient(client);
     }
@@ -117,27 +120,8 @@ public class ClientsService : IClientsServices
             throw new EntityNotFoundException($"Client {id} not found");
         }
 
-        await CheckAccess(claims, client);
+        await _clientsValidator.CheckAccess(claims, client);
 
         return  client.ApplicationForPsychologistSearch.ToList();
-    }
-
-
-    private async Task CheckAccess(ClaimModel claims, Client client)
-    {
-        if ((!(((claims.Email == client.Email
-         || claims.Role == Role.Manager)
-         && claims.Role != Role.Psychologist) &&
-         claims is not null)))
-            throw new AccessException($"Access denied");
-    }
-
-
-    private async Task CheckEmailForUniqueness(string email) 
-    {
-        if( await _clientsRepository.GetClientByEmail(email) != null)
-        {
-            throw new UniquenessException($"That email is registred");
-        }
     }
 }

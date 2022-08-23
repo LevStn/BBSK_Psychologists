@@ -7,6 +7,8 @@ using BBSK_Psycho.DataLayer;
 using BBSK_Psycho;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
 using BBSK_Psycho.Extensions;
+using BBSK_Psycho.Controllers;
+using BBSK_Psycho.BusinessLayer.Services.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 

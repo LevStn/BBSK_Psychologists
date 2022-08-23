@@ -11,14 +11,16 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
 {
 
     private readonly IApplicationForPsychologistSearchRepository _applicationForPsychologistSearchRepository;
-
+    private readonly IApplicationsValidator _applicationsValidator;
     private readonly IClientsRepository _clientsRepository;
 
-    public ApplicationForPsychologistSearchServices(IApplicationForPsychologistSearchRepository applicationForPsychologistSearchRepository, IClientsRepository clientsRepository)
+    public ApplicationForPsychologistSearchServices(IApplicationForPsychologistSearchRepository applicationForPsychologistSearchRepository, 
+                                                    IClientsRepository clientsRepository,
+                                                    IApplicationsValidator applicationsValidator)
     {
         _applicationForPsychologistSearchRepository = applicationForPsychologistSearchRepository;
         _clientsRepository = clientsRepository;
-       
+        _applicationsValidator = applicationsValidator;
     }
 
     public async Task <int> AddApplicationForPsychologist(ApplicationForPsychologistSearch application, ClaimModel claim)
@@ -54,7 +56,7 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
             throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        await CheckAccess(claim, application);
+        await _applicationsValidator.CheckAccess(claim, application);
 
         return application;
     }
@@ -70,7 +72,7 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
             throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        await CheckAccess(claim, application);
+        await _applicationsValidator.CheckAccess(claim, application);
 
         _applicationForPsychologistSearchRepository.DeleteApplicationForPsychologist(application);
     }
@@ -85,7 +87,7 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
             throw new EntityNotFoundException($"Application {id} not found");
         }
 
-        await CheckAccess(claim, application);
+        await _applicationsValidator.CheckAccess(claim, application);
 
         application.Name = newModel.Name;
         application.PhoneNumber = newModel.PhoneNumber;
@@ -97,15 +99,5 @@ public class ApplicationForPsychologistSearchServices : IApplicationForPsycholog
         application.Time = newModel.Time;
 
         await _applicationForPsychologistSearchRepository.UpdateApplicationForPsychologist(application);
-    }
-
-
-    private async Task CheckAccess(ClaimModel claim, ApplicationForPsychologistSearch application)
-    {
-         if(!(((claim.Email == application.Client.Email
-            || claim.Role == Role.Manager)
-            && claim.Role != Role.Psychologist) && 
-            claim is not null))
-            throw new AccessException($"Access denied");
     }
 }

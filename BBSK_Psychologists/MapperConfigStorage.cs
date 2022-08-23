@@ -41,8 +41,8 @@ public class MapperConfigStorage : Profile
             .ForMember(dest => dest.psychologistResponse, opt => opt.MapFrom(src => src.Psychologist));
         CreateMap<Order, AllOrdersResponse>();
 
-        CreateMap<OrderCreateRequest, Client>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
+        CreateMap<OrderCreateRequest, Client>();
+            //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ClientId));
         CreateMap<OrderCreateRequest, Psychologist>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PsychologistId));
     }

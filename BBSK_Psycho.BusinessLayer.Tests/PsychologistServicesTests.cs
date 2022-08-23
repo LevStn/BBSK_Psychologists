@@ -1,3 +1,5 @@
+﻿using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer.Services.Validators;
 ﻿using BBSK_Psycho.BusinessLayer.Services.Helpers;
 using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Entities;
@@ -20,6 +22,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         private Mock<IPsychologistsRepository> _psychologistsRepositoryMock;
         private Mock<IOrdersRepository> _ordersRepositoryMock;
         private Mock<IClientsRepository> _clientsRepositoryMock;
+        private IPsychologistsValidator _psychologistsValidator;
+
         private  ISearchByFilter _searchByFilter;
         private ClaimModel _claims;
         //given
@@ -32,8 +36,12 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _ordersRepositoryMock = new Mock<IOrdersRepository>();
             _clientsRepositoryMock = new Mock<IClientsRepository>();
             _searchByFilter = new SearchByFilter();
-
-            _sut = new PsychologistService(_psychologistsRepositoryMock.Object, _clientsRepositoryMock.Object, _ordersRepositoryMock.Object, _searchByFilter);
+            _psychologistsValidator = new PsychologistsValidator(_psychologistsRepositoryMock.Object);
+            _sut = new PsychologistService(_psychologistsValidator,
+                                           _psychologistsRepositoryMock.Object, 
+                                           _clientsRepositoryMock.Object, 
+                                           _ordersRepositoryMock.Object,
+                                           _searchByFilter);
         }
 
         [Test]

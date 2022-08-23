@@ -26,7 +26,7 @@ namespace BBSK_Psycho.Controllers
         }
 
         [AuthorizeByRole]
-        [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AllOrdersResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void),StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(void),StatusCodes.Status403Forbidden)]
         [HttpGet]
@@ -60,14 +60,14 @@ namespace BBSK_Psycho.Controllers
         {
             ClaimModel claim = this.GetClaims();
             Order newOrder = _mapper.Map<Order>(request);
-            newOrder.Client = new() {Id = request.ClientId};
+            newOrder.Client = new() {Id = claim.Id};
             newOrder.Psychologist = new() {Id = request.PsychologistId};
             await _ordersService.AddOrder(newOrder, claim);
             return Created($"{this.GetRequestPath()}/{newOrder.Id}", newOrder.Id);
         }
 
 
-        [Authorize(Roles = nameof(Role.Manager))]
+        [AuthorizeByRole(Role.Client)]
         [HttpDelete("{orderId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]

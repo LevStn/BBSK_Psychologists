@@ -120,16 +120,17 @@ namespace BBSK_Psychologists.Tests
         {
             //given
             _claimModel.Role = role;
-
-            _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", role, 58);
+            _claimModel.Id = 228;
+            _sut.ControllerContext.HttpContext.User = OrdersHelper.GetUser("go@v.no", role, 228);
 
             Client client = OrdersHelper.GetClient();
+            client.Id = _claimModel.Id;
             Psychologist psychologist = OrdersHelper.GetPsychologist();
 
             OrderCreateRequest givenRequest = new()
             {
-                ClientId = client.Id,
-                Cost = 1100,
+                //ClientId = client.Id,
+                //Cost = 1100,
                 Duration = SessionDuration.OneAcademicHour,
                 Message = "",
                 OrderDate = DateTime.Now,
