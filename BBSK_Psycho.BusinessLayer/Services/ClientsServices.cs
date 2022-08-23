@@ -70,8 +70,7 @@ public class ClientsService : IClientsServices
 
     public async Task<int> AddClient(Client client)
     {
-
-         await CheckEmailForUniqueness(client.Email);
+        await CheckEmailForUniqueness(client.Email);
 
         client.Password = PasswordHash.HashPassword(client.Password);
         return await _clientsRepository.AddClient(client);

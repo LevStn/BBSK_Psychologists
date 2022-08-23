@@ -35,11 +35,11 @@ namespace BBSK_DataLayer.Tests
         public async Task GetOrders_WhenCorrectEndpointCalled_ThenOrdersListReturned()
         {
             //given
-            Client client = OrdersHelper.GetClient();
-            Psychologist psychologist = OrdersHelper.GetPsychologist();
-            Order firstOrder = OrdersHelper.GetOrder(client, psychologist);
-            Order secondOrder = OrdersHelper.GetOrder();
-            Order thirdOrder = OrdersHelper.GetOrder();
+            Client client = await OrdersHelper.GetClient();
+            Psychologist psychologist =await OrdersHelper.GetPsychologist();
+            Order firstOrder =await OrdersHelper.GetOrder(client, psychologist);
+            Order secondOrder =await OrdersHelper.GetOrder();
+            Order thirdOrder =await OrdersHelper.GetOrder();
             thirdOrder.IsDeleted = true;
 
             _context.Orders.Add(firstOrder);
@@ -65,7 +65,7 @@ namespace BBSK_DataLayer.Tests
         public async Task GetOrderById_WhenCorrectIdPassed_ThenOrderReturned()
         {
             //given
-            Order givenOrder = OrdersHelper.GetOrder();
+            Order givenOrder = await OrdersHelper.GetOrder();
 
             _context.Orders.Add(givenOrder);
             _context.SaveChanges();
@@ -81,7 +81,7 @@ namespace BBSK_DataLayer.Tests
         public async Task AddOrder_WhenCorrectDataPassed_ThenOrderAdded()
         {
             //given
-            Order givenOrder = OrdersHelper.GetOrder();
+            Order givenOrder = await OrdersHelper.GetOrder();
 
             //when
             await _sut.AddOrder(givenOrder);
@@ -97,7 +97,7 @@ namespace BBSK_DataLayer.Tests
         public async Task DeleteOrder_WhenCorrectIdPassed_ThenOrderDeleted()
         {
             //given
-            Order givenOrder = OrdersHelper.GetOrder();
+            Order givenOrder = await OrdersHelper.GetOrder();
 
             _context.Orders.Add(givenOrder);
             _context.SaveChanges();
@@ -116,7 +116,7 @@ namespace BBSK_DataLayer.Tests
         public async Task UpdateOrdersStatus_WhenCorrectDataPassed_ThenOrderStatusUpdated()
         {
             //given
-            Order givenOrder = OrdersHelper.GetOrder();
+            Order givenOrder = await OrdersHelper.GetOrder();
             givenOrder.OrderPaymentStatus = OrderPaymentStatus.Unpaid;
             givenOrder.OrderStatus = OrderStatus.Created;
 

@@ -12,7 +12,7 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
         private static Random random = new();
 
 
-        public static Client GetClient()
+        public static async Task<Client> GetClient()
         {
             Client client = new()
             {
@@ -31,12 +31,12 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
             return client;
         }
 
-        public static Order GetOrder()
+        public static async Task<Order> GetOrder()
         {
             Order order = new()
             {
-                Client = GetClient(),
-                Psychologist = GetPsychologist(),
+                Client = await GetClient(),
+                Psychologist = await GetPsychologist(),
                 Cost = 1200,
                 Duration = SessionDuration.OneAcademicHour,
                 Message = "Программирование на C++",
@@ -50,9 +50,9 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
             return order;
         }
 
-        public static Order GetOrder(Client client, Psychologist psychologist)
+        public static async Task<Order> GetOrder(Client client, Psychologist psychologist)
         {
-            Order order = GetOrder();
+            Order order =await GetOrder();
 
             order.Client.Id = client.Id;
             order.Psychologist.Id = psychologist.Id;
@@ -62,7 +62,7 @@ namespace BBSK_DataLayer.Tests.TestCaseSources
             return order;
         }
 
-        public static Psychologist GetPsychologist()
+        public static async Task<Psychologist> GetPsychologist()
         {
             Psychologist psychologist = new()
             {

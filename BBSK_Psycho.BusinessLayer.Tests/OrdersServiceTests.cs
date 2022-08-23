@@ -136,7 +136,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claimModel = new() { Email = order.Client.Email, Id = order.Client.Id, Role = Role.Client };
 
-            _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).Returns(order.Psychologist);
+            _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).ReturnsAsync(order.Psychologist);
             _clientsRepository.Setup(c => c.GetClientById(order.Client.Id)).ReturnsAsync(order.Client);
 
             _ordersRepository.Setup(c => c.AddOrder(order)).ReturnsAsync(42);
@@ -159,7 +159,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
 
             _claimModel.Role = Role.Client;
 
-            _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).Returns((Psychologist)null);
+            _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).ReturnsAsync((Psychologist)null);
 
             //when-then
             Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddOrder(order, _claimModel));
@@ -176,7 +176,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             order.Psychologist = OrdersHelper.GetPsychologist();
             _claimModel.Role = Role.Client;
 
-            _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).Returns(order.Psychologist);
+            _psychologistsRepository.Setup(c => c.GetPsychologist(order.Psychologist.Id)).ReturnsAsync(order.Psychologist);
 
             //when-then
             Assert.ThrowsAsync<EntityNotFoundException>(() => _sut.AddOrder(order, _claimModel));

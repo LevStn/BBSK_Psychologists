@@ -4,18 +4,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using BBSK_Psycho.DataLayer;
-using BBSK_Psycho.DataLayer.Repositories;
 using BBSK_Psycho;
-using BBSK_Psycho.BusinessLayer.Services.Interfaces;
-using BBSK_Psycho.BusinessLayer.Services;
 using BBSK_Psycho.BusinessLayer.Infrastructure;
-using BBSK_Psycho.BusinessLayer;
-using BBSK_Psycho.DataLayer.Repositories.Interfaces;
 using BBSK_Psycho.Extensions;
-using BBSK_Psycho.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
@@ -64,27 +57,10 @@ builder.Services.AddDbContext <BBSK_PsychoContext> (o =>
 
 });
 
-
-builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
-builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
-builder.Services.AddScoped<IPsychologistsRepository,PsychologistsRepository>();
-builder.Services.AddScoped<IPsychologistService, PsychologistService>();
-builder.Services.AddScoped<IAuthServices, AuthServices>();
-builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
-builder.Services.AddScoped<IAuthServices, AuthServices>();
-builder.Services.AddScoped<IClientsServices, ClientsService>();
-builder.Services.AddScoped<IOrdersService, OrdersService>();
-builder.Services.AddScoped<IOrdersValidator, OrdersValidator>();
-
-builder.Services.AddScoped<IApplicationForPsychologistSearchRepository, ApplicationForPsychologistSearchRepository>();
-builder.Services.AddScoped<IApplicationForPsychologistSearchServices, ApplicationForPsychologistSearchServices>();
-
+builder.Services.AddDataLayerRepositotories();
+builder.Services.AddBusinessLayerServices();
 builder.Services.AddAuthorization();
-
 builder.Services.AddAutoMapper(typeof(MapperConfigStorage));
-
-
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -106,20 +82,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
         };
     });
-
-
 var app = builder.Build();
-
 app.UseCustomExceptionHandler();
-
-
 app.UseSwagger();
 app.UseSwaggerUI();
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();

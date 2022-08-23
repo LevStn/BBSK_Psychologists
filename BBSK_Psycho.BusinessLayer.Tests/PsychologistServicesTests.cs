@@ -1,4 +1,5 @@
-﻿using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+﻿using BBSK_Psycho.BusinessLayer.Services.Helpers;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
 using BBSK_Psycho.DataLayer.Repositories;
@@ -19,6 +20,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         private Mock<IPsychologistsRepository> _psychologistsRepositoryMock;
         private Mock<IOrdersRepository> _ordersRepositoryMock;
         private Mock<IClientsRepository> _clientsRepositoryMock;
+        private  ISearchByFilter _searchByFilter;
         private ClaimModel _claims;
         //given
         //when
@@ -29,7 +31,9 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             _psychologistsRepositoryMock = new Mock<IPsychologistsRepository>();
             _ordersRepositoryMock = new Mock<IOrdersRepository>();
             _clientsRepositoryMock = new Mock<IClientsRepository>();
-            _sut = new PsychologistService(_psychologistsRepositoryMock.Object, _clientsRepositoryMock.Object, _ordersRepositoryMock.Object);
+            _searchByFilter = new SearchByFilter();
+
+            _sut = new PsychologistService(_psychologistsRepositoryMock.Object, _clientsRepositoryMock.Object, _ordersRepositoryMock.Object, _searchByFilter);
         }
 
         [Test]
@@ -57,7 +61,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(order);
             _psychologistsRepositoryMock.Setup(c => c.AddCommentToPsyhologist(It.Is<Comment>(c => c.Id == comment.Id && c.Text == comment.Text), (It.Is<int>(i => i == commentActual.Psychologist.Id))))
                 .ReturnsAsync(comment);
             _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(client);
@@ -91,15 +95,15 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             var psychologistId = 1;
             _claims = new();
 
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(p => p == comment.Psychologist.Id), It.Is<int>(c => c == comment.Client.Id))).Returns((Order?)null);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(p => p == comment.Psychologist.Id), It.Is<int>(c => c == comment.Client.Id))).ReturnsAsync((Order?)null);
             //when
             //then
-            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(comment, psychologistId, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.AddCommentToPsyhologist(comment, psychologistId, _claims));
         }
 
 
         [Test]
-        public void AddCommentToPsychologist_CommonOrderIsNotFound_ReturnAccessException()
+        public async Task AddCommentToPsychologist_CommonOrderIsNotFound_ReturnEntityNotFoundException()
         {
             //given
             var comment = new Comment();
@@ -122,11 +126,11 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //when
 
             //then
-            Assert.ThrowsAsync<Exceptions.AccessException>(() => _sut.AddCommentToPsyhologist(commentActual, psychologistId, _claims));
+            Assert.ThrowsAsync<Exceptions.EntityNotFoundException>(() => _sut.AddCommentToPsyhologist(commentActual, psychologistId, _claims));
         }
 
         [Test]
-        public void AddCommentToPsychologist_InvalidRolePassed_ReturnAccessdenied()
+        public async Task AddCommentToPsychologist_InvalidRolePassed_ReturnAccessdenied()
         {
             //given
             var comment = new Comment()
@@ -150,7 +154,7 @@ namespace BBSK_Psycho.BusinessLayer.Tests
                 Psychologist = new Psychologist(),
                 Client = new Client()
             };
-            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).Returns(order);
+            _ordersRepositoryMock.Setup(o => o.GetOrderByPsychIdAndClientId(It.Is<int>(i => i == commentActual.Psychologist.Id), It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(order);
 
             _clientsRepositoryMock.Setup(c => c.GetClientById(It.Is<int>(i => i == commentActual.Client.Id))).ReturnsAsync(client);
             var expectedComment = comment;
@@ -546,6 +550,276 @@ namespace BBSK_Psycho.BusinessLayer.Tests
             //then
             Assert.ThrowsAsync<Exceptions.AccessException>(() =>  _sut.UpdatePsychologist(newPsychologist, psychologist.Id, _claims));
 
+        }
+
+        [Test]
+        public async Task GetPsychologistsByParametrs_ValidRequestParametrsGenderIsEmptyPriceAssending_PsychologistsSelectionOfParametersReceived()
+        {
+            //given
+            var expectedPrice = Price.Ascending;
+            Gender? expectedGender = null;
+            var expectedProblems = new List<int>() { 1, 5 };
+
+            var psychologists = new List<Psychologist>()
+                {
+                    new Psychologist()
+                    {
+                        Id = 1,
+                        Name = "Петр",
+                        LastName = "Петров",
+                        Patronymic = "Петькович",
+                        Gender = Gender.Male,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 20000,
+                        Problems = new List<Problem> {
+                            new Problem
+                            {
+                                Id = 1,
+                                ProblemName = "Насилие", 
+                                IsDeleted = false
+                            },
+                        },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Душевная беседа", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    },
+                    new Psychologist()
+                    {
+                        Id = 2,
+                        Name = "Валера",
+                        LastName = "Валеров",
+                        Patronymic = "Валерьевич",
+                        Gender = Gender.Male,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 3000,
+                        Problems = new List<Problem> { new Problem { Id = 2, ProblemName = "Зависимость", IsDeleted = false } },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Гипноз", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    },
+                    new Psychologist()
+                    {
+                        Id = 3,
+                        Name = "Зинаида",
+                        LastName = "Зиновна",
+                        Patronymic = "Александровна",
+                        Gender = Gender.Famale,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 200,
+                        Problems = new List<Problem>
+                        {
+                            new Problem
+                            {
+                                Id = 1,
+                                ProblemName = "Насилие",
+                                IsDeleted = false
+                            },
+                            new Problem
+                            {
+                                Id = 5,
+                                ProblemName = "Комплексы",
+                                IsDeleted = false
+                            }
+                        },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Гештальд", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    },
+                    new Psychologist()
+                    {
+                        Id = 4,
+                        Name = "Гена",
+                        LastName = "Гена",
+                        Patronymic = "Гена",
+                        Gender = Gender.Famale,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 200,
+                        Problems = new List<Problem>
+                        {
+                            new Problem
+                            {
+                                Id = 1,
+                                ProblemName = "Насилие",
+                                IsDeleted = false
+                            },
+                            new Problem
+                            {
+                                Id = 5,
+                                ProblemName = "Комплексы",
+                                IsDeleted = false
+                            }
+                        },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Гештальд", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    }
+
+                };
+
+            _psychologistsRepositoryMock.Setup(o => o.GetAllPsychologistsWithFullInformations()).ReturnsAsync(psychologists);
+            //when
+            var actual = await _sut.GetPsychologistsByFilter(expectedPrice, expectedProblems, expectedGender);
+            //then
+            Assert.NotNull(actual);
+            Assert.AreEqual(actual[0], psychologists[2]);
+            Assert.AreEqual(actual[1], psychologists[3]);
+            Assert.AreEqual(actual[2], psychologists[0]);
+
+            _psychologistsRepositoryMock.Verify(c => c.GetAllPsychologistsWithFullInformations(), Times.Once);
+        }
+
+        [Test]
+        public async Task GetPsychologistsByParametrs_ValidRequestParametrsGenderFamalePriceDescending_PsychologistsSelectionOfParametersReceived()
+        {
+            //given
+            var expectedPrice = Price.Descending;
+            Gender? expectedGender = Gender.Famale;
+            var expectedProblems = new List<int>() { 1, 5 };
+
+            var psychologists = new List<Psychologist>()
+                {
+                    new Psychologist()
+                    {
+                        Id = 1,
+                        Name = "Жанна",
+                        LastName = "Петрова",
+                        Patronymic = "Алек",
+                        Gender = Gender.Famale,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 20000,
+                        Problems = new List<Problem> {
+                            new Problem
+                            {
+                                Id = 1,
+                                ProblemName = "Насилие",
+                                IsDeleted = false
+                            },
+                        },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Душевная беседа", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    },
+                    new Psychologist()
+                    {
+                        Id = 2,
+                        Name = "Валера",
+                        LastName = "Валеров",
+                        Patronymic = "Валерьевич",
+                        Gender = Gender.Male,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 3000,
+                        Problems = new List<Problem> { new Problem { Id = 2, ProblemName = "Зависимость", IsDeleted = false } },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Гипноз", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    },
+                    new Psychologist()
+                    {
+                        Id = 3,
+                        Name = "Зинаида",
+                        LastName = "Зиновна",
+                        Patronymic = "Александровна",
+                        Gender = Gender.Famale,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 200,
+                        Problems = new List<Problem>
+                        {
+                            new Problem
+                            {
+                                Id = 1,
+                                ProblemName = "Насилие",
+                                IsDeleted = false
+                            },
+                            new Problem
+                            {
+                                Id = 5,
+                                ProblemName = "Комплексы",
+                                IsDeleted = false
+                            }
+                        },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Гештальд", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    },
+                    new Psychologist()
+                    {
+                        Id = 4,
+                        Name = "Гена",
+                        LastName = "Гена",
+                        Patronymic = "Гена",
+                        Gender = Gender.Male,
+                        Phone = "85884859",
+                        Educations = new List<Education> { new Education { EducationData = "2020-12-12", IsDeleted = false } },
+                        CheckStatus = CheckStatus.Completed,
+                        Email = "ros@fja.com",
+                        PasportData = "23146456",
+                        Price = 200,
+                        Problems = new List<Problem>
+                        {
+                            new Problem
+                            {
+                                Id = 1,
+                                ProblemName = "Насилие",
+                                IsDeleted = false
+                            },
+                            new Problem
+                            {
+                                Id = 5,
+                                ProblemName = "Комплексы",
+                                IsDeleted = false
+                            }
+                        },
+                        TherapyMethods = new List<TherapyMethod> { new TherapyMethod { Method = "Гештальд", IsDeleted = false } },
+                        WorkExperience = 10,
+                        BirthDate = DateTime.Parse("1210 - 12 - 12"),
+                        Password = "12334534"
+                    }
+
+                };
+
+            _psychologistsRepositoryMock.Setup(o => o.GetAllPsychologistsWithFullInformations()).ReturnsAsync(psychologists);
+            //when
+            var actual = await _sut.GetPsychologistsByFilter(expectedPrice, expectedProblems, expectedGender);
+            //then
+            Assert.NotNull(actual);
+            Assert.AreEqual(actual[0], psychologists[2]);
+            Assert.AreEqual(actual[1], psychologists[0]);
+            _psychologistsRepositoryMock.Verify(c => c.GetAllPsychologistsWithFullInformations(), Times.Once);
         }
     }
 }

@@ -12,12 +12,15 @@ namespace BBSK_Psycho.BusinessLayer
         private readonly IPsychologistsRepository _psychologistsRepository;
         private readonly IOrdersRepository _ordersRepository;
         private readonly IClientsRepository _clientsRepository;
+        private readonly ISearchByFilter _searchByFilter;
 
-        public PsychologistService(IPsychologistsRepository psychologistsRepository, IClientsRepository clientsRepository, IOrdersRepository ordersRepository)
+        public PsychologistService(IPsychologistsRepository psychologistsRepository,
+            IClientsRepository clientsRepository, IOrdersRepository ordersRepository, ISearchByFilter searchByFilter)
         {
             _psychologistsRepository = psychologistsRepository;
             _ordersRepository = ordersRepository;
             _clientsRepository = clientsRepository;
+            _searchByFilter = searchByFilter;
         }
 
         public async Task <int> AddCommentToPsyhologist(Comment comment, int psychologistId, ClaimModel claim)
@@ -42,7 +45,7 @@ namespace BBSK_Psycho.BusinessLayer
         }
 
         public async Task <int> AddPsychologist(Psychologist psychologist)
-        {
+        {            
             await CheckEmailForUniqueness(psychologist.Email);
             
             psychologist.Password = PasswordHash.HashPassword(psychologist.Password);
@@ -110,6 +113,12 @@ namespace BBSK_Psycho.BusinessLayer
             await _psychologistsRepository.UpdatePsychologist(psychologist, id);
         }
 
+        public async Task<List<Psychologist>> GetPsychologistsByFilter(Price price, List<int> problems, Gender? gender)
+        {
+            var psychologists = await _psychologistsRepository.GetAllPsychologistsWithFullInformations();
+            return await _searchByFilter.GetPsychologistsByParametrs(price, problems, gender, psychologists);
+        }
+
         public async Task CheckAccessOnlyForPsychologistAndManagers (int id, ClaimModel claim)
         {
             if (claim.Id != id
@@ -134,5 +143,6 @@ namespace BBSK_Psycho.BusinessLayer
                 throw new UniquenessException($"That email is registred");
             }
         }
+
     }
 }
