@@ -1,4 +1,6 @@
 ﻿using BBSK_Psycho.BusinessLayer.Services;
+using BBSK_Psycho.BusinessLayer.Services.Interfaces;
+using BBSK_Psycho.BusinessLayer.Services.Validators;
 using BBSK_Psycho.BusinessLayer.Tests.ModelControllerSource;
 using BBSK_Psycho.DataLayer.Entities;
 using BBSK_Psycho.DataLayer.Enums;
@@ -13,6 +15,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
     {
         private ClientsService _sut;
         private Mock<IClientsRepository> _clientsRepositoryMock;
+        private IClientsValidator _clientsValidator;
+
 
         private ClaimModel _claims;
 
@@ -21,7 +25,8 @@ namespace BBSK_Psycho.BusinessLayer.Tests
         {
 
             _clientsRepositoryMock = new Mock<IClientsRepository>();
-            _sut = new ClientsService(_clientsRepositoryMock.Object);
+            _clientsValidator = new ClientsValidator(_clientsRepositoryMock.Object);
+            _sut = new ClientsService(_clientsRepositoryMock.Object, _clientsValidator);
         }
 
 
