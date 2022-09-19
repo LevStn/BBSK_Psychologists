@@ -7,9 +7,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Compile BBSK_Psycho
-        run: gcc -fprofile-arcs -ftest-coverage -O0 -o test_BBSK_Psycho test_BBSK_Psycho BBSK_Psycho.sln
+        run: gcc -fprofile-arcs -ftest-coverage -O0 -o BBSK-Psychologists.Tests BBSK-Psychologists.Tests BBSK_Psycho.sln
       - name: Run tests
-        run: ./test_BBSK_Psycho
+        run: ./BBSK-Psychologists.Tests
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
