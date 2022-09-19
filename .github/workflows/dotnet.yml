@@ -1,17 +1,27 @@
-name: Workflow for Codecov example-c
-on: [push, pull_request]
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
-  run:
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Compile BBSK_Psycho
-        run: gcc -fprofile-arcs -ftest-coverage -O0 -o BBSK-Psychologists.Tests BBSK-Psychologists.Tests BBSK_Psycho.sln
-      - name: Run tests
-        run: ./BBSK-Psychologists.Tests
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          gcov: true
-          gcov_include: BBSK_Psycho.sln
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore BBSK_Psycho.sln
+    - name: Build
+      run: dotnet build --no-restore BBSK_Psycho.sln
+    - name: Test
+      run: dotnet test BBSK_Psycho.sln --configuration Debug --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+    - name: Codecov upload
+      uses: codecov/codecov-action@v2
